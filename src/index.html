@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Spotify testing for HASS</title>
+</head>
+<body>
+<script type="module">
+  import { html, h, Component, render } from 'https://unpkg.com/htm/preact/standalone.mjs';
+  const clientId = 'e40443dc58e44e33ba85a42014b95925'; // take from config?
+  const scopes = ['user-read-private', 'user-read-email', 'playlist-read-private', 'user-read-birthdate', 'user-read-playback-state', 'user-modify-playback-state'];
+
+
+  ////////////////////////////////////////
+  // SpotifyCard
+  ////////////////////////////////////////
+  class PlayerSelect extends Component {
+    state = {
+      selectedDevice: '-- choose mediaplayer --'
+    };
+
+    selectDevice(device) {
+      this.setState({selectedDevice: device.name});
+      this.props.onMediaplayerSelect(device);
+    }
+
+    render() {
+      const { devices } = this.props;
+
+      return html`
+            <div class="dropdown">
+              	<div class="mediaplayer_select">
+                    <img class="mediaplayer_speaker_img" src="speaker.svg" />
+                    ${this.state.selectedDevice}<button class="mediaplayer_button">…</button>
+                </div>
+              <div class="dropdown-content">
+                ${devices.map((device, idx) => html`
+                    <a onClick=${() => this.selectDevice(device)}>${device.name}</a>
+                `)}
+              </div>
+            </div>
+        `;
+    }
+  }
+
+  class SpotifyCard extends Component {
+    constructor(props) {
+      super(props);
+      this.state = {
+        user: {},
+        playlists: [],
+        devices: [],
+        selectedPlaylist: null,
+        selectedDevice: null
+      };
+    }
+
+    async componentDidMount() {
+      const hashParams = new URLSearchParams(window.location.hash.substring(1));
+      const access_token = hashParams.get('access_token') || localStorage.getItem('access_token');
+      const headers = {
+        'Authorization': `Bearer ${access_token}`
+      };
+
+      const userResp = await fetch('https://api.spotify.com/v1/me', {headers}).then(r => r.json());
+      if (userResp.error) {
+        if (userResp.error.status === 401) {
+          console.log('got 401');
+          const redirectUrl = window.location.href;
+          // if the token is too old handle it
+          window.location.href = `https://accounts.spotify.com/sv/authorize?client_id=${clientId}&redirect_uri=${redirectUrl}&scope=${scopes.join('%20')}&response_type=token`;
+          return;
+        }
+        this.setState({ error: response.error });
+        return; // deal with error
+      } else {
+        localStorage.setItem('access_token', access_token);
+      }
+
+      const playlists = await fetch('https://api.spotify.com/v1/me/playlists?limit=10', {headers}).then(r => r.json()).then(p => p.items)
+      const devices = await fetch('https://api.spotify.com/v1/me/player/devices', {headers}).then(r => r.json()).then(r => r.devices);
+      this.setState({ user: userResp, playlists, devices });
+    }
+
+    playPlaylist() {
+      const {selectedPlaylist, selectedDevice} = this.state;
+      if(!selectedPlaylist || !selectedDevice) {
+        return;
+      }
+
+      console.log('Play playlist:', selectedPlaylist.uri, selectedDevice.id);
+      const access_token = localStorage.getItem('access_token');
+
+      const playData = {context_uri: selectedPlaylist.uri };
+
+      fetch('https://api.spotify.com/v1/me/player/play?device_id=' + selectedDevice.id, {
+        method: "PUT",
+//        mode: "cors",
+        headers: {
+          "Content-Type": "application/json",
+          'Authorization': `Bearer ${access_token}`
+        },
+        body: JSON.stringify(playData),
+      })
+      .then(response => response.json())
+      .then(r => console.log(r));
+
+    }
+
+    render() {
+      const { user, playlists, devices } = this.state;
+      console.log(this.state);
+      return html`
+          <div class="spotify_container">
+            <${Header} />
+            <div class="playlists">
+              ${playlists.map((playlist, idx) => html`
+                <div class="playlist" onClick=${() => this.setState({ selectedPlaylist: playlist})}>
+                    <div class="playlist__cover_art"><img src="${playlist.images[0].url}"/></div>
+                    <div class="playlist__number">${idx}</div>
+                    <div class="playlist__title">${playlist.name}</div>
+                </div>
+              `)}
+            </div>
+            <div class="controls">
+                <${PlayerSelect} devices=${devices} onMediaplayerSelect=${device => this.setState({selectedDevice: device})}/>
+                <button class="greenButton playButton" onClick=${() => this.playPlaylist()}>PLAY</button>
+            </div>
+          </div>
+        `;
+    }
+  }
+
+  const Header = () => html`<div class="header">
+<img src="Spotify_Logo_RGB_White.png" />
+</div>`
+
+  // const Footer = props => html`<footer ...${props} />`
+
+  const styleElement = document.createElement('style');
+  const  styles = {
+    green: 'rgb(30, 215, 96)',
+    lightBlack: 'rgb(40, 40, 40)',
+    black: 'rgb(24, 24, 24)',
+    grey: 'rgb(170, 170, 170)',
+    sand: 'rgb(200, 200, 200)',
+    white: 'rgb(255, 255, 255)',
+    blue: '#4688d7'
+  };
+
+  styleElement.textContent = `
+
+    .spotify_container {
+        background-color: ${styles.lightBlack};
+        font-family: 'Roboto', sans-serif;
+        color:  ${styles.white};
+        font-size: 14px;
+        padding: 25px;
+    }
+    .spotify_container *:focus {outline:none}
+    .header img {
+        height: 40px;
+        margin-bottom: 10px;
+    }
+
+    .playlists {
+        display: flex;
+        flex-flow: column nowrap;
+        margin-bottom: 50px;
+        background-color: ${styles.black};
+    }
+    .playlist {
+        display: flex;
+        flex-flow: row nowrap;
+        align-items: center;
+        border-top: 1px solid ${styles.lightBlack};
+        height: 42px;
+    }
+    .playlist:last-child {
+      border-bottom: 1px solid ${styles.lightBlack};
+    }
+    .playlist:hover {
+      background: ${styles.lightBlack};
+    }
+    .playlist__cover_art img {
+        width: 42px;
+        height: 42px;
+    }
+    .playlist__number {
+      margin-left: 10px;
+      color:  ${styles.grey};
+      width: 12px;
+    }
+    .playlist__title {
+        margin-left: 30px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 75vw;
+    }
+    .controls {
+        display: flex;
+        flex-flow: row nowrap;
+        align-items: center;
+    }
+
+    .greenButton {
+        border-radius: 15px;
+        padding: 0 20px 0 20px;
+        font-size: 14px;
+        height: 27px;
+        color: white;
+        border: none;
+        background: ${styles.green};
+        cursor: pointer;
+        margin-right: 10px;
+    }
+    .greenButton:hover {
+        background-color: #43e57d;
+    }
+    .playButton::before {
+        content: "\\25B6  "
+    }
+
+    .dropdown {
+      position: relative;
+      display: inline-block;
+      color: ${styles.sand};
+    }
+    .mediaplayer_select {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .mediaplayer_speaker_img {
+        width: 27px;
+        height: 27px;
+        margin-right: 5px;
+    }
+    .mediaplayer_button {
+        font-size: 14px;
+        height: 27px;
+        background: ${styles.lightBlack};
+        color: ${styles.sand};
+        border: 1px solid ${styles.sand};
+        border-radius: 50%;
+        margin: 0 15px 0 5px;
+        cursor: pointer;
+        padding: 0 5px 17px 5px;
+        font-weight: 800;
+      }
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: ${styles.lightBlack};
+      min-width: 250px;
+      box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+      z-index: 1;
+    }
+    .dropdown-content a {
+      color: ${styles.sand};
+      padding: 12px 16px;
+      text-decoration: none;
+      display: block;
+    }
+    .dropdown-content a:hover {
+        box-shadow: inset 0 0 100px 100px rgba(255, 255, 255, 0.07);
+    }
+    .dropdown:hover .dropdown-content {
+      display: block;
+    }
+`;
+
+  class SpotifyCardWebComponent extends HTMLElement {
+    connectedCallback() {
+      const mountPoint = document.createElement('div');
+      const shadow = this.attachShadow({ mode: 'open' })
+      shadow.appendChild(styleElement);
+      shadow.appendChild(mountPoint);
+      render(html`<${SpotifyCard}/>`, mountPoint);
+    }
+  }
+  customElements.define('spotify-card', SpotifyCardWebComponent);
+
+</script>
+
+<spotify-card></spotify-card>
+
+</body>
+</html>
