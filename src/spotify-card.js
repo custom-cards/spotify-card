@@ -100,15 +100,19 @@ class SpotifyCard extends Component {
 
     const playlists = await fetch('https://api.spotify.com/v1/me/playlists?limit=10', {headers}).then(r => r.json()).then(p => p.items)
     const devices = await fetch('https://api.spotify.com/v1/me/player/devices', {headers}).then(r => r.json()).then(r => r.devices);
-    const currentPlayer = await fetch('https://api.spotify.com/v1/me/player', {headers}).then(r => r.json());
+
+    const currentPlayerRes = await fetch('https://api.spotify.com/v1/me/player', {headers});
 
     let selectedDevice, playingPlaylist = null;
-    if (currentPlayer.is_playing) {
-      selectedDevice = currentPlayer.device;
-      const currPlayingHref = currentPlayer.context.external_urls.spotify;
-      playingPlaylist = playlists.find(pl => currPlayingHref === pl.external_urls.spotify);
+    // 200 is returned when something is playing. 204 is ok status without body.
+    if(currentPlayerRes.status === 200) {
+      const currentPlayer = await currentPlayerRes.json();
+      if (currentPlayer.is_playing) {
+        selectedDevice = currentPlayer.device;
+        const currPlayingHref = currentPlayer.context.external_urls.spotify;
+        playingPlaylist = playlists.find(pl => currPlayingHref === pl.external_urls.spotify);
+      }
     }
-
     this.setState({ user: userResp, playlists, devices, selectedDevice, playingPlaylist });
   }
 
