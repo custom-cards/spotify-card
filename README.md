@@ -1,4 +1,6 @@
 ## Home Assistant Spotify Lovelace Card
+**DISCLAIMER**: *This project is a private open source project and doesn't have any connection with Spotify.*
+ 
 Web component card which can be used as a Lovelace [Home Assistants](https://www.home-assistant.io/lovelace/]) card.
 
 This card supports listing the users currently available devices and the users 10 top playlists on [Spotify](https://www.spotify.com). 
@@ -14,8 +16,12 @@ If this is the case either create a fix and post a PR or upgrade to a more moder
 
 ### Installation
 Download `src/spotify-card.js` and copy it to `config/www/spotify-card.js`. 
-Create a new app at [https://developer.spotify.com/my-applications/#!/applications](Spotify developer console) and set the redirect URL to XXX.
-For more information about create an app see [https://www.home-assistant.io/components/media_player.spotify/](Home Assistant Spotify Component documentation).
+Create a new app at [https://developer.spotify.com/my-applications/#!/applications](Spotify developer console) or use the one created for the HA Spotify component (see below).
+Make sure you edit the settings and adds the redirect URL for the tab the card is one. 
+
+Example:  `https://<your public home assistant hostname>:8123/lovelace/media`.
+
+For more information about how to create an app see [Home Assistant Spotify Component documentation](https://www.home-assistant.io/components/media_player.spotify/).
 
 Add the resource in lovelace config:
 ```
@@ -29,9 +35,14 @@ Now add the card like this:
       client_id: <YOUR CLIENT ID>
 ```
 
+### Improvements to come thru PR or with patience
+  - Request a refresh token so the user doesn't have to authenticate every 3600 secs
+  - Will publish to CDN so it doesn't need to be downloaded
+  - Add support for chrome cast media players
 
 ### General usage
 This library can of course also be used on other websites or projects other than Home Assistant
 
 ### CONTRIBUTING
 Please contribute and help.Before creating a large PR make sure to sync about it with me.
+
