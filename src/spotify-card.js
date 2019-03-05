@@ -255,7 +255,18 @@ styleElement.textContent = `
         border: thin solid ${styles.sand};
         border-radius: 50%;
     }
-
+    .mediaplayer_button {
+        font-size: 14px;
+        height: 27px;
+        background: ${styles.lightBlack};
+        color: ${styles.sand};
+        border: 1px solid ${styles.sand};
+        border-radius: 50%;
+        margin: 0 15px 0 5px;
+        cursor: pointer;
+        padding: 0 5px 17px 5px;
+        font-weight: 800;
+      }
     .dropdown-content {
       display: none;
       position: absolute;
