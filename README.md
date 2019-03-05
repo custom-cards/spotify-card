@@ -6,6 +6,8 @@ Choose an online media player and click on a playlist to play it on the device.
 This component will query the current playback 
 The component used the [Spotify Web API](https://developer.spotify.com/documentation/web-api/).
 
+![Screenshot](/spotify-card-highlight.png)
+
 ### Requirements
 As I wanted to create a vanilla javascript []Web Component](https://developer.mozilla.org/en-US/docs/Web/Web_Components) the code is not transpiled and might not work in your browser.
 If this is the case either create a fix and post a PR or upgrade to a more modern browser.

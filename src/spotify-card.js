@@ -68,6 +68,7 @@ class SpotifyCard extends Component {
   async componentDidMount() {
     const hashParams = new URLSearchParams(window.location.hash.substring(1));
     const access_token = hashParams.get('access_token') || localStorage.getItem('access_token');
+    const token_expires_ms = localStorage.getItem('token_expires_ms');
 
     const headers = {
       'Authorization': `Bearer ${access_token}`
@@ -85,11 +86,15 @@ class SpotifyCard extends Component {
 
     this.setState({ authenticationRequired: false });
 
-    localStorage.setItem('access_token', access_token);
     if(hashParams.get('access_token')) {
+      const expires_in = hashParams.get('expires_in');
+      localStorage.setItem('access_token', access_token);
+      localStorage.setItem('token_expires_ms', new Date().getTime() + (expires_in * 1000));
+
       // Auth success, remove the parameters from spotify
       const newurl = window.location.href.split('#')[0];
       window.history.pushState({path:newurl}, '', newurl);
+      // TODO: request refresh token option 4 in https://developer.spotify.com/documentation/general/guides/authorization-guide/
     }
 
 
@@ -110,7 +115,7 @@ class SpotifyCard extends Component {
   authenticateSpotify() {
     const redirectUrl = window.location.href.split('?')[0];
     const { clientId } = this.props;
-    window.location.href = `https://accounts.spotify.com/sv/authorize?client_id=${clientId}&redirect_uri=${redirectUrl}&scope=${this.scopes.join('%20')}&response_type=token`;
+    window.location.href = `https://accounts.spotify.com/authorize?client_id=${clientId}&redirect_uri=${redirectUrl}&scope=${this.scopes.join('%20')}&response_type=token`;
   }
 
   playPlaylist() {
