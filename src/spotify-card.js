@@ -14,6 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import 'https://unpkg.com/@webcomponents/custom-elements';
 import { html, h, Component, render } from 'https://unpkg.com/htm/preact/standalone.mjs';
 
 class PlayerSelect extends Component {
