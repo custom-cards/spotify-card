@@ -50,6 +50,7 @@ Now add the card like this:
 ### Improvements to come thru PR or with patience
   - Request a refresh token so the user doesn't have to authenticate every 3600 secs
   - Add support for chrome cast media players
+  - Look at possibly transpiling for older browsers. 
 
 ### General usage
 This library can of course also be used on other websites or projects other than Home Assistant
