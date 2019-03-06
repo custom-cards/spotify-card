@@ -29,14 +29,14 @@ Add the resource in lovelace config:
 ```
   - type: module
     url: >-
-      https://cdn.jsdelivr.net/gh/fondberg/spotify-card@1.1/src/spotify-card.js
+      https://cdn.jsdelivr.net/gh/fondberg/spotify-card@master/src/spotify-card.js 
 ```
 
 ##### Specific release:
 ```
   - type: module
     url: >-
-      https://cdn.jsdelivr.net/gh/fondberg/spotify-card@master/src/spotify-card.js 
+      https://cdn.jsdelivr.net/gh/fondberg/spotify-card@1.1/src/spotify-card.js
 ```
 
 ##### Add the card to lovelace config
