@@ -3,6 +3,8 @@
  
 Web component card which can be used as a Lovelace [Home Assistants](https://www.home-assistant.io/lovelace/]) card.
 
+Forum thread: https://community.home-assistant.io/t/spotify-lovelace-card/103525
+
 This card supports listing the users currently available devices and the users 10 top playlists on [Spotify](https://www.spotify.com). 
 Choose an online media player and click on a playlist to play it on the device.
 This component will query the current playback from the Spotify Web API and tries to reflect the current status wrt to device and playlist if something is playing. 
