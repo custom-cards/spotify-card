@@ -18,7 +18,7 @@ If this is the case either create a fix and post a PR or upgrade to a more moder
 ### Installation
 Create a new app at [Spotify developer console](https://developer.spotify.com/my-applications/#!/applications) 
 or use the one created for the HA Spotify component (see below).
-Make sure you edit the settings and adds the redirect URL for the tab the card is one. 
+Make sure you edit the settings and adds the redirect URL for the tab the card has. 
 
 Example:  `https://<your public home assistant hostname>:8123/lovelace/media`.
 
