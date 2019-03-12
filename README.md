@@ -29,14 +29,21 @@ Add the resource in lovelace config:
 ```
   - type: module
     url: >-
-      https://cdn.jsdelivr.net/gh/fondberg/spotify-card@master/src/spotify-card.js 
+      https://cdn.jsdelivr.net/gh/custom-cards/spotify-card@master/src/spotify-card.js 
 ```
 
 ##### Specific release:
 ```
   - type: module
     url: >-
-      https://cdn.jsdelivr.net/gh/fondberg/spotify-card@1.1/src/spotify-card.js
+      https://cdn.jsdelivr.net/gh/custom-cards/spotify-card@1.1/src/spotify-card.js
+```
+
+#### Polyfill test version for older browsers:
+```
+  - type: module
+    url: >-
+      https://cdn.jsdelivr.net/gh/custom-cards/spotify-card@polyfill/src/spotify-card.js
 ```
 
 ##### Add the card to lovelace config
@@ -49,7 +56,7 @@ Now add the card like this:
 
 ### Improvements to come thru PR or with patience
   - Request a refresh token so the user doesn't have to authenticate every 3600 secs
-  - Add support for chrome cast media players
+  - Add support to initiate playback on chrome cast media players (tips and code wanted!)
   - Look at possibly transpiling for older browsers. 
 
 ### General usage
