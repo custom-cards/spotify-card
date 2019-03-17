@@ -1,14 +1,30 @@
 {
-  "name": "hass-spotify",
+  "name": "spotify-card",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "",
-  "license": "ISC",
+  "main": "dist/spotify-card.cjs.js",
+  "module": "dist/spotify-card.esm.js",
+  "browser": "dist/spotify-card.umd.js",
   "dependencies": {
-    "spotify-web-api-js": "^1.2.0"
-  }
+    "htm": "^2.1.1",
+    "preact": "^8.4.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.2.2",
+    "@babel/polyfill": "^7.2.5",
+    "@babel/preset-env": "^7.2.3",
+    "babel-polyfill": "^6.26.0",
+    "live-server": "^1.2.1",
+    "rollup": "^1.0.0",
+    "rollup-plugin-babel": "^4.2.0",
+    "rollup-plugin-commonjs": "^9.2.0",
+    "rollup-plugin-node-resolve": "^4.0.0"
+  },
+  "scripts": {
+    "build": "rollup -c",
+    "dev": "rollup -c -w",
+    "serve": "live-server --port=50994 ./"
+  },
+  "files": [
+    "dist"
+  ]
 }
