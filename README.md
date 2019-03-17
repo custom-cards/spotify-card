@@ -14,8 +14,7 @@ The component uses the [Spotify Web API](https://developer.spotify.com/documenta
 ![Screenshot](/spotify-card-highlight.png)
 
 ### Requirements
-As I wanted to create a vanilla javascript [Web Component](https://developer.mozilla.org/en-US/docs/Web/Web_Components) the code is not transpiled and might not work in your browser.
-If this is the case either create a fix and post a PR or upgrade to a more modern browser.
+This should now work in all newer major browsers. If it does't work for you please provide detailed reports in an issue ticket.
 
 ### Installation
 Create a new app at [Spotify developer console](https://developer.spotify.com/my-applications/#!/applications) 
@@ -27,25 +26,12 @@ Example:  `https://<your public home assistant hostname>:8123/lovelace/media`.
 For more information about how to create an app see [Home Assistant Spotify Component documentation](https://www.home-assistant.io/components/media_player.spotify/).
 
 Add the resource in lovelace config:
-##### Master builds:
-```
-  - type: module
-    url: >-
-      https://cdn.jsdelivr.net/gh/custom-cards/spotify-card@master/src/spotify-card.js 
-```
 
-##### Specific release:
+##### Latest release:
 ```
   - type: module
     url: >-
-      https://cdn.jsdelivr.net/gh/custom-cards/spotify-card@1.1/src/spotify-card.js
-```
-
-#### Polyfill test version for older browsers:
-```
-  - type: module
-    url: >-
-      https://cdn.jsdelivr.net/gh/custom-cards/spotify-card@polyfill/src/spotify-card.js
+      https://cdn.jsdelivr.net/gh/custom-cards/spotify-card@1.2/dist/spotify-card.umd.js
 ```
 
 ##### Add the card to lovelace config
@@ -59,7 +45,6 @@ Now add the card like this:
 ### Improvements to come thru PR or with patience
   - Request a refresh token so the user doesn't have to authenticate every 3600 secs
   - Add support to initiate playback on chrome cast media players (tips and code wanted!)
-  - Look at possibly transpiling for older browsers. 
 
 ### General usage
 This library can of course also be used on other websites or projects other than Home Assistant
@@ -67,3 +52,5 @@ This library can of course also be used on other websites or projects other than
 ### CONTRIBUTING
 Please contribute and help.Before creating a large PR make sure to sync about it with me.
 
+### License
+This library is licensed under Apache 2.0, see [LICENSE](./LICENSE)
