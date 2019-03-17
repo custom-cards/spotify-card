@@ -1,3 +1,7 @@
+import '@babel/polyfill';
+import { h, render, Component } from 'preact';
+import htm from 'htm';
+
 /**
  * @license
  * Copyright 2019 Niklas Fondberg<niklas.fondberg@gmail.com>. All Rights Reserved.
@@ -14,36 +18,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import '@babel/polyfill';
-// impport 'https://unpkg.com/babel-polyfill@6.26.0/dist/polyfill.min.js';
-
-// import { html, h, Component, render } from 'https://unpkg.com/htm/preact/standalone.mjs';
-import { h, Component, render } from 'preact';
-import htm from 'htm';
-
 const html = htm.bind(h);
 
 class PlayerSelect extends Component {
   constructor() {
     super();
     this.state = {
-      selectedDevice: '-- choose mediaplayer --',
+      selectedDevice: '-- choose mediaplayer --'
     };
   }
 
   componentWillReceiveProps(props, state) {
     if (props.selectedDevice) {
-      this.setState({ selectedDevice: props.selectedDevice.name });
+      this.setState({
+        selectedDevice: props.selectedDevice.name
+      });
     }
   }
 
   selectDevice(device) {
-    this.setState({ selectedDevice: device.name });
+    this.setState({
+      selectedDevice: device.name
+    });
     this.props.onMediaplayerSelect(device);
   }
 
   render() {
-    const { devices } = this.props;
+    const {
+      devices
+    } = this.props;
     return html`
       <div class="dropdown">
         <div class="mediaplayer_select">
@@ -63,15 +66,14 @@ class PlayerSelect extends Component {
           ${this.state.selectedDevice}
         </div>
         <div class="dropdown-content">
-          ${devices.map(
-            (device, idx) => html`
+          ${devices.map((device, idx) => html`
               <a onClick=${() => this.selectDevice(device)}>${device.name}</a>
-            `
-          )}
+            `)}
         </div>
       </div>
     `;
   }
+
 }
 
 class SpotifyCard extends Component {
@@ -84,115 +86,145 @@ class SpotifyCard extends Component {
       selectedPlaylist: null,
       selectedDevice: null,
       playingPlaylist: null,
-      authenticationRequired: true,
+      authenticationRequired: true
     };
-    this.scopes = [
-      'user-read-private',
-      'user-read-email',
-      'playlist-read-private',
-      'user-read-birthdate',
-      'user-read-playback-state',
-      'user-modify-playback-state',
-    ];
+    this.scopes = ['user-read-private', 'user-read-email', 'playlist-read-private', 'user-read-birthdate', 'user-read-playback-state', 'user-modify-playback-state'];
   }
 
   async componentDidMount() {
     const hashParams = new URLSearchParams(window.location.hash.substring(1));
     const access_token = hashParams.get('access_token') || localStorage.getItem('access_token');
     const token_expires_ms = localStorage.getItem('token_expires_ms');
-
     const headers = {
-      Authorization: `Bearer ${access_token}`,
+      Authorization: `Bearer ${access_token}`
     };
-    const userResp = await fetch('https://api.spotify.com/v1/me', { headers }).then(r => r.json());
+    const userResp = await fetch('https://api.spotify.com/v1/me', {
+      headers
+    }).then(r => r.json());
 
     if (userResp.error) {
       if (userResp.error.status === 401) {
-        this.setState({ authenticationRequired: true });
+        this.setState({
+          authenticationRequired: true
+        });
         return;
       }
+
       console.error('This should never happen:', response);
-      return this.setState({ error: response.error });
+      return this.setState({
+        error: response.error
+      });
     }
 
-    this.setState({ authenticationRequired: false });
+    this.setState({
+      authenticationRequired: false
+    });
 
     if (hashParams.get('access_token')) {
       const expires_in = hashParams.get('expires_in');
       localStorage.setItem('access_token', access_token);
-      localStorage.setItem('token_expires_ms', new Date().getTime() + expires_in * 1000);
+      localStorage.setItem('token_expires_ms', new Date().getTime() + expires_in * 1000); // Auth success, remove the parameters from spotify
 
-      // Auth success, remove the parameters from spotify
       const newurl = window.location.href.split('#')[0];
-      window.history.pushState({ path: newurl }, '', newurl);
-      // TODO: request refresh token option 4 in https://developer.spotify.com/documentation/general/guides/authorization-guide/
+      window.history.pushState({
+        path: newurl
+      }, '', newurl); // TODO: request refresh token option 4 in https://developer.spotify.com/documentation/general/guides/authorization-guide/
     }
 
-    const playlists = await fetch('https://api.spotify.com/v1/me/playlists?limit=10', { headers })
-      .then(r => r.json())
-      .then(p => p.items);
-    const devices = await fetch('https://api.spotify.com/v1/me/player/devices', { headers })
-      .then(r => r.json())
-      .then(r => r.devices);
-
-    const currentPlayerRes = await fetch('https://api.spotify.com/v1/me/player', { headers });
-
+    const playlists = await fetch('https://api.spotify.com/v1/me/playlists?limit=10', {
+      headers
+    }).then(r => r.json()).then(p => p.items);
+    const devices = await fetch('https://api.spotify.com/v1/me/player/devices', {
+      headers
+    }).then(r => r.json()).then(r => r.devices);
+    const currentPlayerRes = await fetch('https://api.spotify.com/v1/me/player', {
+      headers
+    });
     let selectedDevice,
-      playingPlaylist = null;
-    // 200 is returned when something is playing. 204 is ok status without body.
+        playingPlaylist = null; // 200 is returned when something is playing. 204 is ok status without body.
+
     if (currentPlayerRes.status === 200) {
       const currentPlayer = await currentPlayerRes.json();
+
       if (currentPlayer.is_playing) {
         selectedDevice = currentPlayer.device;
         const currPlayingHref = currentPlayer.context.external_urls.spotify;
         playingPlaylist = playlists.find(pl => currPlayingHref === pl.external_urls.spotify);
       }
     }
-    this.setState({ user: userResp, playlists, devices, selectedDevice, playingPlaylist });
+
+    this.setState({
+      user: userResp,
+      playlists,
+      devices,
+      selectedDevice,
+      playingPlaylist
+    });
   }
 
   authenticateSpotify() {
     const redirectUrl = window.location.href.split('?')[0];
-    const { clientId } = this.props;
-    window.location.href = `https://accounts.spotify.com/authorize?client_id=${clientId}&redirect_uri=${redirectUrl}&scope=${this.scopes.join(
-      '%20'
-    )}&response_type=token`;
+    const {
+      clientId
+    } = this.props;
+    window.location.href = `https://accounts.spotify.com/authorize?client_id=${clientId}&redirect_uri=${redirectUrl}&scope=${this.scopes.join('%20')}&response_type=token`;
   }
 
   playPlaylist() {
-    const { selectedPlaylist, selectedDevice } = this.state;
+    const {
+      selectedPlaylist,
+      selectedDevice
+    } = this.state;
+
     if (!selectedPlaylist || !selectedDevice) {
       return;
     }
+
     fetch('https://api.spotify.com/v1/me/player/play?device_id=' + selectedDevice.id, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+        Authorization: `Bearer ${localStorage.getItem('access_token')}`
       },
-      body: JSON.stringify({ context_uri: selectedPlaylist.uri }),
-    }).then(() => this.setState({ playingPlaylist: selectedPlaylist }));
+      body: JSON.stringify({
+        context_uri: selectedPlaylist.uri
+      })
+    }).then(() => this.setState({
+      playingPlaylist: selectedPlaylist
+    }));
   }
 
   onPlaylistSelect(playlist) {
-    this.setState({ selectedPlaylist: playlist });
+    this.setState({
+      selectedPlaylist: playlist
+    });
     this.playPlaylist();
   }
 
   getHighlighted(playlist) {
-    const { selectedPlaylist } = this.state;
+    const {
+      selectedPlaylist
+    } = this.state;
     const selectedPlaylistId = selectedPlaylist ? selectedPlaylist.id : '';
     return playlist.id === selectedPlaylistId ? 'highlight' : '';
   }
 
   getIsPlayingClass(playlist) {
-    const { playingPlaylist } = this.state;
+    const {
+      playingPlaylist
+    } = this.state;
     const playingPlaylistId = playingPlaylist ? playingPlaylist.id : '';
     return playlist.id === playingPlaylistId ? 'playing' : '';
   }
 
   render() {
-    const { authenticationRequired, user, playlists, devices, selectedDevice } = this.state;
+    const {
+      authenticationRequired,
+      user,
+      playlists,
+      devices,
+      selectedDevice
+    } = this.state;
 
     if (authenticationRequired) {
       return html`
@@ -209,8 +241,7 @@ class SpotifyCard extends Component {
       <div class="spotify_container">
         <${Header} />
         <div class="playlists">
-          ${playlists.map(
-            (playlist, idx) => html`
+          ${playlists.map((playlist, idx) => html`
               <div
                 class="${`playlist ${this.getHighlighted(playlist)}`}"
                 onClick=${event => this.onPlaylistSelect(playlist, idx, event, this)}
@@ -220,19 +251,21 @@ class SpotifyCard extends Component {
                 <div class="${`playlist__playicon ${this.getIsPlayingClass(playlist)}`}">►</div>
                 <div class="playlist__title">${playlist.name}</div>
               </div>
-            `
-          )}
+            `)}
         </div>
         <div class="controls">
           <${PlayerSelect}
             devices=${devices}
             selectedDevice=${selectedDevice}
-            onMediaplayerSelect=${device => this.setState({ selectedDevice: device })}
+            onMediaplayerSelect=${device => this.setState({
+      selectedDevice: device
+    })}
           />
         </div>
       </div>
     `;
   }
+
 }
 
 const Header = () => html`
@@ -249,9 +282,8 @@ const styles = {
   grey: 'rgb(170, 170, 170)',
   sand: 'rgb(200, 200, 200)',
   white: 'rgb(255, 255, 255)',
-  blue: '#4688d7',
+  blue: '#4688d7'
 };
-
 styleElement.textContent = `
     .spotify_container {
       background-color: ${styles.lightBlack};
@@ -392,9 +424,12 @@ styleElement.textContent = `
 class SpotifyCardWebComponent extends HTMLElement {
   constructor() {
     super();
-    this.shadow = this.attachShadow({ mode: 'open' });
+    this.shadow = this.attachShadow({
+      mode: 'open'
+    });
     this.config = {};
   }
+
   set hass(hass) {
     if (!this.savedHass) {
       this.savedHass = hass;
@@ -405,6 +440,7 @@ class SpotifyCardWebComponent extends HTMLElement {
     if (!config.client_id) {
       throw new Error('No client ---- id');
     }
+
     this.config = config;
   }
 
@@ -420,15 +456,15 @@ class SpotifyCardWebComponent extends HTMLElement {
     if (!this.config.client_id) {
       this.config.client_id = this.getAttribute('client_id');
     }
+
     const mountPoint = document.createElement('div');
     this.shadow.appendChild(styleElement);
     this.shadow.appendChild(mountPoint);
-    render(
-      html`
+    render(html`
         <${SpotifyCard} clientId=${this.config.client_id} />
-      `,
-      mountPoint
-    );
+      `, mountPoint);
   }
+
 }
+
 customElements.define('spotify-card', SpotifyCardWebComponent);
