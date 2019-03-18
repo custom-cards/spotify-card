@@ -108,6 +108,13 @@ class SpotifyCard extends preact.Component {
 
     if (userResp.error) {
       if (userResp.error.status === 401) {
+        // Have a token but it is old
+        if (access_token && 0 + token_expires_ms - new Date().getTime() < 0) {
+          // console.log('Will do auth, has token but ut us old');
+          return this.authenticateSpotify();
+        } // no token - show login button
+
+
         this.setState({
           authenticationRequired: true
         });
@@ -132,7 +139,7 @@ class SpotifyCard extends preact.Component {
       const newurl = window.location.href.split('#')[0];
       window.history.pushState({
         path: newurl
-      }, '', newurl); // TODO: request refresh token option 4 in https://developer.spotify.com/documentation/general/guides/authorization-guide/
+      }, '', newurl);
     }
 
     const playlists = await fetch('https://api.spotify.com/v1/me/playlists?limit=10', {
@@ -152,8 +159,11 @@ class SpotifyCard extends preact.Component {
 
       if (currentPlayer.is_playing) {
         selectedDevice = currentPlayer.device;
-        const currPlayingHref = currentPlayer.context.external_urls.spotify;
-        playingPlaylist = playlists.find(pl => currPlayingHref === pl.external_urls.spotify);
+
+        if (currentPlayer.context && currentPlayer.context.external_urls) {
+          const currPlayingHref = currentPlayer.context.external_urls.spotify;
+          playingPlaylist = playlists.find(pl => currPlayingHref === pl.external_urls.spotify);
+        }
       }
     }
 
