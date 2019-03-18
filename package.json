@@ -14,15 +14,17 @@
     "@babel/preset-env": "^7.2.3",
     "babel-polyfill": "^6.26.0",
     "live-server": "^1.2.1",
+    "prettier": "^1.16.4",
     "rollup": "^1.0.0",
     "rollup-plugin-babel": "^4.2.0",
     "rollup-plugin-commonjs": "^9.2.0",
-    "rollup-plugin-node-resolve": "^4.0.0"
+    "rollup-plugin-node-resolve": "^4.0.0",
+    "rollup-plugin-terser": "^4.0.4"
   },
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c -w",
-    "serve": "live-server --port=50994 ./"
+    "serve": "live-server --ignore=node_modules --port=50994 ./"
   },
   "files": [
     "dist"
