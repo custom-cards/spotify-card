@@ -31,7 +31,7 @@ Add the resource in lovelace config:
 ```
   - type: module
     url: >-
-      https://cdn.jsdelivr.net/gh/custom-cards/spotify-card@1.3/dist/spotify-card.umd.js
+      https://cdn.jsdelivr.net/gh/custom-cards/spotify-card@1.4/dist/spotify-card.umd.js
 ```
 
 ##### master version:
