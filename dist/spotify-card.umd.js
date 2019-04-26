@@ -33,17 +33,17 @@
       <div class="spotify_container">
         <${ku} />
         <div class="playlists">
-          ${e.map((t,n)=>Nu`
+          ${e.map((t,n)=>{const e=t.images[0]?t.images[0].url:"https://via.placeholder.com/150x150.png?text=No+image";return Nu`
               <div
                 class="${`playlist ${this.getHighlighted(t)}`}"
                 onClick=${e=>this.onPlaylistSelect(t,n,e,this)}
               >
-                <div class="playlist__cover_art"><img src="${t.images[0].url}" /></div>
+                <div class="playlist__cover_art"><img src="${e}" /></div>
                 <div class="playlist__number">${n+1}</div>
                 <div class="${`playlist__playicon ${this.getIsPlayingClass(t)}`}">►</div>
                 <div class="playlist__title">${t.name}</div>
               </div>
-            `)}
+            `})}
         </div>
         <div class="controls">
           <${Iu}

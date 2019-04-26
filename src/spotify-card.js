@@ -44,6 +44,7 @@ class PlayerSelect extends Component {
 
   render() {
     const { devices } = this.props;
+    // console.log('PlayerSelect: devices', devices);
     return html`
       <div class="dropdown">
         <div class="mediaplayer_select">
@@ -140,6 +141,9 @@ class SpotifyCard extends Component {
       .then(r => r.json())
       .then(r => r.devices);
 
+    // console.log('Response: playlists', playlists);
+    // console.log('Response: devices', devices);
+
     const currentPlayerRes = await fetch('https://api.spotify.com/v1/me/player', { headers });
 
     let selectedDevice,
@@ -200,7 +204,7 @@ class SpotifyCard extends Component {
 
   render() {
     const { authenticationRequired, user, playlists, devices, selectedDevice } = this.state;
-
+    // console.log('SpotifyCard: playlists.length:', playlists.length, ' authenticationRequired:', authenticationRequired, ' devices.length', devices.length);
     if (authenticationRequired) {
       return html`
         <div class="spotify_container">
@@ -217,17 +221,25 @@ class SpotifyCard extends Component {
         <${Header} />
         <div class="playlists">
           ${playlists.map(
-            (playlist, idx) => html`
+            (playlist, idx) => 
+            {
+              const image = playlist.images[0] 
+                  ? playlist.images[0].url 
+                  : 'https://via.placeholder.com/150x150.png?text=No+image';
+              // if(!playlist.images[0]) {
+              //   console.log('no image, click to expand the object to the right:', playlist.images);
+              // }
+              return html`
               <div
                 class="${`playlist ${this.getHighlighted(playlist)}`}"
                 onClick=${event => this.onPlaylistSelect(playlist, idx, event, this)}
               >
-                <div class="playlist__cover_art"><img src="${playlist.images[0].url}" /></div>
+                <div class="playlist__cover_art"><img src="${image}" /></div>
                 <div class="playlist__number">${idx + 1}</div>
                 <div class="${`playlist__playicon ${this.getIsPlayingClass(playlist)}`}">►</div>
                 <div class="playlist__title">${playlist.name}</div>
               </div>
-            `
+            `}
           )}
         </div>
         <div class="controls">
