@@ -1,6 +1,6 @@
 {
   "name": "spotify-card",
-  "version": "1.0.0",
+  "version": "1.5.0",
   "main": "dist/spotify-card.cjs.js",
   "module": "dist/spotify-card.esm.js",
   "browser": "dist/spotify-card.umd.js",

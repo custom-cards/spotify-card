@@ -28,7 +28,8 @@ class PlayerSelect extends preact.Component {
   constructor() {
     super();
     this.state = {
-      selectedDevice: '-- choose mediaplayer --'
+      selectedDevice: '-- choose mediaplayer --',
+      chromecastDevices: []
     };
   }
 
@@ -37,6 +38,17 @@ class PlayerSelect extends preact.Component {
       this.setState({
         selectedDevice: props.selectedDevice.name
       });
+    }
+
+    if (props.hass) {
+      const chromecastSensor = props.hass.states['sensor.chromecast_devices'];
+
+      if (chromecastSensor) {
+        const chromecastDevices = JSON.parse(chromecastSensor.attributes.devices_json);
+        this.setState({
+          chromecastDevices
+        });
+      }
     }
   }
 
@@ -47,11 +59,17 @@ class PlayerSelect extends preact.Component {
     this.props.onMediaplayerSelect(device);
   }
 
+  selectChromecastDevice(device) {
+    this.props.onChromecastDeviceSelect(device);
+  }
+
   render() {
     const {
       devices
-    } = this.props; // console.log('PlayerSelect: devices', devices);
-
+    } = this.props;
+    const {
+      chromecastDevices
+    } = this.state;
     return html`
       <div class="dropdown">
         <div class="mediaplayer_select">
@@ -71,8 +89,13 @@ class PlayerSelect extends preact.Component {
           ${this.state.selectedDevice}
         </div>
         <div class="dropdown-content">
+          <a onClick=${() => {}}><i>Spotify Connect devices</i></a>
           ${devices.map((device, idx) => html`
-              <a onClick=${() => this.selectDevice(device)}>${device.name}</a>
+              <a onClick=${() => this.selectDevice(device)} style="margin-left: 15px">${device.name}</a>
+            `)}
+          <a onClick=${() => {}}><i>Chromecast devices</i></a>
+          ${chromecastDevices.map(chromecastDevice => html`
+              <a onClick=${() => this.selectChromecastDevice(chromecastDevice)} style="margin-left: 15px">${chromecastDevice.name + ' (' + chromecastDevice.cast_type + ')'}</a>
             `)}
         </div>
       </div>
@@ -84,6 +107,7 @@ class PlayerSelect extends preact.Component {
 class SpotifyCard extends preact.Component {
   constructor(props) {
     super(props);
+    this.dataRefreshToken = null;
     this.state = {
       user: {},
       playlists: [],
@@ -93,7 +117,7 @@ class SpotifyCard extends preact.Component {
       playingPlaylist: null,
       authenticationRequired: true
     };
-    this.scopes = ['user-read-private', 'user-read-email', 'playlist-read-private', 'user-read-birthdate', 'user-read-playback-state', 'user-modify-playback-state'];
+    this.scopes = ['playlist-read-private', 'user-read-playback-state', 'user-modify-playback-state'];
   }
 
   async componentDidMount() {
@@ -111,7 +135,6 @@ class SpotifyCard extends preact.Component {
       if (userResp.error.status === 401) {
         // Have a token but it is old
         if (access_token && 0 + token_expires_ms - new Date().getTime() < 0) {
-          // console.log('Will do auth, has token but ut us old');
           return this.authenticateSpotify();
         } // no token - show login button
 
@@ -128,10 +151,6 @@ class SpotifyCard extends preact.Component {
       });
     }
 
-    this.setState({
-      authenticationRequired: false
-    });
-
     if (hashParams.get('access_token')) {
       const expires_in = hashParams.get('expires_in');
       localStorage.setItem('access_token', access_token);
@@ -143,14 +162,30 @@ class SpotifyCard extends preact.Component {
       }, '', newurl);
     }
 
-    const playlists = await fetch('https://api.spotify.com/v1/me/playlists?limit=10', {
+    this.setState({
+      user: userResp,
+      authenticationRequired: false
+    });
+    await this.refreshPlayData();
+    this.dataRefreshToken = setInterval(async () => {
+      await this.refreshPlayData();
+    }, 5000);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.dataRefreshToken);
+  }
+
+  async refreshPlayData() {
+    const headers = {
+      Authorization: `Bearer ${localStorage.getItem('access_token')}`
+    };
+    const playlists = await fetch('https://api.spotify.com/v1/me/playlists?limit=' + this.props.limit, {
       headers
     }).then(r => r.json()).then(p => p.items);
     const devices = await fetch('https://api.spotify.com/v1/me/player/devices', {
       headers
-    }).then(r => r.json()).then(r => r.devices); // console.log('Response: playlists', playlists);
-    // console.log('Response: devices', devices);
-
+    }).then(r => r.json()).then(r => r.devices);
     const currentPlayerRes = await fetch('https://api.spotify.com/v1/me/player', {
       headers
     });
@@ -164,6 +199,7 @@ class SpotifyCard extends preact.Component {
         selectedDevice = currentPlayer.device;
 
         if (currentPlayer.context && currentPlayer.context.external_urls) {
+          // console.log('Currently playing:', currentPlayer);
           const currPlayingHref = currentPlayer.context.external_urls.spotify;
           playingPlaylist = playlists.find(pl => currPlayingHref === pl.external_urls.spotify);
         }
@@ -171,7 +207,6 @@ class SpotifyCard extends preact.Component {
     }
 
     this.setState({
-      user: userResp,
       playlists,
       devices,
       selectedDevice,
@@ -194,6 +229,7 @@ class SpotifyCard extends preact.Component {
     } = this.state;
 
     if (!selectedPlaylist || !selectedDevice) {
+      console.error('Will not play because there is no playlist or device selected');
       return;
     }
 
@@ -218,6 +254,27 @@ class SpotifyCard extends preact.Component {
     this.playPlaylist();
   }
 
+  onMediaPlayerSelect(device) {
+    this.setState({
+      selectedDevice: device
+    });
+  }
+
+  onChromecastDeviceSelect(device) {
+    const playlist = this.state.playingPlaylist ? this.state.playingPlaylist : this.state.playlists[0];
+
+    if (!playlist) {
+      console.error('Nothing to play, skipping starting chromecast device');
+      return;
+    } // console.log('Starting:', playlist.uri, ' on ', device.name);
+
+
+    this.props.hass.callService('spotcast', 'start', {
+      device_name: device.name,
+      uri: playlist.uri
+    });
+  }
+
   getHighlighted(playlist) {
     const {
       selectedPlaylist
@@ -237,11 +294,10 @@ class SpotifyCard extends preact.Component {
   render() {
     const {
       authenticationRequired,
-      user,
       playlists,
       devices,
       selectedDevice
-    } = this.state; // console.log('SpotifyCard: playlists.length:', playlists.length, ' authenticationRequired:', authenticationRequired, ' devices.length', devices.length);
+    } = this.state;
 
     if (authenticationRequired) {
       return html`
@@ -259,10 +315,7 @@ class SpotifyCard extends preact.Component {
         <${Header} />
         <div class="playlists">
           ${playlists.map((playlist, idx) => {
-      const image = playlist.images[0] ? playlist.images[0].url : 'https://via.placeholder.com/150x150.png?text=No+image'; // if(!playlist.images[0]) {
-      //   console.log('no image, click to expand the object to the right:', playlist.images);
-      // }
-
+      const image = playlist.images[0] ? playlist.images[0].url : 'https://via.placeholder.com/150x150.png?text=No+image';
       return html`
               <div
                 class="${`playlist ${this.getHighlighted(playlist)}`}"
@@ -280,9 +333,9 @@ class SpotifyCard extends preact.Component {
           <${PlayerSelect}
             devices=${devices}
             selectedDevice=${selectedDevice}
-            onMediaplayerSelect=${device => this.setState({
-      selectedDevice: device
-    })}
+            hass=${this.props.hass}
+            onMediaplayerSelect=${device => this.onMediaPlayerSelect(device)}
+            onChromecastDeviceSelect=${device => this.onChromecastDeviceSelect(device)}
           />
         </div>
       </div>
@@ -454,6 +507,7 @@ class SpotifyCardWebComponent extends HTMLElement {
   }
 
   set hass(hass) {
+    // console.log('HASS:', hass);
     if (!this.savedHass) {
       this.savedHass = hass;
     }
@@ -484,7 +538,7 @@ class SpotifyCardWebComponent extends HTMLElement {
     this.shadow.appendChild(styleElement);
     this.shadow.appendChild(mountPoint);
     preact.render(html`
-        <${SpotifyCard} clientId=${this.config.client_id} />
+        <${SpotifyCard} clientId=${this.config.client_id} limit=${this.config.limit || 10} hass=${this.savedHass}/>
       `, mountPoint);
   }
 

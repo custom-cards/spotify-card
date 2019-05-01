@@ -5,11 +5,15 @@ Web component card which can be used as a Lovelace [Home Assistants](https://www
 
 Forum thread: https://community.home-assistant.io/t/spotify-lovelace-card/103525
 
-This card supports listing the users currently available devices and the users 10 top playlists on [Spotify](https://www.spotify.com). 
+This card supports listing the users currently available devices and the users top playlists on [Spotify](https://www.spotify.com). 
 Choose an online media player and click on a playlist to play it on the device.
 This component will query the current playback from the Spotify Web API and tries to reflect the current status wrt to device and playlist if something is playing. 
 
 The component uses the [Spotify Web API](https://developer.spotify.com/documentation/web-api/).
+
+***New from version 1.5*** 
+The card can make use of [My Spotify Chromecast custom component](https://github.com/fondberg/spotcast) if it is installed, to initiate playback on idle chromecast devices. Please read that README for any limitations.
+This release also adds a limit configuration property to make the number of playlists retrieved configurable.
 
 ![Screenshot](/spotify-card-highlight.png)
 
@@ -31,7 +35,7 @@ Add the resource in lovelace config:
 ```
   - type: module
     url: >-
-      https://cdn.jsdelivr.net/gh/custom-cards/spotify-card@1.4/dist/spotify-card.umd.js
+      https://cdn.jsdelivr.net/gh/custom-cards/spotify-card@1.5/dist/spotify-card.umd.js
 ```
 
 ##### master version:
@@ -48,6 +52,7 @@ Now add the card like this:
   cards:
     - type: 'custom:spotify-card'
       client_id: <YOUR CLIENT ID>
+      limit: <optional number of playlists to retrieve (default 10)>
 ```
 
 ### Improvements to come thru PR or with patience
