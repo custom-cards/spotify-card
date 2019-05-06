@@ -24,7 +24,7 @@
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c -w",
-    "serve": "live-server --ignore=node_modules --port=50994 ./"
+    "serve": "live-server --ignore=node_modules --port=50994 ./",
     "test": "echo 'tests' && exit 0"
   },
   "files": [
