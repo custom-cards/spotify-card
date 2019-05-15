@@ -65,5 +65,9 @@ This library can of course also be used on other websites or projects other than
 ### CONTRIBUTING
 Please contribute and help.Before creating a large PR make sure to sync about it with me.
 
+### Donate
+If you like this and want to buy me a coffee
+
+<a href="https://www.buymeacoffee.com/fondberg" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: auto !important;width: auto !important;" ></a>
 ### License
 This library is licensed under Apache 2.0, see [LICENSE](./LICENSE)
