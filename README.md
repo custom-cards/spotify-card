@@ -1,17 +1,17 @@
 ## Home Assistant Spotify Lovelace Card
 **DISCLAIMER**: *This project is a private open source project and doesn't have any connection with Spotify.*
- 
+
 Web component card which can be used as a Lovelace [Home Assistants](https://www.home-assistant.io/lovelace/]) card.
 
 Forum thread: https://community.home-assistant.io/t/spotify-lovelace-card/103525
 
-This card supports listing the users currently available devices and the users top playlists on [Spotify](https://www.spotify.com). 
+This card supports listing the users currently available devices and the users top playlists on [Spotify](https://www.spotify.com).
 Choose an online media player and click on a playlist to play it on the device.
-This component will query the current playback from the Spotify Web API and tries to reflect the current status wrt to device and playlist if something is playing. 
+This component will query the current playback from the Spotify Web API and tries to reflect the current status wrt to device and playlist if something is playing.
 
 The component uses the [Spotify Web API](https://developer.spotify.com/documentation/web-api/).
 
-***New from version 1.5*** 
+***New from version 1.5***
 The card can make use of [My Spotify Chromecast custom component](https://github.com/fondberg/spotcast) if it is installed, to initiate playback on idle chromecast devices. Please read that README for any limitations.
 This release also adds a limit configuration property to make the number of playlists retrieved configurable.
 
@@ -21,9 +21,9 @@ This release also adds a limit configuration property to make the number of play
 This should now work in all newer major browsers. If it does't work for you please provide detailed reports in an issue ticket.
 
 ### Installation
-Create a new app at [Spotify developer console](https://developer.spotify.com/my-applications/#!/applications) 
+Create a new app at [Spotify developer console](https://developer.spotify.com/my-applications/#!/applications)
 or use the one created for the HA Spotify component (see below).
-Make sure you edit the settings and adds the redirect URL for the tab the card has. 
+Make sure you edit the settings and adds the redirect URL for the tab the card has.
 
 Example:  `https://<your public home assistant hostname>:8123/lovelace/media`.
 
@@ -53,7 +53,10 @@ Now add the card like this:
     - type: 'custom:spotify-card'
       client_id: <YOUR CLIENT ID>
       limit: <optional number of playlists to retrieve (default 10)>
+      device: <optional name of a device to pre-select>
 ```
+
+If you add the `device` setting, the card will select it by default and will not display the dropdown menu.
 
 ### Improvements to come thru PR or with patience
   - Request a refresh token so the user doesn't have to authenticate every 3600 secs

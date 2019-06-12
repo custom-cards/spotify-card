@@ -21,6 +21,7 @@ import '@babel/polyfill';
 import { h, Component, render } from 'preact';
 import htm from 'htm';
 
+
 const html = htm.bind(h);
 
 class PlayerSelect extends Component {
@@ -58,6 +59,37 @@ class PlayerSelect extends Component {
   render() {
     const { devices } = this.props;
     const { chromecastDevices } = this.state;
+    const choice_form = html`<div class="dropdown-content">
+          <a onClick=${() => {}}><i>Spotify Connect devices</i></a>
+          ${devices.map(
+            (device, idx) => html`
+              <a onClick=${() => this.selectDevice(device)} style="margin-left: 15px">${device.name}</a>
+            `
+          )}
+          <a onClick=${() => {}}><i>Chromecast devices</i></a>
+          ${chromecastDevices.map(
+            chromecastDevice => html`
+              <a onClick=${() => this.selectChromecastDevice(chromecastDevice)} style="margin-left: 15px">${chromecastDevice.name + ' (' + chromecastDevice.cast_type + ')'}</a>
+            `
+          )}
+        </div>`;
+
+    let form = '';
+    if (this.props.player && this.props.player == this.state.selectedDevice) {
+      form = ''; // We have selected the player already
+    } else  if (this.props.player && this.props.player != this.state.selectedDevice) {
+      const selected = devices.filter(d => d.name == this.props.player);
+      if (selected.length == 1) {
+        form = '';
+        this.selectDevice(selected[0]);
+      } else {
+        // console.log(`Was not able to find player ${this.props.player} within ${JSON.stringify(devices)}`);
+        form = choice_form;
+      }
+    } else {
+      form = choice_form;
+    }
+
     return html`
       <div class="dropdown">
         <div class="mediaplayer_select">
@@ -76,20 +108,7 @@ class PlayerSelect extends Component {
           </svg>
           ${this.state.selectedDevice}
         </div>
-        <div class="dropdown-content">
-          <a onClick=${() => {}}><i>Spotify Connect devices</i></a>
-          ${devices.map(
-            (device, idx) => html`
-              <a onClick=${() => this.selectDevice(device)} style="margin-left: 15px">${device.name}</a>
-            `
-          )}
-          <a onClick=${() => {}}><i>Chromecast devices</i></a>
-          ${chromecastDevices.map(
-             chromecastDevice => html`
-              <a onClick=${() => this.selectChromecastDevice(chromecastDevice)} style="margin-left: 15px">${chromecastDevice.name + ' (' + chromecastDevice.cast_type + ')'}</a>
-            `
-          )}
-        </div>
+        ${form}
       </div>
     `;
   }
@@ -270,11 +289,11 @@ class SpotifyCard extends Component {
         <${Header} />
         <div class="playlists">
           ${playlists.map(
-            (playlist, idx) => 
+            (playlist, idx) =>
             {
-              const image = playlist.images[0] 
-                  ? playlist.images[0].url 
-                  : 'https://via.placeholder.com/150x150.png?text=No+image';
+              const image = playlist.images[0]
+                ? playlist.images[0].url
+                : 'https://via.placeholder.com/150x150.png?text=No+image';
               return html`
               <div
                 class="${`playlist ${this.getHighlighted(playlist)}`}"
@@ -293,6 +312,7 @@ class SpotifyCard extends Component {
             devices=${devices}
             selectedDevice=${selectedDevice}
             hass=${this.props.hass}
+      player=${this.props.player}
             onMediaplayerSelect=${device => this.onMediaPlayerSelect(device)}
             onChromecastDeviceSelect=${device => this.onChromecastDeviceSelect(device)}
           />
@@ -372,19 +392,19 @@ styleElement.textContent = `
       color:  ${styles.grey};
       width: 12px;
     }
-    
+
     .playlist__playicon {
       color: ${styles.white};
-      margin-left: 10px;    
+      margin-left: 10px;
     }
     .playlist__playicon:hover {
       color: rgb(216, 255, 229);
       text-shadow: 0 0 20px rgb(216, 255, 229);
-    } 
+    }
     .playing {
       color: ${styles.green}
     }
-    
+
     .playlist__title {
       margin-left: 30px;
       white-space: nowrap;
@@ -494,7 +514,7 @@ class SpotifyCardWebComponent extends HTMLElement {
     this.shadow.appendChild(mountPoint);
     render(
       html`
-        <${SpotifyCard} clientId=${this.config.client_id} limit=${this.config.limit || 10} hass=${this.savedHass}/>
+        <${SpotifyCard} clientId=${this.config.client_id} limit=${this.config.limit || 10} player=${this.config.device || '*'} hass=${this.savedHass}/>
       `,
       mountPoint
     );
