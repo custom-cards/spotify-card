@@ -21,7 +21,6 @@ import '@babel/polyfill';
 import { h, Component, render } from 'preact';
 import htm from 'htm';
 
-
 const html = htm.bind(h);
 
 class PlayerSelect extends Component {
@@ -42,7 +41,7 @@ class PlayerSelect extends Component {
       const chromecastSensor = props.hass.states['sensor.chromecast_devices'];
       if (chromecastSensor) {
         const chromecastDevices = JSON.parse(chromecastSensor.attributes.devices_json);
-        this.setState({chromecastDevices});
+        this.setState({ chromecastDevices });
       }
     }
   }
@@ -59,25 +58,29 @@ class PlayerSelect extends Component {
   render() {
     const { devices } = this.props;
     const { chromecastDevices } = this.state;
-    const choice_form = html`<div class="dropdown-content">
-          <a onClick=${() => {}}><i>Spotify Connect devices</i></a>
-          ${devices.map(
-            (device, idx) => html`
-              <a onClick=${() => this.selectDevice(device)} style="margin-left: 15px">${device.name}</a>
-            `
-          )}
-          <a onClick=${() => {}}><i>Chromecast devices</i></a>
-          ${chromecastDevices.map(
-            chromecastDevice => html`
-              <a onClick=${() => this.selectChromecastDevice(chromecastDevice)} style="margin-left: 15px">${chromecastDevice.name + ' (' + chromecastDevice.cast_type + ')'}</a>
-            `
-          )}
-        </div>`;
+    const choice_form = html`
+      <div class="dropdown-content">
+        <a onClick=${() => {}}><i>Spotify Connect devices</i></a>
+        ${devices.map(
+          (device, idx) => html`
+            <a onClick=${() => this.selectDevice(device)} style="margin-left: 15px">${device.name}</a>
+          `
+        )}
+        <a onClick=${() => {}}><i>Chromecast devices</i></a>
+        ${chromecastDevices.map(
+          chromecastDevice => html`
+            <a onClick=${() => this.selectChromecastDevice(chromecastDevice)} style="margin-left: 15px"
+              >${chromecastDevice.name + ' (' + chromecastDevice.cast_type + ')'}</a
+            >
+          `
+        )}
+      </div>
+    `;
 
     let form = '';
     if (this.props.player && this.props.player == this.state.selectedDevice) {
       form = ''; // We have selected the player already
-    } else  if (this.props.player && this.props.player != this.state.selectedDevice) {
+    } else if (this.props.player && this.props.player != this.state.selectedDevice) {
       const selected = devices.filter(d => d.name == this.props.player);
       if (selected.length == 1) {
         form = '';
@@ -125,13 +128,9 @@ class SpotifyCard extends Component {
       selectedPlaylist: null,
       selectedDevice: null,
       playingPlaylist: null,
-      authenticationRequired: true
+      authenticationRequired: true,
     };
-    this.scopes = [
-      'playlist-read-private',
-      'user-read-playback-state',
-      'user-modify-playback-state',
-    ];
+    this.scopes = ['playlist-read-private', 'user-read-playback-state', 'user-modify-playback-state'];
   }
 
   async componentDidMount() {
@@ -255,7 +254,7 @@ class SpotifyCard extends Component {
     // console.log('Starting:', playlist.uri, ' on ', device.name);
     this.props.hass.callService('spotcast', 'start', {
       device_name: device.name,
-      uri: playlist.uri
+      uri: playlist.uri,
     });
   }
 
@@ -288,13 +287,11 @@ class SpotifyCard extends Component {
       <div class="spotify_container">
         <${Header} />
         <div class="playlists">
-          ${playlists.map(
-            (playlist, idx) =>
-            {
-              const image = playlist.images[0]
-                ? playlist.images[0].url
-                : 'https://via.placeholder.com/150x150.png?text=No+image';
-              return html`
+          ${playlists.map((playlist, idx) => {
+            const image = playlist.images[0]
+              ? playlist.images[0].url
+              : 'https://via.placeholder.com/150x150.png?text=No+image';
+            return html`
               <div
                 class="${`playlist ${this.getHighlighted(playlist)}`}"
                 onClick=${event => this.onPlaylistSelect(playlist, idx, event, this)}
@@ -304,15 +301,15 @@ class SpotifyCard extends Component {
                 <div class="${`playlist__playicon ${this.getIsPlayingClass(playlist)}`}">►</div>
                 <div class="playlist__title">${playlist.name}</div>
               </div>
-            `}
-          )}
+            `;
+          })}
         </div>
         <div class="controls">
           <${PlayerSelect}
             devices=${devices}
             selectedDevice=${selectedDevice}
             hass=${this.props.hass}
-      player=${this.props.player}
+            player=${this.props.player}
             onMediaplayerSelect=${device => this.onMediaPlayerSelect(device)}
             onChromecastDeviceSelect=${device => this.onChromecastDeviceSelect(device)}
           />
@@ -514,7 +511,12 @@ class SpotifyCardWebComponent extends HTMLElement {
     this.shadow.appendChild(mountPoint);
     render(
       html`
-        <${SpotifyCard} clientId=${this.config.client_id} limit=${this.config.limit || 10} player=${this.config.device || '*'} hass=${this.savedHass}/>
+        <${SpotifyCard}
+          clientId=${this.config.client_id}
+          limit=${this.config.limit || 10}
+          player=${this.config.device || '*'}
+          hass=${this.savedHass}
+        />
       `,
       mountPoint
     );

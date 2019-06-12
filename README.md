@@ -15,6 +15,9 @@ The component uses the [Spotify Web API](https://developer.spotify.com/documenta
 The card can make use of [My Spotify Chromecast custom component](https://github.com/fondberg/spotcast) if it is installed, to initiate playback on idle chromecast devices. Please read that README for any limitations.
 This release also adds a limit configuration property to make the number of playlists retrieved configurable.
 
+***New from version 1.6***
+Add device as a parameter (thanks Maxence Dunnewind @maxenced).
+
 ![Screenshot](/spotify-card-highlight.png)
 
 ### Requirements
@@ -35,7 +38,7 @@ Add the resource in lovelace config:
 ```
   - type: module
     url: >-
-      https://cdn.jsdelivr.net/gh/custom-cards/spotify-card@1.5/dist/spotify-card.umd.js
+      https://cdn.jsdelivr.net/gh/custom-cards/spotify-card@1.6/dist/spotify-card.umd.js
 ```
 
 ##### master version:
