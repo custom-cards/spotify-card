@@ -1,25 +1,26 @@
 {
   "name": "spotify-card",
-  "version": "1.5.0",
+  "version": "1.8.0",
   "main": "dist/spotify-card.cjs.js",
   "module": "dist/spotify-card.esm.js",
   "browser": "dist/spotify-card.umd.js",
   "dependencies": {
+    "home-assistant-js-websocket": "^4.2.2",
     "htm": "^2.1.1",
     "preact": "^8.4.2"
   },
   "devDependencies": {
-    "@babel/core": "^7.2.2",
-    "@babel/polyfill": "^7.2.5",
-    "@babel/preset-env": "^7.2.3",
+    "@babel/core": "^7.5.4",
+    "@babel/polyfill": "^7.4.4",
+    "@babel/preset-env": "^7.5.4",
     "babel-polyfill": "^6.26.0",
     "live-server": "^1.2.1",
-    "prettier": "^1.16.4",
-    "rollup": "^1.0.0",
-    "rollup-plugin-babel": "^4.2.0",
-    "rollup-plugin-commonjs": "^9.2.0",
-    "rollup-plugin-node-resolve": "^4.0.0",
-    "rollup-plugin-terser": "^4.0.4"
+    "prettier": "^1.18.2",
+    "rollup": "^1.17.0",
+    "rollup-plugin-babel": "^4.3.3",
+    "rollup-plugin-commonjs": "^10.0.1",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-terser": "^5.1.1"
   },
   "scripts": {
     "build": "rollup -c",

@@ -14,119 +14,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import '@babel/polyfill';
-// impport 'https://unpkg.com/babel-polyfill@6.26.0/dist/polyfill.min.js';
-
-// import { html, h, Component, render } from 'https://unpkg.com/htm/preact/standalone.mjs';
+import 'core-js/stable';
 import { h, Component, render } from 'preact';
 import htm from 'htm';
 
+import PlayerSelect from './PlayerSelect';
+
 const html = htm.bind(h);
-
-class PlayerSelect extends Component {
-  constructor() {
-    super();
-    this.state = {
-      selectedDevice: '-- choose mediaplayer --',
-      chromecastDevices: [],
-    };
-  }
-
-  componentWillReceiveProps(props, state) {
-    if (props.selectedDevice) {
-      this.setState({ selectedDevice: props.selectedDevice.name });
-    }
-
-    if (props.hass) {
-      const chromecastSensor = props.hass.states['sensor.chromecast_devices'];
-      if (chromecastSensor) {
-        const chromecastDevices = JSON.parse(chromecastSensor.attributes.devices_json);
-        this.setState({ chromecastDevices });
-      }
-    }
-  }
-
-  selectDevice(device) {
-    this.setState({ selectedDevice: device.name });
-    this.props.onMediaplayerSelect(device);
-  }
-
-  selectChromecastDevice(device) {
-    this.props.onChromecastDeviceSelect(device);
-  }
-
-  render() {
-    const { devices } = this.props;
-    const { chromecastDevices } = this.state;
-    const choice_form = html`
-      <div class="dropdown-content">
-        <a onClick=${() => {}}><i>Spotify Connect devices</i></a>
-        ${devices.map(
-          (device, idx) => html`
-            <a onClick=${() => this.selectDevice(device)} style="margin-left: 15px">${device.name}</a>
-          `
-        )}
-        <a onClick=${() => {}}><i>Chromecast devices</i></a>
-        ${chromecastDevices.map(
-          chromecastDevice => html`
-            <a onClick=${() => this.selectChromecastDevice(chromecastDevice)} style="margin-left: 15px"
-              >${chromecastDevice.name + ' (' + chromecastDevice.cast_type + ')'}</a
-            >
-          `
-        )}
-      </div>
-    `;
-
-    let form = '';
-    if (this.props.player && this.props.player == this.state.selectedDevice) {
-      form = ''; // We have selected the player already
-    } else if (this.props.player && this.props.player != this.state.selectedDevice) {
-      const selected = devices.filter(d => d.name == this.props.player);
-      if (selected.length == 1) {
-        form = '';
-        this.selectDevice(selected[0]);
-      } else {
-        // console.log(`Was not able to find player ${this.props.player} within ${JSON.stringify(devices)}`);
-        form = choice_form;
-      }
-    } else {
-      form = choice_form;
-    }
-
-    return html`
-      <div class="dropdown">
-        <div class="mediaplayer_select">
-          <svg
-            class="mediaplayer_speaker_icon"
-            width="220"
-            height="220"
-            viewBox="0 0 220 220"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              fill="#c9c9c9"
-              d="M197.766 112.275q0 56.608-34.867 105.006l-8.157-6.984q32.743-44.355 32.743-98.022 0-52.565-32.632-97.9l8.158-6.984q34.755 48.398 34.755 104.884zm-24.586 0q0 46.928-28.831 88.22l-8.158-6.74q26.708-38.228 26.708-81.48 0-43.13-26.708-81.359l8.158-6.74q28.831 40.435 28.831 88.099zm-24.585 0q0 37.126-22.908 71.434l-8.27-6.617q20.897-30.632 20.897-64.817 0-33.573-20.897-64.818l8.27-6.616q22.908 34.308 22.908 71.434zm-54.646 89.2l-52.634-53.3H8.125V76.374h33.302l52.522-53.177v178.278z"
-              stroke="null"
-            />
-          </svg>
-          ${this.state.selectedDevice}
-        </div>
-        ${form}
-      </div>
-    `;
-  }
-}
 
 class SpotifyCard extends Component {
   constructor(props) {
     super(props);
     this.dataRefreshToken = null;
     this.state = {
-      user: {},
       playlists: [],
       devices: [],
-      selectedPlaylist: null,
       selectedDevice: null,
+      selectedPlaylist: null,
+      currentPlayer: null,
       playingPlaylist: null,
       authenticationRequired: true,
     };
@@ -134,6 +39,25 @@ class SpotifyCard extends Component {
   }
 
   async componentDidMount() {
+    document.addEventListener('visibilitychange', async () => {
+      if (!document.hidden) {
+        await this.checkAuthentication();
+        await this.refreshPlayData();
+      }
+    });
+    await this.checkAuthentication();
+    await this.refreshPlayData();
+
+    this.dataRefreshToken = setInterval(async () => {
+      await this.refreshPlayData();
+    }, 5000); // TODO: check if we can use the mp.spotify state instead?
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.dataRefreshToken);
+  }
+
+  async checkAuthentication() {
     const hashParams = new URLSearchParams(window.location.hash.substring(1));
     const access_token = hashParams.get('access_token') || localStorage.getItem('access_token');
     const token_expires_ms = localStorage.getItem('token_expires_ms');
@@ -151,8 +75,7 @@ class SpotifyCard extends Component {
           return this.authenticateSpotify();
         }
         // no token - show login button
-        this.setState({ authenticationRequired: true });
-        return;
+        return this.setState({ authenticationRequired: true });
       }
       console.error('This should never happen:', response);
       return this.setState({ error: response.error });
@@ -168,20 +91,14 @@ class SpotifyCard extends Component {
       window.history.pushState({ path: newurl }, '', newurl);
     }
 
-    this.setState({ user: userResp, authenticationRequired: false });
-
-    await this.refreshPlayData();
-
-    this.dataRefreshToken = setInterval(async () => {
-      await this.refreshPlayData();
-    }, 5000);
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.dataRefreshToken);
+    this.setState({ authenticationRequired: false });
   }
 
   async refreshPlayData() {
+    if (document.hidden) {
+      return;
+    }
+    await this.checkAuthentication();
     const headers = {
       Authorization: `Bearer ${localStorage.getItem('access_token')}`,
     };
@@ -196,20 +113,20 @@ class SpotifyCard extends Component {
     const currentPlayerRes = await fetch('https://api.spotify.com/v1/me/player', { headers });
 
     let selectedDevice,
-      playingPlaylist = null;
+      playingPlaylist = null,
+      currentPlayer = null;
     // 200 is returned when something is playing. 204 is ok status without body.
     if (currentPlayerRes.status === 200) {
-      const currentPlayer = await currentPlayerRes.json();
-      if (currentPlayer.is_playing) {
-        selectedDevice = currentPlayer.device;
-        if (currentPlayer.context && currentPlayer.context.external_urls) {
-          // console.log('Currently playing:', currentPlayer);
-          const currPlayingHref = currentPlayer.context.external_urls.spotify;
-          playingPlaylist = playlists.find(pl => currPlayingHref === pl.external_urls.spotify);
-        }
+      currentPlayer = await currentPlayerRes.json();
+      // console.log('Currently playing:', currentPlayer);
+      selectedDevice = currentPlayer.device;
+      if (currentPlayer.context && currentPlayer.context.external_urls) {
+        const currPlayingHref = currentPlayer.context.external_urls.spotify;
+        playingPlaylist = playlists.find(pl => currPlayingHref === pl.external_urls.spotify);
       }
     }
-    this.setState({ playlists, devices, selectedDevice, playingPlaylist });
+
+    this.setState({ playlists, devices, selectedDevice, playingPlaylist, currentPlayer });
   }
 
   authenticateSpotify() {
@@ -223,7 +140,7 @@ class SpotifyCard extends Component {
   playPlaylist() {
     const { selectedPlaylist, selectedDevice } = this.state;
     if (!selectedPlaylist || !selectedDevice) {
-      console.error('Will not play because there is no playlist or device selected');
+      console.error('Will not play because there is no playlist or device selected,', selectedPlaylist, selectedDevice);
       return;
     }
     fetch('https://api.spotify.com/v1/me/player/play?device_id=' + selectedDevice.id, {
@@ -243,6 +160,17 @@ class SpotifyCard extends Component {
 
   onMediaPlayerSelect(device) {
     this.setState({ selectedDevice: device });
+
+    if (this.state.currentPlayer) {
+      fetch('https://api.spotify.com/v1/me/player', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+        },
+        body: JSON.stringify({ device_ids: [device.id], play: true }),
+      });
+    }
   }
 
   onChromecastDeviceSelect(device) {
@@ -251,10 +179,11 @@ class SpotifyCard extends Component {
       console.error('Nothing to play, skipping starting chromecast device');
       return;
     }
-    // console.log('Starting:', playlist.uri, ' on ', device.name);
+
     this.props.hass.callService('spotcast', 'start', {
-      device_name: device.name,
+      device_name: device,
       uri: playlist.uri,
+      transfer_playback: this.state.currentPlayer != null,
     });
   }
 

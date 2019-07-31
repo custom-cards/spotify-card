@@ -2,35 +2,43 @@
 
 function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
 
-require('@babel/polyfill');
+require('core-js/stable');
 var preact = require('preact');
 var htm = _interopDefault(require('htm'));
 
-/**
- * @license
- * Copyright 2019 Niklas Fondberg<niklas.fondberg@gmail.com>. All Rights Reserved.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 const html = htm.bind(preact.h);
-
 class PlayerSelect extends preact.Component {
   constructor() {
     super();
     this.state = {
       selectedDevice: '-- choose mediaplayer --',
-      chromecastDevices: []
+      castEntities: []
     };
+  }
+
+  componentWillUnmount() {
+    typeof this.unsubscribeEntitites === 'function' && this.unsubscribeEntitites();
+  }
+
+  async componentDidMount() {
+    await this.refreshCastEntities();
+    this.dataRefreshToken = setInterval(async () => {
+      await this.refreshCastEntities();
+    }, 5000); // TODO: check if we can use the mp.spotify state instead?
+  }
+
+  async refreshCastEntities() {
+    const res = await this.props.hass.callWS({
+      type: 'config/entity_registry/list'
+    });
+    const castEntities = res.filter(e => e.platform == 'cast').map(e => this.props.hass.states[e.entity_id]).filter(e => e != null);
+    this.setState({
+      castEntities
+    });
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.dataRefreshToken);
   }
 
   componentWillReceiveProps(props, state) {
@@ -38,17 +46,6 @@ class PlayerSelect extends preact.Component {
       this.setState({
         selectedDevice: props.selectedDevice.name
       });
-    }
-
-    if (props.hass) {
-      const chromecastSensor = props.hass.states['sensor.chromecast_devices'];
-
-      if (chromecastSensor) {
-        const chromecastDevices = JSON.parse(chromecastSensor.attributes.devices_json);
-        this.setState({
-          chromecastDevices
-        });
-      }
     }
   }
 
@@ -68,7 +65,7 @@ class PlayerSelect extends preact.Component {
       devices
     } = this.props;
     const {
-      chromecastDevices
+      castEntities
     } = this.state;
     const choice_form = html`
       <div class="dropdown-content">
@@ -77,9 +74,9 @@ class PlayerSelect extends preact.Component {
             <a onClick=${() => this.selectDevice(device)} style="margin-left: 15px">${device.name}</a>
           `)}
         <a onClick=${() => {}}><i>Chromecast devices</i></a>
-        ${chromecastDevices.map(chromecastDevice => html`
-            <a onClick=${() => this.selectChromecastDevice(chromecastDevice)} style="margin-left: 15px"
-              >${chromecastDevice.name + ' (' + chromecastDevice.cast_type + ')'}</a
+        ${castEntities.map(entitiy => html`
+            <a onClick=${() => this.selectChromecastDevice(entitiy.attributes.friendly_name)} style="margin-left: 15px"
+              >${entitiy.attributes.friendly_name}</a
             >
           `)}
       </div>
@@ -127,16 +124,34 @@ class PlayerSelect extends preact.Component {
 
 }
 
+/**
+ * @license
+ * Copyright 2019 Niklas Fondberg<niklas.fondberg@gmail.com>. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+const html$1 = htm.bind(preact.h);
+
 class SpotifyCard extends preact.Component {
   constructor(props) {
     super(props);
     this.dataRefreshToken = null;
     this.state = {
-      user: {},
       playlists: [],
       devices: [],
-      selectedPlaylist: null,
       selectedDevice: null,
+      selectedPlaylist: null,
+      currentPlayer: null,
       playingPlaylist: null,
       authenticationRequired: true
     };
@@ -144,6 +159,24 @@ class SpotifyCard extends preact.Component {
   }
 
   async componentDidMount() {
+    document.addEventListener('visibilitychange', async () => {
+      if (!document.hidden) {
+        await this.checkAuthentication();
+        await this.refreshPlayData();
+      }
+    });
+    await this.checkAuthentication();
+    await this.refreshPlayData();
+    this.dataRefreshToken = setInterval(async () => {
+      await this.refreshPlayData();
+    }, 5000); // TODO: check if we can use the mp.spotify state instead?
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.dataRefreshToken);
+  }
+
+  async checkAuthentication() {
     const hashParams = new URLSearchParams(window.location.hash.substring(1));
     const access_token = hashParams.get('access_token') || localStorage.getItem('access_token');
     const token_expires_ms = localStorage.getItem('token_expires_ms');
@@ -162,10 +195,9 @@ class SpotifyCard extends preact.Component {
         } // no token - show login button
 
 
-        this.setState({
+        return this.setState({
           authenticationRequired: true
         });
-        return;
       }
 
       console.error('This should never happen:', response);
@@ -186,20 +218,16 @@ class SpotifyCard extends preact.Component {
     }
 
     this.setState({
-      user: userResp,
       authenticationRequired: false
     });
-    await this.refreshPlayData();
-    this.dataRefreshToken = setInterval(async () => {
-      await this.refreshPlayData();
-    }, 5000);
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.dataRefreshToken);
   }
 
   async refreshPlayData() {
+    if (document.hidden) {
+      return;
+    }
+
+    await this.checkAuthentication();
     const headers = {
       Authorization: `Bearer ${localStorage.getItem('access_token')}`
     };
@@ -213,19 +241,17 @@ class SpotifyCard extends preact.Component {
       headers
     });
     let selectedDevice,
-        playingPlaylist = null; // 200 is returned when something is playing. 204 is ok status without body.
+        playingPlaylist = null,
+        currentPlayer = null; // 200 is returned when something is playing. 204 is ok status without body.
 
     if (currentPlayerRes.status === 200) {
-      const currentPlayer = await currentPlayerRes.json();
+      currentPlayer = await currentPlayerRes.json(); // console.log('Currently playing:', currentPlayer);
 
-      if (currentPlayer.is_playing) {
-        selectedDevice = currentPlayer.device;
+      selectedDevice = currentPlayer.device;
 
-        if (currentPlayer.context && currentPlayer.context.external_urls) {
-          // console.log('Currently playing:', currentPlayer);
-          const currPlayingHref = currentPlayer.context.external_urls.spotify;
-          playingPlaylist = playlists.find(pl => currPlayingHref === pl.external_urls.spotify);
-        }
+      if (currentPlayer.context && currentPlayer.context.external_urls) {
+        const currPlayingHref = currentPlayer.context.external_urls.spotify;
+        playingPlaylist = playlists.find(pl => currPlayingHref === pl.external_urls.spotify);
       }
     }
 
@@ -233,7 +259,8 @@ class SpotifyCard extends preact.Component {
       playlists,
       devices,
       selectedDevice,
-      playingPlaylist
+      playingPlaylist,
+      currentPlayer
     });
   }
 
@@ -252,7 +279,7 @@ class SpotifyCard extends preact.Component {
     } = this.state;
 
     if (!selectedPlaylist || !selectedDevice) {
-      console.error('Will not play because there is no playlist or device selected');
+      console.error('Will not play because there is no playlist or device selected,', selectedPlaylist, selectedDevice);
       return;
     }
 
@@ -281,6 +308,20 @@ class SpotifyCard extends preact.Component {
     this.setState({
       selectedDevice: device
     });
+
+    if (this.state.currentPlayer) {
+      fetch('https://api.spotify.com/v1/me/player', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('access_token')}`
+        },
+        body: JSON.stringify({
+          device_ids: [device.id],
+          play: true
+        })
+      });
+    }
   }
 
   onChromecastDeviceSelect(device) {
@@ -289,12 +330,12 @@ class SpotifyCard extends preact.Component {
     if (!playlist) {
       console.error('Nothing to play, skipping starting chromecast device');
       return;
-    } // console.log('Starting:', playlist.uri, ' on ', device.name);
-
+    }
 
     this.props.hass.callService('spotcast', 'start', {
-      device_name: device.name,
-      uri: playlist.uri
+      device_name: device,
+      uri: playlist.uri,
+      transfer_playback: this.state.currentPlayer != null
     });
   }
 
@@ -323,7 +364,7 @@ class SpotifyCard extends preact.Component {
     } = this.state;
 
     if (authenticationRequired) {
-      return html`
+      return html$1`
         <div class="spotify_container">
           <${Header} />
           <div class="login__box">
@@ -333,13 +374,13 @@ class SpotifyCard extends preact.Component {
       `;
     }
 
-    return html`
+    return html$1`
       <div class="spotify_container">
         <${Header} />
         <div class="playlists">
           ${playlists.map((playlist, idx) => {
       const image = playlist.images[0] ? playlist.images[0].url : 'https://via.placeholder.com/150x150.png?text=No+image';
-      return html`
+      return html$1`
               <div
                 class="${`playlist ${this.getHighlighted(playlist)}`}"
                 onClick=${event => this.onPlaylistSelect(playlist, idx, event, this)}
@@ -368,7 +409,7 @@ class SpotifyCard extends preact.Component {
 
 }
 
-const Header = () => html`
+const Header = () => html$1`
   <div class="header">
     <img src="https://storage.googleapis.com/pr-newsroom-wp/1/2018/11/Spotify_Logo_RGB_White.png" />
   </div>
@@ -561,7 +602,7 @@ class SpotifyCardWebComponent extends HTMLElement {
     const mountPoint = document.createElement('div');
     this.shadow.appendChild(styleElement);
     this.shadow.appendChild(mountPoint);
-    preact.render(html`
+    preact.render(html$1`
         <${SpotifyCard}
           clientId=${this.config.client_id}
           limit=${this.config.limit || 10}
