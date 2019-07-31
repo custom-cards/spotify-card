@@ -18,10 +18,15 @@ This release also adds a limit configuration property to make the number of play
 ***New from version 1.6***
 Add device as a parameter (thanks Maxence Dunnewind @maxenced).
 
+**New from version 1.8**
+Removed need for custom sensor from [My Spotify Chromecast custom component](https://github.com/fondberg/spotcast). 
+Fixed the reauth problem and added support for stopping pollimg Spotify APIs when the browser tab is hidden.
+Added transfer playback support and fixed a lot of bugs (amongst others security issues with dependencies).
+
 ![Screenshot](/spotify-card-highlight.png)
 
 ### Requirements
-This should now work in all newer major browsers. If it does't work for you please provide detailed reports in an issue ticket.
+This should now work in all newer major browsers. If it does not work for you please provide detailed reports in an issue ticket.
 
 ### Installation
 Create a new app at [Spotify developer console](https://developer.spotify.com/my-applications/#!/applications)

@@ -5,6 +5,7 @@ import { terser } from 'rollup-plugin-terser';
 
 import pkg from './package.json';
 
+// TODO: add node modules bundling https://github.com/kuzivany/simple-preact-rollup/blob/master/rollup.config.js
 export default [
   // browser-friendly UMD build
   {
