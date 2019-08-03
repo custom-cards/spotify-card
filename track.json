@@ -1,7 +1,7 @@
 {
     "spotify-card": {
-      "version": "1.8",
-      "remote_location": "https://raw.githubusercontent.com/custom-cards/spotify-card/v1.8/src/spotify-card.js",
+      "version": "1.9",
+      "remote_location": "https://raw.githubusercontent.com/custom-cards/spotify-card/v1.9/dist/spotify-card.js",
       "visit_repo": "https://github.com/custom-cards/spotify-card",
       "changelog": "https://github.com/custom-cards/spotify-card/releases/latest"
     }
