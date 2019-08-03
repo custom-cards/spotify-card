@@ -1,9 +1,7 @@
 {
   "name": "spotify-card",
-  "version": "1.8.0",
-  "main": "dist/spotify-card.cjs.js",
-  "module": "dist/spotify-card.esm.js",
-  "browser": "dist/spotify-card.umd.js",
+  "version": "1.9.0",
+  "browser": "dist/spotify-card.js",
   "dependencies": {
     "home-assistant-js-websocket": "^4.2.2",
     "htm": "^2.1.1",
@@ -23,7 +21,7 @@
     "rollup-plugin-terser": "^5.1.1"
   },
   "scripts": {
-    "build": "rollup -c",
+    "build": "rollup -c && cp dist/spotify-card.js dist/spotify-card.umd.js",
     "dev": "rollup -c -w",
     "serve": "live-server --ignore=node_modules --port=50994 ./",
     "test": "echo 'tests' && exit 0"
