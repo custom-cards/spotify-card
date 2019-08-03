@@ -23,6 +23,9 @@ Removed need for custom sensor from [My Spotify Chromecast custom component](htt
 Fixed the reauth problem and added support for stopping pollimg Spotify APIs when the browser tab is hidden.
 Added transfer playback support and fixed a lot of bugs (amongst others security issues with dependencies).
 
+**New in version 1.9**
+Support for [HACS](https://github.com/custom-components/hacs). 
+
 ![Screenshot](/spotify-card-highlight.png)
 
 ### Requirements
@@ -39,20 +42,16 @@ For more information about how to create an app see [Home Assistant Spotify Comp
 
 Add the resource in lovelace config:
 
-##### Latest release:
+##### HACS users:
+Follow the configuration the instructions when installing it.
+
+
+##### Latest release using cdn:
 ```
   - type: module
     url: >-
       https://cdn.jsdelivr.net/gh/custom-cards/spotify-card@1.8/dist/spotify-card.umd.js
 ```
-
-##### master version:
-```
-  - type: module
-    url: >-
-      https://cdn.jsdelivr.net/gh/custom-cards/spotify-card/dist/spotify-card.umd.js
-```
-
 
 ##### Add the card to lovelace config
 Now add the card like this:
