@@ -1,5 +1,6 @@
 {
   "name": "spotify-card",
+  "author": "Niklas Fondberg <niklas.fondberg@gmail.com>",
   "version": "1.9.0",
   "browser": "dist/spotify-card.js",
   "dependencies": {
