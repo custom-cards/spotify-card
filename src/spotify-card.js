@@ -179,12 +179,17 @@ class SpotifyCard extends Component {
       console.error('Nothing to play, skipping starting chromecast device');
       return;
     }
-
-    this.props.hass.callService('spotcast', 'start', {
+    const options = {
       device_name: device,
       uri: playlist.uri,
       transfer_playback: this.state.currentPlayer != null,
-    });
+    };
+
+    if (this.props.account) {
+      options.account = this.props.account;
+    }
+
+    this.props.hass.callService('spotcast', 'start', options);
   }
 
   getHighlighted(playlist) {
@@ -445,6 +450,7 @@ class SpotifyCardWebComponent extends HTMLElement {
           limit=${this.config.limit || 10}
           player=${this.config.device || '*'}
           hass=${this.savedHass}
+          account=${this.config.account || ''}
         />
       `,
       mountPoint
