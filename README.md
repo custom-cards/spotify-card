@@ -23,12 +23,17 @@ This release also adds a limit configuration property to make the number of play
 Add device as a parameter (thanks Maxence Dunnewind @maxenced).
 
 **New from version 1.8**
-Removed need for custom sensor from [My Spotify Chromecast custom component](https://github.com/fondberg/spotcast). 
+Removed need for custom sensor from [My Spotify Chromecast custom component](https://github.com/fondberg/spotcast).
 Fixed the reauth problem and added support for stopping pollimg Spotify APIs when the browser tab is hidden.
 Added transfer playback support and fixed a lot of bugs (amongst others security issues with dependencies).
 
 **New in version 1.9**
-Support for [HACS](https://github.com/custom-components/hacs). 
+Support for [HACS](https://github.com/custom-components/hacs).
+
+**New in version 1.10**
+- Support for showing featured playlists instead of users playlists. Use configuration parameter `featuredPlaylists` and set it to true.
+- Define which account should be used when calling spotcast. This should be the account key name as defined in the configuration for spotcast. Default is to use default account.
+- Possibility to set height with scrolling. New configuration parameter `height` which takes an integer value and renders the playlist element that height in pixels.
 
 ![Screenshot](/spotify-card-highlight.png)
 
@@ -65,6 +70,9 @@ Now add the card like this:
       client_id: <YOUR CLIENT ID>
       limit: <optional number of playlists to retrieve (default 10)>
       device: <optional name of a device to pre-select>
+      player: <optional use this player only, value should be the same name as the displayname of the player>
+      featuredPlaylists: <optional show featured playlists instead of users playlists>
+      height: <optional pixels height for the playlist element. If content is larger scrolling will be enabled>
 ```
 
 If you add the `device` setting, the card will select it by default and will not display the dropdown menu.
