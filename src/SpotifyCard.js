@@ -4,7 +4,6 @@ import PlayerSelect from './PlayerSelect';
 
 const html = htm.bind(h);
 
-
 export default class SpotifyCard extends Component {
   constructor(props) {
     super(props);
@@ -12,6 +11,7 @@ export default class SpotifyCard extends Component {
     this.state = {
       playlists: [],
       devices: [],
+      playlists: [],
       selectedDevice: null,
       selectedPlaylist: null,
       currentPlayer: null,
@@ -30,10 +30,10 @@ export default class SpotifyCard extends Component {
   async componentDidMount() {
     document.addEventListener('visibilitychange', async () => {
       if (!document.hidden) {
-        await this.checkAuthentication();
         await this.refreshPlayData();
       }
     });
+    console.log('componentDidMount');
     await this.checkAuthentication();
     await this.refreshPlayData();
 
@@ -55,6 +55,13 @@ export default class SpotifyCard extends Component {
     const hashParams = new URLSearchParams(window.location.hash.substring(1));
     const access_token = hashParams.get('access_token') || localStorage.getItem(this.getLocalStorageTokenName());
     const token_expires_ms = localStorage.getItem(this.getLocalStorageTokenName() + '-expires_ms');
+
+    if (access_token && 0 + token_expires_ms - new Date().getTime() > 30000 && !this.state.authenticationRequired) {
+      console.log(
+        'CheckAuth no check required: authenticationRequired, expires in:',  token_expires_ms - new Date().getTime()
+      );
+      return;
+    }
 
     const headers = {
       Authorization: `Bearer ${access_token}`,
@@ -89,23 +96,30 @@ export default class SpotifyCard extends Component {
   }
 
   async refreshPlayData() {
-    if (document.hidden) {
+    if (document.hidden || this.state.authenticationRequired) {
       return;
     }
     await this.checkAuthentication();
+
     const headers = {
       Authorization: `Bearer ${localStorage.getItem(this.getLocalStorageTokenName())}`,
     };
 
     let playlists;
-    if (this.props.featuredPlaylists) {
-      playlists = await fetch('https://api.spotify.com/v1/browse/featured-playlists?limit=' + this.props.limit, { headers })
-        .then(r => r.json())
-        .then(r => r.playlists.items);
+    if (this.state.playlists.length > 0) {
+      playlists = this.state.playlists;
     } else {
-      playlists = await fetch('https://api.spotify.com/v1/me/playlists?limit=' + this.props.limit, { headers })
-        .then(r => r.json())
-        .then(p => p.items);
+      if (this.props.featuredPlaylists) {
+        playlists = await fetch('https://api.spotify.com/v1/browse/featured-playlists?limit=' + this.props.limit, {
+          headers,
+        })
+          .then(r => r.json())
+          .then(r => r.playlists.items);
+      } else {
+        playlists = await fetch('https://api.spotify.com/v1/me/playlists?limit=' + this.props.limit, { headers })
+          .then(r => r.json())
+          .then(p => p.items);
+      }
     }
 
     const devices = await fetch('https://api.spotify.com/v1/me/player/devices', { headers })
@@ -181,6 +195,7 @@ export default class SpotifyCard extends Component {
       console.error('Nothing to play, skipping starting chromecast device');
       return;
     }
+    console.log('onChromecastDeviceSelect', device);
     const options = {
       device_name: device,
       uri: playlist.uri,
