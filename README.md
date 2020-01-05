@@ -35,6 +35,13 @@ Support for [HACS](https://github.com/custom-components/hacs).
 - Define which account should be used when calling spotcast. This should be the account key name as defined in the configuration for spotcast. Default is to use default account.
 - Possibility to set height with scrolling. New configuration parameter `height` which takes an integer value and renders the playlist element that height in pixels.
 
+**New in 1.11**
+- Bump packages to get security updates
+- Limit number of requests to spotify api to not get 429
+- Limit to vertical scroll if height is smaller than number of items
+- Fix minor bugs with auth
+
+
 ![Screenshot](/spotify-card-highlight.png)
 
 ### Requirements
