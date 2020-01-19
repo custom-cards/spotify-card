@@ -41,6 +41,9 @@ Support for [HACS](https://github.com/custom-components/hacs).
 - Limit to vertical scroll if height is smaller than number of items
 - Fix minor bugs with auth
 
+**New in 1.20**
+- Add support for dailyMixes using spotcast 2.6.0
+
 
 ![Screenshot](/spotify-card-highlight.png)
 

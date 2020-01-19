@@ -33,7 +33,6 @@ export default class SpotifyCard extends Component {
         await this.refreshPlayData();
       }
     });
-    console.log('componentDidMount');
     await this.checkAuthentication();
     await this.refreshPlayData();
 
@@ -115,6 +114,11 @@ export default class SpotifyCard extends Component {
         })
           .then(r => r.json())
           .then(r => r.playlists.items);
+      } else if (this.props.dailyMixes) {
+        const res = await this.props.hass.callWS({
+          type: 'spotcast/playlists',
+        });
+        playlists = res.content.items;
       } else {
         playlists = await fetch('https://api.spotify.com/v1/me/playlists?limit=' + this.props.limit, { headers })
           .then(r => r.json())
