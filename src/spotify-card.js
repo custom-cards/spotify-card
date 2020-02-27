@@ -150,7 +150,7 @@ styleElement.textContent = `
     }
     .dropdown-content {
       display: none;
-      position: absolute;
+      position: fixed;
       background-color: ${styles.lightBlack};
       min-width: 250px;
       box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
