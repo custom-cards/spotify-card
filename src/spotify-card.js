@@ -53,7 +53,6 @@ styleElement.textContent = `
       flex-flow: column nowrap;
       margin-bottom: 15px;
       background-color: ${styles.black};
-      overflow-y: scroll;
     }
     .playlist {
       display: flex;
