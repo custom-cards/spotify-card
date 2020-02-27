@@ -38,6 +38,8 @@ styleElement.textContent = `
       color:  ${styles.white};
       font-size: 14px;
       padding: 25px;
+      height:auto;
+      overflow-y:auto;
     }
     .spotify_container *:focus {outline:none}
     .header img {
@@ -53,7 +55,6 @@ styleElement.textContent = `
       flex-flow: column nowrap;
       margin-bottom: 15px;
       background-color: ${styles.black};
-      overflow-y: scroll;
     }
     .playlist {
       display: flex;
@@ -149,7 +150,7 @@ styleElement.textContent = `
     }
     .dropdown-content {
       display: none;
-      position: absolute;
+      position: fixed;
       background-color: ${styles.lightBlack};
       min-width: 250px;
       box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
