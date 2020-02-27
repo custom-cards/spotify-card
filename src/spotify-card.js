@@ -38,6 +38,8 @@ styleElement.textContent = `
       color:  ${styles.white};
       font-size: 14px;
       padding: 25px;
+      height:auto;
+      overflow-y:auto;
     }
     .spotify_container *:focus {outline:none}
     .header img {
