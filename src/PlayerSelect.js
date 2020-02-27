@@ -30,7 +30,7 @@ export default class PlayerSelect extends Component {
     const castEntities = res
       .filter(e => e.platform == 'cast')
       .map(e => this.props.hass.states[e.entity_id])
-      .filter(e => e != null);
+      .filter(e => e != null && e.state != 'unavailable')
     this.setState({ castEntities });
   }
 
