@@ -203,7 +203,7 @@ export default class SpotifyCard extends Component {
     const options = {
       device_name: device,
       uri: playlist.uri,
-      transfer_playback: this.state.currentPlayer != null,
+      force_playback: this.state.currentPlayer != null,
     };
 
     if (this.props.account) {
