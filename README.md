@@ -83,7 +83,7 @@ Now add the card like this:
       player: <optional use this player only, value should be the same name as the displayname of the player>
       featuredPlaylists: <optional show featured playlists instead of users playlists>
       height: <optional pixels height for the playlist element. If content is larger scrolling will be enabled>
-      random_song: <optional boolean to start playlists from random song>
+      random_song: <optional boolean to begin playlist from random song>
 ```
 
 If you add the `device` setting, the card will select it by default and will not display the dropdown menu.
