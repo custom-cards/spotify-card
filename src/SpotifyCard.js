@@ -204,6 +204,7 @@ export default class SpotifyCard extends Component {
       device_name: device,
       uri: playlist.uri,
       force_playback: this.state.currentPlayer != null,
+      random_song: (this.props.random_song?this.props.random_song : false),
     };
 
     if (this.props.account) {
