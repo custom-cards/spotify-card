@@ -44,6 +44,11 @@ Support for [HACS](https://github.com/custom-components/hacs).
 **New in 1.20**
 - Add support for dailyMixes using spotcast 2.6.0
 
+**New In 1.21**
+- Add option to start playlists from random song.
+
+**New in 1.22**
+- Add option to shuffle playlists after first song.
 
 ![Screenshot](/spotify-card-highlight.png)
 
@@ -83,7 +88,8 @@ Now add the card like this:
       player: <optional use this player only, value should be the same name as the displayname of the player>
       featuredPlaylists: <optional show featured playlists instead of users playlists>
       height: <optional pixels height for the playlist element. If content is larger scrolling will be enabled>
-      random_song: <optional boolean to begin playlist from random song>
+      random_song: <optional boolean to start playlists from a random song>
+      shuffle: <optional boolean to shuffle playlist following first song, combine with random_song for initial shuffle>
 ```
 
 If you add the `device` setting, the card will select it by default and will not display the dropdown menu.
