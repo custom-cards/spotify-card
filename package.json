@@ -1,7 +1,7 @@
 {
   "name": "spotify-card",
   "author": "Niklas Fondberg <niklas.fondberg@gmail.com>",
-  "version": "1.11.0",
+  "version": "1.24.0",
   "browser": "dist/spotify-card.js",
   "dependencies": {
     "home-assistant-js-websocket": "^4.4.0",
@@ -13,7 +13,6 @@
     "@babel/polyfill": "^7.7.0",
     "@babel/preset-env": "^7.7.7",
     "babel-polyfill": "^6.26.0",
-    "live-server": "^1.2.1",
     "prettier": "^1.19.1",
     "rollup": "^1.28.0",
     "rollup-plugin-babel": "^4.3.3",

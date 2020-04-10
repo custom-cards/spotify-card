@@ -15,42 +15,9 @@ This component will query the current playback from the Spotify Web API and trie
 
 The component uses the [Spotify Web API](https://developer.spotify.com/documentation/web-api/).
 
-***New from version 1.5***
-The card can make use of [My Spotify Chromecast custom component](https://github.com/fondberg/spotcast) if it is installed, to initiate playback on idle chromecast devices. Please read that README for any limitations.
-This release also adds a limit configuration property to make the number of playlists retrieved configurable.
-
-***New from version 1.6***
-Add device as a parameter (thanks Maxence Dunnewind @maxenced).
-
-**New from version 1.8**
-Removed need for custom sensor from [My Spotify Chromecast custom component](https://github.com/fondberg/spotcast).
-Fixed the reauth problem and added support for stopping pollimg Spotify APIs when the browser tab is hidden.
-Added transfer playback support and fixed a lot of bugs (amongst others security issues with dependencies).
-
-**New in version 1.9**
-Support for [HACS](https://github.com/custom-components/hacs).
-
-**New in version 1.10**
-- Support for showing featured playlists instead of users playlists. Use configuration parameter `featuredPlaylists` and set it to true.
-- Define which account should be used when calling spotcast. This should be the account key name as defined in the configuration for spotcast. Default is to use default account.
-- Possibility to set height with scrolling. New configuration parameter `height` which takes an integer value and renders the playlist element that height in pixels.
-
-**New in 1.11**
-- Bump packages to get security updates
-- Limit number of requests to spotify api to not get 429
-- Limit to vertical scroll if height is smaller than number of items
-- Fix minor bugs with auth
-
-**New in 1.20**
-- Add support for dailyMixes using spotcast 2.6.0
-
-**New In 1.21**
-- Add option to start playlists from random song.
-
-**New in 1.22**
-- Add option to shuffle playlists after first song.
-
 ![Screenshot](/spotify-card-highlight.png)
+
+## See release information in github for release notes
 
 ### Requirements
 This should now work in all newer major browsers. If it does not work for you please provide detailed reports in an issue ticket.
@@ -67,8 +34,7 @@ For more information about how to create an app see [Home Assistant Spotify Comp
 Add the resource in lovelace config:
 
 ##### HACS users:
-Follow the configuration the instructions when installing it.
-
+Follow the HACS instructions when installing it.
 
 ##### Latest release using cdn:
 ```
@@ -87,6 +53,7 @@ Now add the card like this:
       device: <optional name of a device to pre-select>
       player: <optional use this player only, value should be the same name as the displayname of the player>
       featuredPlaylists: <optional show featured playlists instead of users playlists>
+      dailyMixes: <optional show daily mixes, requires spotcast>
       height: <optional pixels height for the playlist element. If content is larger scrolling will be enabled>
       random_song: <optional boolean to start playlists from a random song>
       shuffle: <optional boolean to shuffle playlist following first song, combine with random_song for initial shuffle>

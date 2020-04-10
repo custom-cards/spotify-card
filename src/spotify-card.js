@@ -217,6 +217,7 @@ class SpotifyCardWebComponent extends HTMLElement {
           dailyMixes=${this.config.dailyMixes || false}
           account=${this.config.account || ''}
           height=${this.config.height || ''}
+          random_song=${this.config.random_song || false}
         />
       `,
       mountPoint
