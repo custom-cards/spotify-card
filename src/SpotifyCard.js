@@ -163,6 +163,14 @@ export default class SpotifyCard extends Component {
       console.error('Will not play because there is no playlist or device selected,', selectedPlaylist, selectedDevice);
       return;
     }
+    fetch('https://api.spotify.com/v1/me/player/shuffle?state=' + (this.props.shuffle?this.props.shuffle : false), {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem(this.getLocalStorageTokenName())}`,
+      },
+      body: JSON.stringify({ device_id: selectedDevice.id }),
+    });
     fetch('https://api.spotify.com/v1/me/player/play?device_id=' + selectedDevice.id, {
       method: 'PUT',
       headers: {
@@ -205,6 +213,7 @@ export default class SpotifyCard extends Component {
       uri: playlist.uri,
       force_playback: this.state.currentPlayer != null,
       random_song: (this.props.random_song?this.props.random_song : false),
+      shuffle: (this.props.shuffle?this.props.shuffle : false),
     };
 
     if (this.props.account) {

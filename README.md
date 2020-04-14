@@ -56,7 +56,8 @@ Now add the card like this:
       featuredPlaylists: <optional show featured playlists instead of users playlists>
       dailyMixes: <optional show daily mixes, requires spotcast>
       height: <optional pixels height for the playlist element. If content is larger scrolling will be enabled>
-      random_song: <optional boolean to start playlists from a random song>
+      random_song: <optional boolean to start playlists from a random song (only through Spotcast devices)>
+      shuffle: <optional boolean to shuffle playlist on play>
 ```
 
 If you add the `device` setting, the card will select it by default and will not display the dropdown menu.
