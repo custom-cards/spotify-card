@@ -36,7 +36,6 @@ Add the resource in lovelace config:
 ##### HACS users:
 Follow the HACS instructions when installing it.
 
-
 ##### Latest release using cdn:
 ```
   - type: module
