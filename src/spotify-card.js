@@ -54,6 +54,7 @@ styleElement.textContent = `
       display: flex;
       flex-flow: column nowrap;
       margin-bottom: 15px;
+      overflow: auto;
       background-color: ${styles.black};
     }
     .playlist {
