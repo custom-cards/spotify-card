@@ -109,7 +109,11 @@ export default class SpotifyCard extends Component {
       playlists = this.state.playlists;
     } else {
       if (this.props.featuredPlaylists) {
-        playlists = await fetch('https://api.spotify.com/v1/browse/featured-playlists?limit=' + this.props.limit, {
+        let url = 'https://api.spotify.com/v1/browse/featured-playlists?limit=' + this.props.limit;
+        if (this.props.featuredPlaylistsCountryCode !== "") {
+          url += "&country=" + this.props.featuredPlaylistsCountryCode;
+        }
+        playlists = await fetch(url, {
           headers,
         })
           .then(r => r.json())
