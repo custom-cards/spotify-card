@@ -214,6 +214,7 @@ class SpotifyCardWebComponent extends HTMLElement {
           player=${this.config.device || '*'}
           hass=${this.savedHass}
           featuredPlaylists=${this.config.featuredPlaylists || false}
+          featuredPlaylistsCountryCode=${this.config.featuredPlaylistsCountryCode || ""}
           dailyMixes=${this.config.dailyMixes || false}
           account=${this.config.account || ''}
           height=${this.config.height || ''}
