@@ -54,7 +54,7 @@ Now add the card like this:
       device: <optional name of a device to pre-select>
       player: <optional use this player only, value should be the same name as the displayname of the player>
       featuredPlaylists: <optional show featured playlists instead of users playlists>
-      featuredPlaylistsCountryCode: <optional, country code to show featured playlist relevent to a particular country. https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2 >
+      featuredPlaylistsCountryCode: <optional country code to show featured playlist relevent to a particular country. https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2 >
       dailyMixes: <optional show daily mixes, requires spotcast>
       height: <optional pixels height for the playlist element. If content is larger scrolling will be enabled>
       random_song: <optional boolean to start playlists from a random song>
