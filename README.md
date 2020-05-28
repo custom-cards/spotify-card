@@ -41,7 +41,7 @@ Follow the HACS instructions when installing it.
 ```
   - type: module
     url: >-
-      https://cdn.jsdelivr.net/gh/custom-cards/spotify-card@1.8/dist/spotify-card.umd.js
+      https://cdn.jsdelivr.net/gh/custom-cards/spotify-card@1.25.0/dist/spotify-card.umd.js
 ```
 
 ##### Add the card to lovelace config
