@@ -40,6 +40,7 @@ styleElement.textContent = `
       padding: 25px;
       height:auto;
       overflow-y:auto;
+      position: relative;
     }
     .spotify_container *:focus {outline:none}
     .header img {
@@ -111,6 +112,8 @@ styleElement.textContent = `
       display: flex;
       flex-flow: row nowrap;
       align-items: center;
+      bottom: 0.5em;
+      position: absolute;
     }
     .greenButton {
       border-radius: 15px;
@@ -149,12 +152,24 @@ styleElement.textContent = `
       border: thin solid ${styles.sand};
       border-radius: 50%;
     }
+    .dropdown-wrapper {
+      display: contents;
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+    }
     .dropdown-content {
       display: none;
-      position: fixed;
+      position: absolute;
+      left: 1em;
+      bottom: 0.5em;
+      max-height: calc(100% - 1em);
+      overflow-y: auto;
       background-color: ${styles.lightBlack};
       min-width: 250px;
-      box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+      box-shadow: black 0 0 16px 0px;
       z-index: 1;
     }
     .dropdown-content a {
@@ -166,7 +181,7 @@ styleElement.textContent = `
     .dropdown-content a:hover {
       box-shadow: inset 0 0 100px 100px rgba(255, 255, 255, 0.07);
     }
-    .dropdown:hover .dropdown-content {
+    .controls:hover+.dropdown-content, .dropdown-content:hover {
       display: block;
     }
 `;

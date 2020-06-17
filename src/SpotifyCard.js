@@ -266,7 +266,6 @@ export default class SpotifyCard extends Component {
             `;
           })}
         </div>
-        <div class="controls">
           <${PlayerSelect}
             devices=${devices}
             selectedDevice=${selectedDevice}
@@ -276,7 +275,6 @@ export default class SpotifyCard extends Component {
             onChromecastDeviceSelect=${device => this.onChromecastDeviceSelect(device)}
           />
         </div>
-      </div>
     `;
   }
 }
