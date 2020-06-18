@@ -92,6 +92,8 @@ export default class PlayerSelect extends Component {
     }
 
     return html`
+    <div class="dropdown-wrapper">
+      <div class="controls">
       <div class="dropdown">
         <div class="mediaplayer_select">
           <svg
@@ -109,7 +111,9 @@ export default class PlayerSelect extends Component {
           </svg>
           ${this.state.selectedDevice}
         </div>
-        ${form}
+      </div>
+      </div>
+      ${form}
       </div>
     `;
   }
