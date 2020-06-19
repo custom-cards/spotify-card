@@ -220,7 +220,7 @@ class SpotifyCardWebComponent extends HTMLElement {
       this.config.client_id = this.getAttribute('client_id');
     }
     const mountPoint = document.createElement('div');
-    this.shadow.appendChild(styleElement);
+    this.shadow.appendChild(styleElement.cloneNode(true));
     this.shadow.appendChild(mountPoint);
     render(
       html`
