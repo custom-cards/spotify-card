@@ -63,7 +63,6 @@ styleElement.textContent = `
       flex-flow: row nowrap;
       align-items: center;
       border-top: 1px solid ${styles.lightBlack};
-      height: 42px;
     }
     .playlist:active {
       background-color: rgb(200, 200, 240);
@@ -77,6 +76,10 @@ styleElement.textContent = `
     }
     .highlight {
       background: ${styles.lightBlack};
+    }
+
+    .playlist__cover_art {
+      height: 42px;
     }
 
     .playlist__cover_art img {
