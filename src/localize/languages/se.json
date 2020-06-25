@@ -1,0 +1,8 @@
+{
+  "common": {
+    "version": "Version",
+    "invalid_configuration": "Invalid configuration",
+    "show_warning": "Show Warning",
+    "show_missing_spotcast": "Spotcast integration has to be installed for this component to work"
+  }
+}

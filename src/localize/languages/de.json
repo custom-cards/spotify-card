@@ -1,0 +1,8 @@
+{
+  "common": {
+    "version": "Version",
+    "invalid_configuration": "Ungültige Konfiguration",
+    "show_warning": "Vis advarsel",
+    "show_missing_spotcast": "Die Spotcast-Integration muss installiert sein, damit diese Karte funktioniert"
+  }
+}
