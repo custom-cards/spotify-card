@@ -18,7 +18,6 @@ export default class SpotifyCard extends Component {
       playingPlaylist: null,
       authenticationRequired: true,
     };
-    // playlist-read-collaborative
     this.scopes = [
       'playlist-read-private',
       'playlist-read-collaborative',
