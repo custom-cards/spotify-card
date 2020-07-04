@@ -14,6 +14,7 @@ export default [
       name: 'spotifyCard',
       file: pkg.browser,
       format: 'umd',
+      sourcemap: true
     },
     plugins: [
       resolve(), // so Rollup can find `ms`

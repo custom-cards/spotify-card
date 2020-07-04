@@ -63,7 +63,6 @@ styleElement.textContent = `
       flex-flow: row nowrap;
       align-items: center;
       border-top: 1px solid ${styles.lightBlack};
-      height: 42px;
     }
     .playlist:active {
       background-color: rgb(200, 200, 240);
@@ -220,7 +219,7 @@ class SpotifyCardWebComponent extends HTMLElement {
       this.config.client_id = this.getAttribute('client_id');
     }
     const mountPoint = document.createElement('div');
-    this.shadow.appendChild(styleElement);
+    this.shadow.appendChild(styleElement.cloneNode(true));
     this.shadow.appendChild(mountPoint);
     render(
       html`

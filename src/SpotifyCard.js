@@ -37,7 +37,7 @@ export default class SpotifyCard extends Component {
 
     this.dataRefreshToken = setInterval(async () => {
       await this.refreshPlayData();
-    }, 5000); // TODO: check if we can use the mp.spotify state instead?
+    }, 10000); // TODO: check if we can use the mp.spotify state instead?
   }
 
   componentWillUnmount() {
@@ -120,8 +120,10 @@ export default class SpotifyCard extends Component {
       } else if (this.props.dailyMixes) {
         const res = await this.props.hass.callWS({
           type: 'spotcast/playlists',
+          playlist_type: 'discover-weekly'
         });
-        playlists = res.content.items;
+        console.log("HERE:", res);
+        playlists = res.items;
       } else {
         playlists = await fetch('https://api.spotify.com/v1/me/playlists?limit=' + this.props.limit, { headers })
           .then(r => r.json())
