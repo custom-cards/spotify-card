@@ -151,6 +151,11 @@ export default class SpotifyCard extends Component {
       }
     }
 
+    // Don't automatically unselect Chromecast when not casting
+    if (selectedDevice == undefined && this.state.selectedDevice != undefined && this.isCastType(this.state.selectedDevice.type)) {
+      selectedDevice = this.state.selectedDevice;
+    }
+
     this.setState({ playlists, devices, selectedDevice, playingPlaylist, currentPlayer });
   }
 
@@ -162,7 +167,7 @@ export default class SpotifyCard extends Component {
     )}&response_type=token`;
   }
 
-  playPlaylist() {
+  playPlaylistOnMediaPlayer() {
     const { selectedPlaylist, selectedDevice } = this.state;
     if (!selectedPlaylist || !selectedDevice) {
       console.error('Will not play because there is no playlist or device selected,', selectedPlaylist, selectedDevice);
@@ -178,9 +183,49 @@ export default class SpotifyCard extends Component {
     }).then(() => this.setState({ playingPlaylist: selectedPlaylist }));
   }
 
+  playPlaylistOnChromecast() {
+    const { selectedPlaylist, selectedDevice } = this.state;
+    if (!selectedDevice) {
+      // Info rather than error as selection of playlist could come before selection of device
+      console.info('Will not play because there is no device selected,', selectedDevice);
+      return;
+    }
+    
+    const playlist = selectedPlaylist ? selectedPlaylist : this.state.playingPlaylist ? this.state.playingPlaylist : this.state.playlists[0];
+    if (!playlist) {
+      // Info rather than error as selection of device could come before selection of playlist
+      console.info('Will not play because there is no playlist selected,', playlist);
+      return;
+    }
+
+    const options = {
+      device_name: selectedDevice.name,
+      uri: playlist.uri,
+      force_playback: this.state.currentPlayer != null,
+      random_song: this.props.random_song ? this.props.random_song : false,
+    };
+
+    if (this.props.account) {
+      options.account = this.props.account;
+    }
+
+    this.props.hass.callService('spotcast', 'start', options);
+  }
+
   onPlaylistSelect(playlist) {
     this.setState({ selectedPlaylist: playlist });
-    this.playPlaylist();
+
+    const { selectedDevice } = this.state;
+    if (!selectedDevice || !selectedDevice.type) {
+      console.info('Will not play because there is no device or device type selected');
+      return;
+    }
+
+    if (this.isCastType(selectedDevice.type)) {
+      this.playPlaylistOnChromecast();
+    } else {
+      this.playPlaylistOnMediaPlayer();
+    }
   }
 
   onMediaPlayerSelect(device) {
@@ -198,25 +243,13 @@ export default class SpotifyCard extends Component {
     }
   }
 
-  onChromecastDeviceSelect(device) {
-    const playlist = this.state.playingPlaylist ? this.state.playingPlaylist : this.state.playlists[0];
-    if (!playlist) {
-      console.error('Nothing to play, skipping starting chromecast device');
-      return;
-    }
-    console.log('onChromecastDeviceSelect', device);
-    const options = {
-      device_name: device,
-      uri: playlist.uri,
-      force_playback: this.state.currentPlayer != null,
-      random_song: (this.props.random_song?this.props.random_song : false),
-    };
+  onChromecastDeviceSelect(deviceName) {
+    this.setState({ selectedDevice: {
+      name: deviceName,
+      type: 'CastPlaceholder'
+    }});
 
-    if (this.props.account) {
-      options.account = this.props.account;
-    }
-
-    this.props.hass.callService('spotcast', 'start', options);
+    this.playPlaylistOnChromecast();
   }
 
   getHighlighted(playlist) {
@@ -229,6 +262,10 @@ export default class SpotifyCard extends Component {
     const { playingPlaylist } = this.state;
     const playingPlaylistId = playingPlaylist ? playingPlaylist.id : '';
     return playlist.id === playingPlaylistId ? 'playing' : '';
+  }
+
+  isCastType(type) {
+    return type == 'CastAudio' || type == 'CastVideo' || type == 'CastPlaceholder';
   }
 
   render() {

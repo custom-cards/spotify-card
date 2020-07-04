@@ -49,8 +49,9 @@ export default class PlayerSelect extends Component {
     this.props.onMediaplayerSelect(device);
   }
 
-  selectChromecastDevice(device) {
-    this.props.onChromecastDeviceSelect(device);
+  selectChromecastDevice(deviceName) {
+    this.setState({ selectedDevice: deviceName });
+    this.props.onChromecastDeviceSelect(deviceName);
   }
 
   render() {
@@ -79,13 +80,21 @@ export default class PlayerSelect extends Component {
     if (this.props.player && this.props.player == this.state.selectedDevice) {
       form = ''; // We have selected the player already
     } else if (this.props.player && this.props.player != this.state.selectedDevice) {
-      const selected = devices.filter(d => d.name == this.props.player);
-      if (selected.length == 1) {
+      // First check for media player
+      const selectedDevice = devices.filter(d => d.name == this.props.player);
+      if (selectedDevice.length == 1) {
         form = '';
-        this.selectDevice(selected[0]);
+        this.selectDevice(selectedDevice[0]);
       } else {
-        // console.log(`Was not able to find player ${this.props.player} within ${JSON.stringify(devices)}`);
-        form = choice_form;
+        // Secondly check for chromecast devices
+        const selectedChromecastDevice = castEntities.filter(d => d.attributes.friendly_name == this.props.player);
+        if (selectedChromecastDevice.length == 1) {
+          form = '';
+          this.selectChromecastDevice(selectedChromecastDevice[0].attributes.friendly_name);
+        } else {
+          // console.log(`Was not able to find player ${this.props.player} within ${JSON.stringify(devices)}`);
+          form = choice_form;
+        }
       }
     } else {
       form = choice_form;
