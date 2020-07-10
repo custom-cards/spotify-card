@@ -5,9 +5,9 @@
     "invalid_configuration": "Invalid configuration",
     "show_warning": "Show Warning",
     "show_missing_spotcast": "Spotcast integration has to be installed for this component to work",
-    "show_missing_spotify": "Spotify integration has to be installed for playback information"
+    "show_missing_spotify": "Spotify integration has to be installed for playback information",
+    "choose_player": "Choose player"
   },
-
   "settings": {
     "general": "General",
     "general_description": "General settings for this card",

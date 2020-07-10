@@ -7,7 +7,6 @@
     "show_missing_spotcast": "Die Spotcast-Integration muss installiert sein, damit diese Karte funktioniert",
     "show_missing_spotify": "Die Spotify-Integration muss installiert sein, damit der Spotify-Status angezeigt werden kann"
   },
-
   "settings": {
     "general": "Generell",
     "general_description": "Generelle Einstellungen",

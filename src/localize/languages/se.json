@@ -7,7 +7,6 @@
     "show_missing_spotcast": "Spotcast integration has to be installed for this component to work",
     "show_missing_spotify": "Spotify integration has to be installed for playback information"
   },
-
   "settings": {
     "general": "General",
     "general_description": "General settings for this card",

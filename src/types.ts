@@ -25,8 +25,18 @@ export interface SpotifyCardConfig extends LovelaceCardConfig {
   grid_center_covers?: boolean;
   //TODO implement preselected device
   device?: string;
-  // locale 
+  // locale
   // used for development
   show_warning?: boolean;
   show_error?: boolean;
+}
+
+export interface SpotifyConnectDevice {
+  id: string;
+  is_active: boolean;
+  is_private_session: boolean;
+  is_restricted: boolean;
+  name: string;
+  type: string;
+  volume_percent: number;
 }

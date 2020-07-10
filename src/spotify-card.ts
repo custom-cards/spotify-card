@@ -15,7 +15,7 @@ import { PLAYLIST_TYPES, DISPLAY_STYLES } from './editor';
 
 import { SpotcastConnector } from './spotcast-connector';
 
-import { SpotifyCardConfig } from './types';
+import { SpotifyCardConfig, SpotifyConnectDevice } from './types';
 import CARD_VERSION from './const';
 
 import { localize } from './localize/localize';
@@ -65,7 +65,9 @@ export class SpotifyCard extends LitElement {
 
   private spotify_state?: HassEntity;
 
-  private chromecast_devices: Array<any> = [];
+  private selected_playlist: any = {};
+
+  private fetch_time_out: any = 0;
 
   connectedCallback(): void {
     super.connectedCallback();
@@ -88,36 +90,22 @@ export class SpotifyCard extends LitElement {
         if (item.startsWith('media_player.spotify_')) {
           this.spotify_installed = true;
           this.spotify_state = entities[item];
-          this.requestUpdate();
         }
         updateDevices = true;
       }
     }
     if (updateDevices) {
-      this.spotcast_connector.fetchDevices();
-      this.fetchChromecasts();
-      console.log('PELLE:', this.getSpotifyEntityState());
+      // Debounce updates to 300ms
+      if (this.fetch_time_out) {
+        clearTimeout(this.fetch_time_out);
+      }
+      this.fetch_time_out = setTimeout(() => {
+        this.spotcast_connector.updateState().then(() => {
+          console.log('State updated:', new Date().toISOString());
+          this.requestUpdate();
+        });
+      }, 400);
     }
-  }
-
-  private fetchChromecasts(): void {
-    this.hass.connection
-      .sendMessagePromise({
-        type: 'config/entity_registry/list',
-      })
-      .then(
-        (res: any) => {
-          this.chromecast_devices = res
-            .filter((e) => e.platform == 'cast')
-            .map((e) => this.hass.states[e.entity_id])
-            .filter((e) => e != null && e.state != 'unavailable');
-
-          console.debug('Got chromecast devices:', this.chromecast_devices);
-        },
-        (err) => {
-          console.error('Got chromecast devices failed:', err);
-        }
-      );
   }
 
   public getSpotifyEntityState(): string {
@@ -161,14 +149,23 @@ export class SpotifyCard extends LitElement {
   }
 
   private spotifyDeviceSelected(device: any): void {
+    const current_player = this.spotcast_connector.getCurrentPlayer();
+    if (current_player) {
+      return this.spotcast_connector.transferPlaybackToConnectDevice(device.id);
+    }
     const playlist = this.spotcast_connector.playlists[0];
-    console.log('spotifyDeviceSelected:', device, playlist);
+    console.log('spotifyDeviceSelected playing first playlist');
     this.spotcast_connector.playUriOnConnectDevice(device.id, playlist.uri);
   }
 
   private chromecastDeviceSelected(device: any): void {
+    const current_player = this.spotcast_connector.getCurrentPlayer();
+    if (current_player) {
+      return this.spotcast_connector.transferPlaybackToCastDevice(device.attributes.friendly_name);
+    }
+
     const playlist = this.spotcast_connector.playlists[0];
-    console.log('chromecastDeviceSelected:', device, playlist);
+    console.log('chromecastDeviceSelected playing first playlist');
     this.spotcast_connector.playUriOnCastDevice(device.attributes.friendly_name, playlist.uri);
   }
 
@@ -199,25 +196,9 @@ export class SpotifyCard extends LitElement {
       }
     }
 
-    // TODO get devices from spotcast
+    const spotify_player_device = this.spotcast_connector.getCurrentPlayer();
+    const playing_text = spotify_player_device ? spotify_player_device.name : localize('common.choose_player');
 
-    const device_list = html`
-      <div class="dropdown-content">
-        <p>Spotify Connect devices</p>
-        ${this.spotcast_connector.devices.map(
-          (device) => html` <a .device=${device} @click=${() => this.spotifyDeviceSelected(device)}>${device.name}</a> `
-        )}
-        <p>Chromecast devices</p>
-        ${this.chromecast_devices.map(
-          (device) =>
-            html`
-              <a .device=${device} @click=${() => this.chromecastDeviceSelected(device)}
-                >${device.attributes.friendly_name}</a
-              >
-            `
-        )}
-      </div>
-    `;
     return html`
       <ha-card tabindex="0" style="${this.config.height ? `height: ${this.config.height}px` : ''}"
         >${this.config.hide_warning ? '' : warning}
@@ -252,14 +233,31 @@ export class SpotifyCard extends LitElement {
                       stroke="null"
                     />
                   </svg>
-                  Current selected Device
+                  ${playing_text}
                 </div>
               </div>
             </div>
-            ${device_list}
+            ${this.generateDeviceList()}
           </div>
         </div>
       </ha-card>
+    `;
+  }
+
+  // Generate device list
+  private generateDeviceList(): TemplateResult {
+    return html`
+      <div class="dropdown-content">
+        <p>Spotify Connect devices</p>
+        ${this.spotcast_connector.devices.map(
+          (device) => html` <a @click=${() => this.spotifyDeviceSelected(device)}>${device.name}</a> `
+        )}
+        <p>Chromecast devices</p>
+        ${this.spotcast_connector.chromecast_devices.map(
+          (device) =>
+            html` <a @click=${() => this.chromecastDeviceSelected(device)}>${device.attributes.friendly_name}</a> `
+        )}
+      </div>
     `;
   }
 
@@ -275,7 +273,7 @@ export class SpotifyCard extends LitElement {
           iconPlay = 'playing';
           iconShuffle = this.spotify_state?.attributes.shuffle ? 'playing' : '';
         }
-        result.push(html`<div class="list-item">
+        result.push(html`<div class="list-item" @click=${() => this.spotcast_connector.playUri(item.uri)}>
           <img src="${item.images[item.images.length - 1].url}" />
           <div class="icon ${iconPlay}">
             <svg width="24" height="24">
@@ -309,7 +307,7 @@ export class SpotifyCard extends LitElement {
         if (this.spotify_state?.attributes.media_playlist === item.name) {
           iconPlay = 'playing';
         }
-        result.push(html`<div class="grid-item ${iconPlay}">
+        result.push(html`<div class="grid-item ${iconPlay}" @click=${() => this.spotcast_connector.playUri(item.uri)}>
           <img
             src="${item.images[item.images.length - 1].url}"
             height=${this.config.grid_cover_size ? this.config.grid_cover_size + 'px' : '100px'}
@@ -334,7 +332,12 @@ export class SpotifyCard extends LitElement {
   static get styles(): CSSResult[] {
     return [SpotifyCard.generalStyles, SpotifyCard.listStyles, SpotifyCard.gridStyles];
   }
+
   static generalStyles = css`
+    *:focus {
+      outline: none;
+    }
+
     ha-card {
       --header-height: 4em;
       --footer-height: 3.5em;
@@ -466,6 +469,7 @@ export class SpotifyCard extends LitElement {
       align-items: center;
       border-bottom: solid var(--divider-color) 1px;
       display: flex;
+      cursor: pointer;
     }
 
     .list-item:last-of-type {
@@ -510,6 +514,7 @@ export class SpotifyCard extends LitElement {
       box-shadow: var(--primary-text-color) 0 0 0.2em;
       margin: 0.2em;
       display: flex;
+      cursor: pointer;
     }
 
     .grid-item.playing {
