@@ -1,12 +1,10 @@
 [![hacs_badge](https://img.shields.io/badge/HACS-Default-orange.svg)](https://github.com/custom-components/hacs) [![spotify-card](https://img.shields.io/github/release/custom-cards/spotify-card.svg)](https://github.com/custom-cards/spotify-card)
 
-![Build](https://github.com/FL550/spotify_card_new/workflows/Build/badge.svg)
+![Build](https://github.com/custom-cards/spotify-card/workflows/Build/badge.svg)
 
 ## Home Assistant Spotify Lovelace Card
 
 **DISCLAIMER**: *This project is a private open source project and doesn't have any connection with Spotify.*
-
-This is a Web component card which can be used as a Lovelace [Home Assistant](https://www.home-assistant.io/lovelace/]) card.
 
 This card supports listing the users currently available devices and the users playlists on [Spotify](https://www.spotify.com). Choose an online media player and click on a playlist to play it on the device. This component will query the current playback from the [Spotify Integration](https://www.home-assistant.io/integrations/spotify/) and tries to reflect the currently playing playlist.
 
@@ -40,13 +38,6 @@ Then you have to add spotify card to your resources. This can be done via `Setti
 ```
 
 If you do not have the `Resources` tab available, you have to enable the advanced mode for Lovelace. To do so, click on your username on your Home Assistant dashboard and enanble the setting.
-<!-- TODO CDN
-##### Latest release using cdn:
-```
-  - type: module
-    url: >-
-      https://cdn.jsdelivr.net/gh/custom-cards/spotify-card@1.25.0/dist/spotify-card.umd.js
-```-->
 
 ### Usage
 
@@ -77,12 +68,6 @@ This library can of course also be used on other websites or projects other than
 ### CONTRIBUTING
 
 Please contribute and help. Before creating a large PR make sure to sync about it with me.
-
-### Donate
-
-If you like this and want to buy me a coffee
-
-[![buymeacoffe](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/fondberg)
 
 ### License
 
