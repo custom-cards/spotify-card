@@ -1,1 +1,3 @@
-###
+- Add visualization for tring to start new playback
+- Localisation 
+- playback and random song

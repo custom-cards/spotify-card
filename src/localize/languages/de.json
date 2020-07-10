@@ -1,0 +1,27 @@
+{
+  "common": {
+    "version": "Version",
+    "description": "Eine Karte um Spotify-Playlist anzuzeigen und abzuspielen",
+    "invalid_configuration": "Ungültige Konfiguration",
+    "show_warning": "Warnung",
+    "show_missing_spotcast": "Die Spotcast-Integration muss installiert sein, damit diese Karte funktioniert",
+    "show_missing_spotify": "Die Spotify-Integration muss installiert sein, damit der Spotify-Status angezeigt werden kann"
+  },
+
+  "settings": {
+    "general": "Generell",
+    "general_description": "Generelle Einstellungen",
+    "appearance": "Aussehen",
+    "appearance_description": "Passe den Stil und anderes an",
+    "hide_warning": "Verstecke Warnhinweise",
+    "playlist_type": "Playlist Typ",
+    "limit": "Anzahl an angezeigten Playlisten",
+    "height": "Höhe der Karte",
+    "country_code": "Länder-Code für die Featured-Playlist",
+    "always_play_random_song": "Spiele immer einen zufälligen Song beim Starten der Wiedergabe ab",
+    "title": "Titel der Karte",
+    "display_style": "Anzeige-Stil",
+    "grid_cover_size": "Cover Größe in der Karten-Ansicht in Pixeln",
+    "grid_center_covers": "Zentriere die Cover in der Karten-Ansicht"
+  }
+}

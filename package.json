@@ -1,32 +1,52 @@
 {
   "name": "spotify-card",
-  "author": "Niklas Fondberg <niklas.fondberg@gmail.com>",
-  "version": "1.27.1",
-  "browser": "dist/spotify-card.js",
+  "author": "Niklas Fondberg <niklas.fondberg@gmail.com>, Max Fermor (FL550)",
+  "version": "2.0.0",
+  "description": "Spotify playlist card",
+  "keywords": [
+    "home-assistant",
+    "homeassistant",
+    "hass",
+    "automation",
+    "lovelace",
+    "custom-cards",
+    "spotify",
+    "playlist"
+  ],
+  "module": "spotify-card.js",
+  "repository": "git@github.com:custom-cards/spotify-card.git",
+  "license": "Apache-2.0",
   "dependencies": {
-    "home-assistant-js-websocket": "^4.4.0",
-    "htm": "^2.2.1",
-    "preact": "^8.5.3"
+    "custom-card-helpers": "^1.6.4",
+    "home-assistant-js-websocket": "^5.3.0",
+    "lit-element": "^2.3.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.7.7",
-    "@babel/polyfill": "^7.7.0",
-    "@babel/preset-env": "^7.7.7",
-    "babel-polyfill": "^6.26.0",
-    "prettier": "^1.19.1",
-    "rollup": "^1.28.0",
-    "rollup-plugin-babel": "^4.3.3",
+    "@babel/core": "^7.10.3",
+    "@babel/plugin-proposal-class-properties": "^7.10.1",
+    "@babel/plugin-proposal-decorators": "^7.10.3",
+    "@rollup/plugin-json": "^4.1.0",
+    "@typescript-eslint/eslint-plugin": "^3.4.0",
+    "@typescript-eslint/parser": "^3.4.0",
+    "eslint": "^7.3.1",
+    "eslint-config-airbnb-base": "^14.2.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-import": "^2.21.2",
+    "eslint-plugin-prettier": "^3.1.4",
+    "prettier": "^2.0.5",
+    "rollup": "^2.18.0",
+    "@rollup/plugin-babel": "^5.0.4",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-node-resolve": "^5.2.0",
-    "rollup-plugin-terser": "^5.1.3"
+    "rollup-plugin-terser": "^6.1.0",
+    "rollup-plugin-typescript2": "^0.27.1",
+    "rollup-plugin-uglify": "^6.0.4",
+    "typescript": "^3.9.5"
   },
   "scripts": {
-    "build": "rollup -c && cp dist/spotify-card.js dist/spotify-card.umd.js",
-    "dev": "rollup -c -w",
-    "serve": "live-server --ignore=node_modules --port=50994 ./",
-    "test": "echo 'tests' && exit 0"
-  },
-  "files": [
-    "dist"
-  ]
+    "start": "rollup -c --watch",
+    "build": "npm run lint && npm run rollup",
+    "lint": "eslint src/*.ts --fix",
+    "rollup": "rollup -c"
+  }
 }
