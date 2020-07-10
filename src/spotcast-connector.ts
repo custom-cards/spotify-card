@@ -1,17 +1,16 @@
 import { SpotifyCard } from './spotify-card';
 
 interface Message {
-  type: string,
-  account?: string
+  type: string;
+  account?: string;
 }
 
 interface PlaylistMessage extends Message {
-  playlist_type: string,
-  country_code?: string,
-  limit?: number,
-  locale?: string,
+  playlist_type: string;
+  country_code?: string;
+  limit?: number;
+  locale?: string;
 }
-
 
 export class SpotcastConnector {
   playlists: any = {};
@@ -41,6 +40,30 @@ export class SpotcastConnector {
     return false;
   }
 
+  private getPlaybackOptions(uri: string): any {
+    const options: any = {
+      uri: uri,
+      force_playback: this.parent.getSpotifyEntityState() == 'playing',
+      random_song: this.parent.config.always_play_random_song,
+    };
+
+    // implement later
+    if (this.parent.config.account) {
+      options.account = this.parent.config.account;
+    }
+    return options;
+  }
+
+  public playUriOnCastDevice(device_name: string, uri: string): void {
+    const options: any = { ...this.getPlaybackOptions(uri), device_name: device_name };
+    this.parent.hass.callService('spotcast', 'start', options);
+  }
+
+  public playUriOnConnectDevice(device_id: string, uri: string): void {
+    const options: any = { ...this.getPlaybackOptions(uri), spotify_device_id: device_id };
+    this.parent.hass.callService('spotcast', 'start', options);
+  }
+
   public fetchDevices(): void {
     this.loading = true;
     const message: Message = {
@@ -48,18 +71,16 @@ export class SpotcastConnector {
       account: 'default',
     };
 
-    this.parent.hass.connection
-      .sendMessagePromise(message)
-      .then(
-        (resp: any) => {
-          console.log('Message success!', resp.devices);
-          this.devices = resp.devices;
-          this.parent.requestUpdate();
-        },
-        (err) => {
-          console.error('Message failed!', err);
-        },
-      );
+    this.parent.hass.connection.sendMessagePromise(message).then(
+      (resp: any) => {
+        console.log('Message success!', resp.devices);
+        this.devices = resp.devices;
+        this.parent.requestUpdate();
+      },
+      (err) => {
+        console.error('Message failed!', err);
+      }
+    );
   }
 
   public fetchPlaylists(limit: number): void {
@@ -72,17 +93,15 @@ export class SpotcastConnector {
     if (this.parent.config.country_code) {
       message.country_code = this.parent.config.country_code;
     }
-    this.parent.hass.connection
-      .sendMessagePromise(message)
-      .then(
-        (resp: any) => {
-          console.log('Message success!', resp.items);
-          this.playlists = resp.items;
-          this.parent.requestUpdate();
-        },
-        (err) => {
-          console.error('Message failed!', err);
-        },
-      );
+    this.parent.hass.connection.sendMessagePromise(message).then(
+      (resp: any) => {
+        console.log('Message success!', resp.items);
+        this.playlists = resp.items;
+        this.parent.requestUpdate();
+      },
+      (err) => {
+        console.error('Message failed!', err);
+      }
+    );
   }
 }
