@@ -1,6 +1,6 @@
 import { HassEntity } from 'home-assistant-js-websocket';
 import { SpotifyCard } from './spotify-card';
-import { SpotifyConnectDevice } from './types';
+import { SpotifyConnectDevice, CurrentPlayer } from './types';
 interface Message {
   type: string;
   account?: string;
@@ -18,7 +18,7 @@ export class SpotcastConnector {
 
   playlists: any = {};
   devices: Array<SpotifyConnectDevice> = [];
-  players: Array<SpotifyConnectDevice> = [];
+  player?: CurrentPlayer;
   chromecast_devices: Array<HassEntity> = [];
 
   loading = false;
@@ -48,12 +48,9 @@ export class SpotcastConnector {
       uri: uri,
       force_playback: this.parent.getSpotifyEntityState() == 'playing',
       random_song: this.parent.config.always_play_random_song,
+      account: this.parent.config.account,
     };
 
-    // implement later in config
-    if (this.parent.config.account) {
-      options.account = this.parent.config.account;
-    }
     return options;
   }
 
@@ -70,6 +67,7 @@ export class SpotcastConnector {
     this.parent.hass.callService('spotcast', 'start', {
       device_name: device_name,
       force_playback: true,
+      account: this.parent.config.account,
     });
   }
 
@@ -77,6 +75,7 @@ export class SpotcastConnector {
     this.parent.hass.callService('spotcast', 'start', {
       spotify_device_id: device_id,
       force_playback: true,
+      account: this.parent.config.account,
     });
   }
 
@@ -96,25 +95,23 @@ export class SpotcastConnector {
     await this.fetchChromecasts();
   }
 
-  public getCurrentPlayer(): SpotifyConnectDevice | null {
-    const spd = this.players.filter((p) => p.is_active).find((o) => typeof o !== 'undefined' && o !== null);
-    return spd ? <SpotifyConnectDevice>spd : null;
+  public getCurrentPlayer(): SpotifyConnectDevice | undefined {
+    return this.player?.device;
   }
 
   private async fetchPlayer(): Promise<void> {
     const message: Message = {
       type: 'spotcast/player',
-      account: 'default',
+      account: this.parent.config.account,
     };
-    const res: any = await this.parent.hass.callWS(message);
-    this.players = res.devices;
-    //console.log('fetchPlayer:', this.players);
+    this.player = <CurrentPlayer>await this.parent.hass.callWS(message);
+    // console.log('fetchPlayer:', JSON.stringify(this.player, null, 2));
   }
 
   private async fetchDevices(): Promise<void> {
     const message: Message = {
       type: 'spotcast/devices',
-      account: 'default',
+      account: this.parent.config.account,
     };
     const res: any = await this.parent.hass.callWS(message);
     this.devices = res.devices;
@@ -141,6 +138,7 @@ export class SpotcastConnector {
     const message: PlaylistMessage = {
       type: 'spotcast/playlists',
       playlist_type: this.parent.config.playlist_type ? this.parent.config.playlist_type : '',
+      account: this.parent.config.account,
     };
     if (this.parent.config.country_code) {
       message.country_code = this.parent.config.country_code;

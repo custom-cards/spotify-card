@@ -22,6 +22,7 @@
     "title": "Title of card",
     "display_style": "Display Style",
     "grid_cover_size": "Cover size in Grid-View in pixels",
-    "grid_center_covers": "Center the covers in Grid-View"
+    "grid_center_covers": "Center the covers in Grid-View",
+    "account": "Account"
   }
 }

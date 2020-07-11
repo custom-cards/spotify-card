@@ -34,12 +34,22 @@ export const DISPLAY_STYLES = ['List', 'Grid'];
 
 @customElement('spotify-card-editor')
 export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor {
-  @property({ type: Object }) public hass?: HomeAssistant;
+  @property({ type: Object }) public hass!: HomeAssistant;
 
   @internalProperty() private _config?: SpotifyCardConfig;
 
   @internalProperty() private _toggle?: boolean;
 
+  accounts: Array<string> = [];
+
+  async connectedCallback(): Promise<void> {
+    super.connectedCallback();
+    const res: any = await this.hass.callWS({
+      type: 'spotcast/accounts',
+    });
+    this.accounts = res;
+    this.requestUpdate();
+  }
   public setConfig(config: SpotifyCardConfig): void {
     this._config = config;
   }
@@ -47,6 +57,13 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
   get _name(): string {
     if (this._config) {
       return this._config.name || '';
+    }
+    return '';
+  }
+
+  get _account(): string {
+    if (this._config) {
+      return this._config._account || 'default';
     }
     return '';
   }
@@ -143,8 +160,19 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
           <div class="secondary">${options.general.secondary}</div>
         </div>
         ${options.general.show
-    ? html`
+          ? html`
               <div class="values">
+                <div>
+                  <paper-dropdown-menu
+                    label=${localize('settings.account')}
+                    @value-changed=${this._valueChanged}
+                    .configValue=${'account'}
+                  >
+                    <paper-listbox slot="dropdown-content" .selected=${this.accounts.indexOf(this._account)}>
+                      ${this.accounts.map((item) => html` <paper-item>${item}</paper-item> `)}
+                    </paper-listbox>
+                  </paper-dropdown-menu>
+                </div>
                 <div>
                   <paper-dropdown-menu
                     label=${localize('settings.playlist_type')}
@@ -194,7 +222,7 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
                 </div>
               </div>
             `
-    : ''}
+          : ''}
         <div class="option" @click=${this._toggleOption} .option=${'appearance'}>
           <div class="row">
             <ha-icon .icon=${`mdi:${options.appearance.icon}`}></ha-icon>
@@ -203,7 +231,7 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
           <div class="secondary">${options.appearance.secondary}</div>
         </div>
         ${options.appearance.show
-    ? html`
+          ? html`
               <div class="values">
                 <div>
                   <ha-switch
@@ -234,8 +262,8 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
                   </paper-dropdown-menu>
                 </div>
                 <div>
-                <div>${localize('settings.grid_cover_size')}</div>
-                <paper-slider
+                  <div>${localize('settings.grid_cover_size')}</div>
+                  <paper-slider
                     .value=${this._grid_cover_size}
                     .configValue=${'grid_cover_size'}
                     @value-changed=${this._valueChanged}
@@ -246,31 +274,31 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
                   ></paper-slider>
                 </div>
                 <div>
+                  <div>${localize('settings.grid_center_covers')}</div>
                   <ha-switch
                     aria-label=${`Toggle grid_center_covers ${this._hide_warning ? 'off' : 'on'}`}
                     .checked=${this._grid_center_covers}
                     .configValue=${'grid_center_covers'}
                     @change=${this._valueChanged}
-                    >${localize('settings.grid_center_covers')}</ha-switch
-                  >
+                  ></ha-switch>
                 </div>
+                <span>Show Warning?</span>
                 <ha-switch
                   aria-label=${`Toggle warning ${this._show_error ? 'off' : 'on'}`}
                   .checked=${this._show_warning}
                   .configValue=${'show_warning'}
                   @change=${this._valueChanged}
-                  >Show Warning?</ha-switch
-                >
+                ></ha-switch>
+                <span>Show Error?</span>
                 <ha-switch
                   aria-label=${`Toggle error ${this._show_error ? 'off' : 'on'}`}
                   .checked=${this._show_error}
                   .configValue=${'show_error'}
                   @change=${this._valueChanged}
-                  >Show Error?</ha-switch
-                >
+                ></ha-switch>
               </div>
             `
-    : ''}
+          : ''}
       </div>
     `;
   }
