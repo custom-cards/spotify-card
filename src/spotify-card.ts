@@ -65,8 +65,6 @@ export class SpotifyCard extends LitElement {
 
   private spotify_state?: HassEntity;
 
-  private selected_playlist: any = {};
-
   private fetch_time_out: any = 0;
 
   connectedCallback(): void {
@@ -169,6 +167,30 @@ export class SpotifyCard extends LitElement {
     this.spotcast_connector.playUriOnCastDevice(device.attributes.friendly_name, playlist.uri);
   }
 
+  private onShuffleSelect(): void {
+    // const player = this.spotcast_connector.getCurrentPlayer();
+    console.log('shuffle;', this.spotify_state);
+    if (this.spotify_state?.state == 'playing') {
+      this.hass.callService('media_player', 'shuffle_set', { entity_id: this.spotify_state.entity_id, shuffle: true });
+    }
+  }
+
+  private handlePlayPauseEvent(ev: Event, command: string) {
+    ev.stopPropagation();
+    ev.preventDefault();
+    if (this.spotify_state?.state) {
+      this.hass.callService('media_player', command, { entity_id: this.spotify_state.entity_id });
+    }
+  }
+
+  private onPauseSelect(ev: Event): void {
+    this.handlePlayPauseEvent(ev, 'media_pause');
+  }
+
+  private onPlaySelect(ev: Event): void {
+    this.handlePlayPauseEvent(ev, 'media_play');
+  }
+
   protected render(): TemplateResult | void {
     let warning = html``;
     if (this.config.show_warning) {
@@ -239,6 +261,16 @@ export class SpotifyCard extends LitElement {
             </div>
             ${this.generateDeviceList()}
           </div>
+          <div class="footer__right">
+            <div class="icon playing" @click=${this.onShuffleSelect}>
+              <svg width="24" height="24">
+                <path d="M0 0h24v24H0z" fill="none" />
+                <path
+                  d="M10.59 9.17L5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41l-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z"
+                />
+              </svg>
+            </div>
+          </div>
         </div>
       </ha-card>
     `;
@@ -261,34 +293,43 @@ export class SpotifyCard extends LitElement {
     `;
   }
 
+  private generateButtonForCurrent(): TemplateResult {
+    if (this.spotify_state?.state == 'playing') {
+      return html`<div class="icon playing" @click=${this.onPauseSelect}>
+        <svg width="24" height="24" viewBox="0 0 1200 1200" style="margin-left: 15px">
+          <path d="M0 832h192V192H0V832zM320 192v640h192V192H320z" />
+        </svg>
+      </div>`;
+    } else {
+      return html`<div class="icon playing" @click=${this.onPlaySelect}>
+        <svg width="24" height="24">
+          <path d="M0 0h24v24H0z" fill="none" />
+          <path d="M8 5v14l11-7z" />
+        </svg>
+      </div>`;
+    }
+  }
+
   // Generate items for display style 'List'
   public generateListView(): TemplateResult {
     if (this.spotcast_connector.is_loaded()) {
       const result: TemplateResult[] = [];
       for (let i = 0; i < this.spotcast_connector.playlists.length; i++) {
         const item = this.spotcast_connector.playlists[i];
-        let iconPlay = '';
-        let iconShuffle = '';
-        if (this.spotify_state?.attributes.media_playlist === item.name) {
-          iconPlay = 'playing';
-          iconShuffle = this.spotify_state?.attributes.shuffle ? 'playing' : '';
-        }
+        const playing = this.spotify_state?.attributes.media_playlist === item.name;
+
         result.push(html`<div class="list-item" @click=${() => this.spotcast_connector.playUri(item.uri)}>
           <img src="${item.images[item.images.length - 1].url}" />
-          <div class="icon ${iconPlay}">
-            <svg width="24" height="24">
-              <path d="M0 0h24v24H0z" fill="none" />
-              <path d="M8 5v14l11-7z" />
-            </svg>
-          </div>
-          <div class="icon ${iconShuffle}">
-            <svg width="24" height="24">
-              <path d="M0 0h24v24H0z" fill="none" />
-              <path
-                d="M10.59 9.17L5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41l-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z"
-              />
-            </svg>
-          </div>
+
+          ${playing
+            ? this.generateButtonForCurrent()
+            : html`<div class="icon">
+                <svg width="24" height="24">
+                  <path d="M0 0h24v24H0z" fill="none" />
+                  <path d="M8 5v14l11-7z" />
+                </svg>
+              </div>`}
+
           <p>${item.name}</p>
         </div>`);
       }
@@ -382,7 +423,14 @@ export class SpotifyCard extends LitElement {
     }
 
     #footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       height: var(--footer-height);
+    }
+
+    .footer__right {
+      padding-right: 15px;
     }
 
     .controls {
@@ -470,6 +518,10 @@ export class SpotifyCard extends LitElement {
       border-bottom: solid var(--divider-color) 1px;
       display: flex;
       cursor: pointer;
+    }
+
+    .list-item:hover {
+      background-color: rgb(240, 240, 240);
     }
 
     .list-item:last-of-type {
