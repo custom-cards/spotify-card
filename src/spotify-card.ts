@@ -206,7 +206,9 @@ export class SpotifyCard extends LitElement {
     let content = html`<div>Loading...</div>`;
     // Request playlist data from spotcast
     if (!this.spotcast_connector.is_loading() && this.spotcast_installed) {
-      this.spotcast_connector.fetchPlaylists(this.config.limit ? this.config.limit : 10);
+      this.spotcast_connector.fetchPlaylists().then(() => {
+        this.requestUpdate();
+      });
     } else {
       // Display spotify playlists
       if (this.config.display_style == 'Grid') {
@@ -369,7 +371,7 @@ export class SpotifyCard extends LitElement {
             src="${item.images[item.images.length - 1].url}"
             height=${this.config.grid_cover_size ? this.config.grid_cover_size + 'px' : '100px'}
           />
-          <div class="grid-item-overlay-icon ${playing ? '' : 'grid-item-overlay-icon-not-playing'}">
+          <div class="grid-item-overlay-icon">
             ${playing
               ? this.generateGridIconForCurrent()
               : html`
@@ -609,21 +611,16 @@ export class SpotifyCard extends LitElement {
       top: calc(50% - 12px);
       left: calc(50% - 12px);
       transition: transform 0.2s;
+      transform: scale(1.5);
+      opacity: 0.7;
     }
 
     .grid-item-overlay-icon:hover {
-      transform: scale(1.5);
+      transform: scale(2);
+      opacity: 1;
     }
     .grid-item-overlay-icon > svg {
       fill: white;
-    }
-
-    .grid-item-overlay-icon-not-playing {
-      opacity: 0;
-    }
-
-    .grid-item-overlay-icon-not-playing:hover {
-      opacity: 1;
     }
   `;
 }

@@ -31,7 +31,7 @@ export interface SpotifyCardConfig extends LovelaceCardConfig {
   show_error?: boolean;
 }
 
-export interface SpotifyConnectDevice {
+export interface ConnectDevice {
   id: string;
   is_active: boolean;
   is_private_session: boolean;
@@ -42,7 +42,7 @@ export interface SpotifyConnectDevice {
 }
 
 export interface CurrentPlayer {
-  device: SpotifyConnectDevice;
+  device: ConnectDevice;
   shuffle_state: boolean;
   repeat_state: string;
   timestamp: number;
@@ -52,6 +52,23 @@ export interface CurrentPlayer {
   currently_playing_type: string;
   actions: Actions;
   is_playing: boolean;
+}
+
+export interface Playlist {
+  collaborative: boolean;
+  description: string;
+  external_urls: ExternalUrls;
+  href: string;
+  id: string;
+  images: Image[];
+  name: string;
+  owner: Owner;
+  primary_color?: any;
+  public: boolean;
+  snapshot_id: string;
+  tracks: Tracks;
+  type: string;
+  uri: string;
 }
 
 export interface ExternalUrls {
@@ -65,12 +82,8 @@ export interface Context {
   uri: string;
 }
 
-export interface ExternalUrls2 {
-  spotify: string;
-}
-
 export interface Artist {
-  external_urls: ExternalUrls2;
+  external_urls: ExternalUrls;
   href: string;
   id: string;
   name: string;
@@ -78,21 +91,17 @@ export interface Artist {
   uri: string;
 }
 
-export interface ExternalUrls3 {
-  spotify: string;
-}
-
 export interface Image {
-  height: number;
+  height?: number;
   url: string;
-  width: number;
+  width?: number;
 }
 
 export interface Album {
   album_type: string;
   artists: Artist[];
   available_markets: string[];
-  external_urls: ExternalUrls3;
+  external_urls: ExternalUrls;
   href: string;
   id: string;
   images: Image[];
@@ -104,36 +113,19 @@ export interface Album {
   uri: string;
 }
 
-export interface ExternalUrls4 {
-  spotify: string;
-}
-
-export interface Artist2 {
-  external_urls: ExternalUrls4;
-  href: string;
-  id: string;
-  name: string;
-  type: string;
-  uri: string;
-}
-
 export interface ExternalIds {
   isrc: string;
 }
 
-export interface ExternalUrls5 {
-  spotify: string;
-}
-
 export interface Item {
   album: Album;
-  artists: Artist2[];
+  artists: Artist[];
   available_markets: string[];
   disc_number: number;
   duration_ms: number;
   explicit: boolean;
   external_ids: ExternalIds;
-  external_urls: ExternalUrls5;
+  external_urls: ExternalUrls;
   href: string;
   id: string;
   is_local: boolean;
@@ -152,4 +144,18 @@ export interface Disallows {
 
 export interface Actions {
   disallows: Disallows;
+}
+
+export interface Owner {
+  display_name: string;
+  external_urls: ExternalUrls;
+  href: string;
+  id: string;
+  type: string;
+  uri: string;
+}
+
+export interface Tracks {
+  href: string;
+  total: number;
 }
