@@ -139,6 +139,7 @@ export class SpotcastConnector {
       type: 'spotcast/playlists',
       playlist_type: this.parent.config.playlist_type ? this.parent.config.playlist_type : '',
       account: this.parent.config.account,
+      limit: this.parent.config.limit,
     };
     if (this.parent.config.country_code) {
       message.country_code = this.parent.config.country_code;

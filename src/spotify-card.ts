@@ -93,7 +93,7 @@ export class SpotifyCard extends LitElement {
       }
     }
     if (updateDevices) {
-      // Debounce updates to 300ms
+      // Debounce updates to 500ms
       if (this.fetch_time_out) {
         clearTimeout(this.fetch_time_out);
       }
@@ -102,7 +102,7 @@ export class SpotifyCard extends LitElement {
           console.log('State updated:', new Date().toISOString());
           this.requestUpdate();
         });
-      }, 400);
+      }, 500);
     }
   }
 
@@ -168,7 +168,6 @@ export class SpotifyCard extends LitElement {
   }
 
   private onShuffleSelect(): void {
-    // const player = this.spotcast_connector.getCurrentPlayer();
     console.log('shuffle;', this.spotify_state);
     if (this.spotify_state?.state == 'playing') {
       this.hass.callService('media_player', 'shuffle_set', { entity_id: this.spotify_state.entity_id, shuffle: true });
@@ -177,8 +176,7 @@ export class SpotifyCard extends LitElement {
 
   private handlePlayPauseEvent(ev: Event, command: string) {
     ev.stopPropagation();
-    ev.preventDefault();
-    if (this.spotify_state?.state) {
+    if (this.spotify_state) {
       this.hass.callService('media_player', command, { entity_id: this.spotify_state.entity_id });
     }
   }
@@ -187,7 +185,7 @@ export class SpotifyCard extends LitElement {
     this.handlePlayPauseEvent(ev, 'media_pause');
   }
 
-  private onPlaySelect(ev: Event): void {
+  private onResumeSelect(ev: Event): void {
     this.handlePlayPauseEvent(ev, 'media_play');
   }
 
@@ -219,7 +217,7 @@ export class SpotifyCard extends LitElement {
     }
 
     const spotify_player_device = this.spotcast_connector.getCurrentPlayer();
-    const playing_text = spotify_player_device ? spotify_player_device.name : localize('common.choose_player');
+    const playing_text = spotify_player_device?.name ?? localize('common.choose_player');
 
     return html`
       <ha-card tabindex="0" style="${this.config.height ? `height: ${this.config.height}px` : ''}"
@@ -301,7 +299,7 @@ export class SpotifyCard extends LitElement {
         </svg>
       </div>`;
     } else {
-      return html`<div class="icon playing" @click=${this.onPlaySelect}>
+      return html`<div class="icon playing" @click=${this.onResumeSelect}>
         <svg width="24" height="24">
           <path d="M0 0h24v24H0z" fill="none" />
           <path d="M8 5v14l11-7z" />

@@ -3782,6 +3782,7 @@ class SpotcastConnector {
             type: 'spotcast/playlists',
             playlist_type: this.parent.config.playlist_type ? this.parent.config.playlist_type : '',
             account: this.parent.config.account,
+            limit: this.parent.config.limit,
         };
         if (this.parent.config.country_code) {
             message.country_code = this.parent.config.country_code;
@@ -3851,7 +3852,7 @@ let SpotifyCard = SpotifyCard_1 = class SpotifyCard extends LitElement {
             }
         }
         if (updateDevices) {
-            // Debounce updates to 300ms
+            // Debounce updates to 500ms
             if (this.fetch_time_out) {
                 clearTimeout(this.fetch_time_out);
             }
@@ -3860,7 +3861,7 @@ let SpotifyCard = SpotifyCard_1 = class SpotifyCard extends LitElement {
                     console.log('State updated:', new Date().toISOString());
                     this.requestUpdate();
                 });
-            }, 400);
+            }, 500);
         }
     }
     getSpotifyEntityState() {
@@ -3917,27 +3918,25 @@ let SpotifyCard = SpotifyCard_1 = class SpotifyCard extends LitElement {
     }
     onShuffleSelect() {
         var _a;
-        // const player = this.spotcast_connector.getCurrentPlayer();
         console.log('shuffle;', this.spotify_state);
         if (((_a = this.spotify_state) === null || _a === void 0 ? void 0 : _a.state) == 'playing') {
             this.hass.callService('media_player', 'shuffle_set', { entity_id: this.spotify_state.entity_id, shuffle: true });
         }
     }
     handlePlayPauseEvent(ev, command) {
-        var _a;
         ev.stopPropagation();
-        ev.preventDefault();
-        if ((_a = this.spotify_state) === null || _a === void 0 ? void 0 : _a.state) {
+        if (this.spotify_state) {
             this.hass.callService('media_player', command, { entity_id: this.spotify_state.entity_id });
         }
     }
     onPauseSelect(ev) {
         this.handlePlayPauseEvent(ev, 'media_pause');
     }
-    onPlaySelect(ev) {
+    onResumeSelect(ev) {
         this.handlePlayPauseEvent(ev, 'media_play');
     }
     render() {
+        var _a;
         let warning = html ``;
         if (this.config.show_warning) {
             warning = this.showWarning(localize('common.show_warning'));
@@ -3964,7 +3963,7 @@ let SpotifyCard = SpotifyCard_1 = class SpotifyCard extends LitElement {
             }
         }
         const spotify_player_device = this.spotcast_connector.getCurrentPlayer();
-        const playing_text = spotify_player_device ? spotify_player_device.name : localize('common.choose_player');
+        const playing_text = (_a = spotify_player_device === null || spotify_player_device === void 0 ? void 0 : spotify_player_device.name) !== null && _a !== void 0 ? _a : localize('common.choose_player');
         return html `
       <ha-card tabindex="0" style="${this.config.height ? `height: ${this.config.height}px` : ''}"
         >${this.config.hide_warning ? '' : warning}
@@ -4040,7 +4039,7 @@ let SpotifyCard = SpotifyCard_1 = class SpotifyCard extends LitElement {
       </div>`;
         }
         else {
-            return html `<div class="icon playing" @click=${this.onPlaySelect}>
+            return html `<div class="icon playing" @click=${this.onResumeSelect}>
         <svg width="24" height="24">
           <path d="M0 0h24v24H0z" fill="none" />
           <path d="M8 5v14l11-7z" />
