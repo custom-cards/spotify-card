@@ -260,14 +260,16 @@ export class SpotifyCard extends LitElement {
             ${this.generateDeviceList()}
           </div>
           <div class="footer__right">
-            <div class="icon playing" @click=${this.onShuffleSelect}>
-              <svg width="24" height="24">
-                <path d="M0 0h24v24H0z" fill="none" />
-                <path
-                  d="M10.59 9.17L5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41l-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z"
-                />
-              </svg>
-            </div>
+            ${this.spotify_state?.state == 'playing'
+              ? html`<div class="icon playing" @click=${this.onShuffleSelect}>
+                  <svg width="24" height="24">
+                    <path d="M0 0h24v24H0z" fill="none" />
+                    <path
+                      d="M10.59 9.17L5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41l-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z"
+                    />
+                  </svg>
+                </div>`
+              : null}
           </div>
         </div>
       </ha-card>
@@ -294,7 +296,7 @@ export class SpotifyCard extends LitElement {
   private generateButtonForCurrent(): TemplateResult {
     if (this.spotify_state?.state == 'playing') {
       return html`<div class="icon playing" @click=${this.onPauseSelect}>
-        <svg width="24" height="24" viewBox="0 0 1200 1200" style="margin-left: 15px">
+        <svg width="24" height="24" viewBox="0 0 500 1000">
           <path d="M0 832h192V192H0V832zM320 192v640h192V192H320z" />
         </svg>
       </div>`;
@@ -336,21 +338,47 @@ export class SpotifyCard extends LitElement {
     return html``;
   }
 
+  private generateGridIconForCurrent(): TemplateResult {
+    if (this.spotify_state?.state == 'playing') {
+      return html` <svg width="24" height="24" viewBox="0 0 500 1000" @click=${this.onPauseSelect}>
+        <path d="M0 832h192V192H0V832zM320 192v640h192V192H320z" />
+      </svg>`;
+    } else {
+      return html` <svg width="24" height="24" @click=${this.onResumeSelect}>
+        <path d="M0 0h24v24H0z" fill="none" />
+        <path d="M8 5v14l11-7z" />
+      </svg>`;
+    }
+  }
+
   // Generate items for display style 'Grid'
   public generateGridView(): TemplateResult {
     if (this.spotcast_connector.is_loaded()) {
       const result: TemplateResult[] = [];
       for (let i = 0; i < this.spotcast_connector.playlists.length; i++) {
         const item = this.spotcast_connector.playlists[i];
-        let iconPlay = '';
-        if (this.spotify_state?.attributes.media_playlist === item.name) {
-          iconPlay = 'playing';
-        }
-        result.push(html`<div class="grid-item ${iconPlay}" @click=${() => this.spotcast_connector.playUri(item.uri)}>
+        const playing = this.spotify_state?.attributes.media_playlist === item.name;
+        this.spotify_state?.attributes.media_playlist === item.name;
+
+        result.push(html`<div
+          class="grid-item ${playing ? 'playing' : ''}"
+          @click=${() => this.spotcast_connector.playUri(item.uri)}
+        >
           <img
+            class="grid-item-album-image"
             src="${item.images[item.images.length - 1].url}"
             height=${this.config.grid_cover_size ? this.config.grid_cover_size + 'px' : '100px'}
           />
+          <div class="grid-item-overlay-icon ${playing ? '' : 'grid-item-overlay-icon-not-playing'}">
+            ${playing
+              ? this.generateGridIconForCurrent()
+              : html`
+                  <svg width="24" height="24" @click=${() => this.spotcast_connector.playUri(item.uri)}>
+                    <path d="M0 0h24v24H0z" fill="none" />
+                    <path d="M8 5v14l11-7z" />
+                  </svg>
+                `}
+          </div>
         </div>`);
       }
       return html`<div
@@ -519,7 +547,7 @@ export class SpotifyCard extends LitElement {
     }
 
     .list-item:hover {
-      background-color: rgb(240, 240, 240);
+      background-color: var(--secondary-background-color);
     }
 
     .list-item:last-of-type {
@@ -561,6 +589,7 @@ export class SpotifyCard extends LitElement {
     }
 
     .grid-item {
+      position: relative;
       box-shadow: var(--primary-text-color) 0 0 0.2em;
       margin: 0.2em;
       display: flex;
@@ -569,6 +598,32 @@ export class SpotifyCard extends LitElement {
 
     .grid-item.playing {
       box-shadow: var(--primary-color) 0 0 0.2em 0.2em;
+    }
+
+    .grid-item-album-image {
+      display: block;
+    }
+
+    .grid-item-overlay-icon {
+      position: absolute;
+      top: calc(50% - 12px);
+      left: calc(50% - 12px);
+      transition: transform 0.2s;
+    }
+
+    .grid-item-overlay-icon:hover {
+      transform: scale(1.5);
+    }
+    .grid-item-overlay-icon > svg {
+      fill: white;
+    }
+
+    .grid-item-overlay-icon-not-playing {
+      opacity: 0;
+    }
+
+    .grid-item-overlay-icon-not-playing:hover {
+      opacity: 1;
     }
   `;
 }

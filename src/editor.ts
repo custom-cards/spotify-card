@@ -212,13 +212,13 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
                   ></paper-input>
                 </div>
                 <div>
+                  <div>${localize('settings.always_play_random_song')}</div>
                   <ha-switch
                     aria-label=${`Toggle always_play_random_song ${this._hide_warning ? 'off' : 'on'}`}
                     .checked=${this._always_play_random_song}
                     .configValue=${'always_play_random_song'}
                     @change=${this._valueChanged}
-                    >${localize('settings.always_play_random_song')}</ha-switch
-                  >
+                  ></ha-switch>
                 </div>
               </div>
             `
