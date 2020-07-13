@@ -131,7 +131,8 @@ export class SpotcastConnector {
       .filter((e) => e.platform == 'cast')
       .map((e) => this.parent.hass.states[e.entity_id])
       .filter((e) => e != null && e.state != 'unavailable');
-    // console.log('fetchChromecasts:', this.chromecast_devices);
+    console.log('fetchChromecasts:', this.chromecast_devices);
+    console.log('fetchChromecasts2:', res2);
   }
 
   public async fetchPlaylists(): Promise<void> {
