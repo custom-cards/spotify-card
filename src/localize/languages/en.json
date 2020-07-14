@@ -13,6 +13,8 @@
     "general_description": "General settings for this card",
     "appearance": "Appearance",
     "appearance_description": "Customize the style, icon, etc",
+    "advanced": "Advanced",
+    "advanced_description": "Customize advanced settings",
     "hide_warning": "Hide warnings",
     "playlist_type": "Playlist Type",
     "limit": "Amount of playlists shown",
@@ -23,6 +25,7 @@
     "display_style": "Display Style",
     "grid_cover_size": "Cover size in Grid-View in pixels",
     "grid_center_covers": "Center the covers in Grid-View",
-    "account": "Account"
+    "account": "Account",
+    "filter_out_cast_devices": "Filter out chromecast devices"
   }
 }

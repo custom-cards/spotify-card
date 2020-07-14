@@ -20,6 +20,9 @@ export class SpotcastConnector {
   devices: Array<ConnectDevice> = [];
   player?: CurrentPlayer;
   chromecast_devices: Array<HassEntity> = [];
+  // data is valid for 2 secs otherwise the service is spammed bcos of the entitiy changes
+  state_ttl = 2000;
+  last_state_update_time = 0;
 
   loading = false;
 
@@ -90,9 +93,16 @@ export class SpotcastConnector {
   }
 
   public async updateState(): Promise<void> {
+    const now = new Date().getTime();
+    if (now - this.last_state_update_time < this.state_ttl) {
+      console.log('cache is still valid:', this.last_state_update_time);
+      return;
+    }
+    console.log('cache is NOT valid:', this.last_state_update_time);
     await this.fetchDevices();
     await this.fetchPlayer();
     await this.fetchChromecasts();
+    this.last_state_update_time = new Date().getTime();
   }
 
   public getCurrentPlayer(): ConnectDevice | undefined {

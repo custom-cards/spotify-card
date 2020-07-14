@@ -280,17 +280,20 @@ export class SpotifyCard extends LitElement {
 
   // Generate device list
   private generateDeviceList(): TemplateResult {
+    const hidden = this.config.hidden_cast_devices ?? [];
+
     return html`
       <div class="dropdown-content">
         <p>Spotify Connect devices</p>
         ${this.spotcast_connector.devices.map(
           (device) => html` <a @click=${() => this.spotifyDeviceSelected(device)}>${device.name}</a> `
         )}
-        <p>Chromecast devices</p>
-        ${this.spotcast_connector.chromecast_devices.map(
-          (device) =>
-            html` <a @click=${() => this.chromecastDeviceSelected(device)}>${device.attributes.friendly_name}</a> `
-        )}
+        ${this.spotcast_connector.chromecast_devices.length ? html`<p>Chromecast devices</p>` : null}
+        ${this.spotcast_connector.chromecast_devices.map((device) => {
+          return hidden.includes(device.attributes.friendly_name)
+            ? null
+            : html`<a @click=${() => this.chromecastDeviceSelected(device)}>${device.attributes.friendly_name}</a>`;
+        })}
       </div>
     `;
   }

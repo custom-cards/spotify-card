@@ -19,13 +19,19 @@ const options = {
     icon: 'tune',
     name: localize('settings.general'),
     secondary: localize('settings.general_description'),
-    show: true,
+    show: false,
   },
   appearance: {
     icon: 'palette',
     name: localize('settings.appearance'),
     secondary: localize('settings.appearance_description'),
     show: false,
+  },
+  advanced: {
+    icon: 'pencil',
+    name: localize('settings.advanced'),
+    secondary: localize('settings.advanced_description'),
+    show: true,
   },
 };
 
@@ -41,6 +47,8 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
   @internalProperty() private _toggle?: boolean;
 
   accounts: Array<string> = [];
+  hidden_cast_devices: Array<string> = [];
+  chromecast_devices: Array<string> = [];
 
   async connectedCallback(): Promise<void> {
     super.connectedCallback();
@@ -48,6 +56,19 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
       type: 'spotcast/accounts',
     });
     this.accounts = res;
+
+    // const casts: any = await this.hass.callWS({
+    //   type: 'spotcast/castdevices',
+    // });
+    const casts = [
+      { ddd: 123, friendly_name: 'Kök' },
+      { ddd: 122, friendly_name: 'Högtalare uppe' },
+      { ddd: 112, friendly_name: 'Vardagsrum' },
+      { ddd: 345, friendly_name: 'Kök 2' },
+      { ddd: 567, friendly_name: 'Högtalare uppe 2' },
+      { ddd: 789, friendly_name: 'Vardagsrum 3' },
+    ];
+    this.chromecast_devices = casts.map((c) => c.friendly_name);
     this.requestUpdate();
   }
   public setConfig(config: SpotifyCardConfig): void {
@@ -124,6 +145,13 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
     return false;
   }
 
+  get _hidden_cast_devices(): Array<string> {
+    if (this._config) {
+      return this._config.hidden_cast_devices || [];
+    }
+    return [];
+  }
+
   get _hide_warning(): boolean {
     if (this._config) {
       return this._config.hide_warning || false;
@@ -145,6 +173,163 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
     return false;
   }
 
+  private renderGeneral(): TemplateResult {
+    return html`
+      <div class="values">
+        <div>
+          <paper-dropdown-menu
+            label=${localize('settings.account')}
+            @value-changed=${this._valueChanged}
+            .configValue=${'account'}
+          >
+            <paper-listbox slot="dropdown-content" .selected=${this.accounts.indexOf(this._account)}>
+              ${this.accounts.map((item) => html` <paper-item>${item}</paper-item> `)}
+            </paper-listbox>
+          </paper-dropdown-menu>
+        </div>
+        <div>
+          <paper-dropdown-menu
+            label=${localize('settings.playlist_type')}
+            @value-changed=${this._valueChanged}
+            .configValue=${'playlist_type'}
+          >
+            <paper-listbox slot="dropdown-content" .selected=${PLAYLIST_TYPES.indexOf(this._playlist_type)}>
+              ${PLAYLIST_TYPES.map((item) => html` <paper-item>${item}</paper-item> `)}
+            </paper-listbox>
+          </paper-dropdown-menu>
+        </div>
+        <div>
+          <div>${localize('settings.limit')}</div>
+          <paper-slider
+            .value=${this._limit}
+            .configValue=${'limit'}
+            @value-changed=${this._valueChanged}
+            max="50"
+            editable
+            pin
+          ></paper-slider>
+        </div>
+        <div>
+          <paper-input
+            label=${localize('settings.height')}
+            .value=${this._height}
+            .configValue=${'height'}
+            @value-changed=${this._valueChanged}
+          ></paper-input>
+        </div>
+        <div>
+          <paper-input
+            label=${localize('settings.country_code')}
+            .value=${this._country_code}
+            .configValue=${'country_code'}
+            @value-changed=${this._valueChanged}
+          ></paper-input>
+        </div>
+        <div>
+          <div>${localize('settings.always_play_random_song')}</div>
+          <ha-switch
+            aria-label=${`Toggle always_play_random_song ${this._hide_warning ? 'off' : 'on'}`}
+            .checked=${this._always_play_random_song}
+            .configValue=${'always_play_random_song'}
+            @change=${this._valueChanged}
+          ></ha-switch>
+        </div>
+      </div>
+    `;
+  }
+
+  private renderAppearance(): TemplateResult {
+    return html`
+      <div class="values">
+        <div>
+          <ha-switch
+            aria-label=${`Toogle Warnings ${this._hide_warning ? 'off' : 'on'}`}
+            .checked=${this._hide_warning}
+            .configValue=${'hide_warning'}
+            @change=${this._valueChanged}
+            >${localize('settings.hide_warning')}</ha-switch
+          >
+        </div>
+        <div>
+          <paper-input
+            label=${localize('settings.title')}
+            .value=${this._name}
+            .configValue=${'name'}
+            @value-changed=${this._valueChanged}
+          ></paper-input>
+        </div>
+        <div>
+          <paper-dropdown-menu
+            label=${localize('settings.display_style')}
+            @value-changed=${this._valueChanged}
+            .configValue=${'display_style'}
+          >
+            <paper-listbox slot="dropdown-content" .selected=${DISPLAY_STYLES.indexOf(this._display_style)}>
+              ${DISPLAY_STYLES.map((item) => html` <paper-item>${item}</paper-item> `)}
+            </paper-listbox>
+          </paper-dropdown-menu>
+        </div>
+        <div>
+          <div>${localize('settings.grid_cover_size')}</div>
+          <paper-slider
+            .value=${this._grid_cover_size}
+            .configValue=${'grid_cover_size'}
+            @value-changed=${this._valueChanged}
+            max="450"
+            min="50"
+            editable
+            pin
+          ></paper-slider>
+        </div>
+        <div>
+          <div>${localize('settings.grid_center_covers')}</div>
+          <ha-switch
+            aria-label=${`Toggle grid_center_covers ${this._hide_warning ? 'off' : 'on'}`}
+            .checked=${this._grid_center_covers}
+            .configValue=${'grid_center_covers'}
+            @change=${this._valueChanged}
+          ></ha-switch>
+        </div>
+        <span>Show Warning?</span>
+        <ha-switch
+          aria-label=${`Toggle warning ${this._show_error ? 'off' : 'on'}`}
+          .checked=${this._show_warning}
+          .configValue=${'show_warning'}
+          @change=${this._valueChanged}
+        ></ha-switch>
+        <span>Show Error?</span>
+        <ha-switch
+          aria-label=${`Toggle error ${this._show_error ? 'off' : 'on'}`}
+          .checked=${this._show_error}
+          .configValue=${'show_error'}
+          @change=${this._valueChanged}
+        ></ha-switch>
+      </div>
+    `;
+  }
+
+  private renderAdvanced(): TemplateResult {
+    return html`
+      <div class="values">
+        <div class="filter_grid">
+          <div class="filter_grid--title">${localize('settings.filter_out_cast_devices')}</div>
+          ${this.chromecast_devices.map((cast, idx) => {
+            return html`
+              <paper-checkbox
+                .idx=${idx}
+                .checked=${this._hidden_cast_devices.includes(cast)}
+                @checked-changed=${this._valueChangedForList}
+                .configValue=${'hidden_cast_devices'}
+              >
+                ${cast}
+              </paper-checkbox>
+            `;
+          })}
+        </div>
+      </div>
+    `;
+  }
+
   protected render(): TemplateResult | void {
     if (!this.hass) {
       return html``;
@@ -159,70 +344,7 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
           </div>
           <div class="secondary">${options.general.secondary}</div>
         </div>
-        ${options.general.show
-          ? html`
-              <div class="values">
-                <div>
-                  <paper-dropdown-menu
-                    label=${localize('settings.account')}
-                    @value-changed=${this._valueChanged}
-                    .configValue=${'account'}
-                  >
-                    <paper-listbox slot="dropdown-content" .selected=${this.accounts.indexOf(this._account)}>
-                      ${this.accounts.map((item) => html` <paper-item>${item}</paper-item> `)}
-                    </paper-listbox>
-                  </paper-dropdown-menu>
-                </div>
-                <div>
-                  <paper-dropdown-menu
-                    label=${localize('settings.playlist_type')}
-                    @value-changed=${this._valueChanged}
-                    .configValue=${'playlist_type'}
-                  >
-                    <paper-listbox slot="dropdown-content" .selected=${PLAYLIST_TYPES.indexOf(this._playlist_type)}>
-                      ${PLAYLIST_TYPES.map((item) => html` <paper-item>${item}</paper-item> `)}
-                    </paper-listbox>
-                  </paper-dropdown-menu>
-                </div>
-                <div>
-                  <div>${localize('settings.limit')}</div>
-                  <paper-slider
-                    .value=${this._limit}
-                    .configValue=${'limit'}
-                    @value-changed=${this._valueChanged}
-                    max="50"
-                    editable
-                    pin
-                  ></paper-slider>
-                </div>
-                <div>
-                  <paper-input
-                    label=${localize('settings.height')}
-                    .value=${this._height}
-                    .configValue=${'height'}
-                    @value-changed=${this._valueChanged}
-                  ></paper-input>
-                </div>
-                <div>
-                  <paper-input
-                    label=${localize('settings.country_code')}
-                    .value=${this._country_code}
-                    .configValue=${'country_code'}
-                    @value-changed=${this._valueChanged}
-                  ></paper-input>
-                </div>
-                <div>
-                  <div>${localize('settings.always_play_random_song')}</div>
-                  <ha-switch
-                    aria-label=${`Toggle always_play_random_song ${this._hide_warning ? 'off' : 'on'}`}
-                    .checked=${this._always_play_random_song}
-                    .configValue=${'always_play_random_song'}
-                    @change=${this._valueChanged}
-                  ></ha-switch>
-                </div>
-              </div>
-            `
-          : ''}
+        ${options.general.show ? this.renderGeneral() : ''}
         <div class="option" @click=${this._toggleOption} .option=${'appearance'}>
           <div class="row">
             <ha-icon .icon=${`mdi:${options.appearance.icon}`}></ha-icon>
@@ -230,75 +352,15 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
           </div>
           <div class="secondary">${options.appearance.secondary}</div>
         </div>
-        ${options.appearance.show
-          ? html`
-              <div class="values">
-                <div>
-                  <ha-switch
-                    aria-label=${`Toogle Warnings ${this._hide_warning ? 'off' : 'on'}`}
-                    .checked=${this._hide_warning}
-                    .configValue=${'hide_warning'}
-                    @change=${this._valueChanged}
-                    >${localize('settings.hide_warning')}</ha-switch
-                  >
-                </div>
-                <div>
-                  <paper-input
-                    label=${localize('settings.title')}
-                    .value=${this._name}
-                    .configValue=${'name'}
-                    @value-changed=${this._valueChanged}
-                  ></paper-input>
-                </div>
-                <div>
-                  <paper-dropdown-menu
-                    label=${localize('settings.display_style')}
-                    @value-changed=${this._valueChanged}
-                    .configValue=${'display_style'}
-                  >
-                    <paper-listbox slot="dropdown-content" .selected=${DISPLAY_STYLES.indexOf(this._display_style)}>
-                      ${DISPLAY_STYLES.map((item) => html` <paper-item>${item}</paper-item> `)}
-                    </paper-listbox>
-                  </paper-dropdown-menu>
-                </div>
-                <div>
-                  <div>${localize('settings.grid_cover_size')}</div>
-                  <paper-slider
-                    .value=${this._grid_cover_size}
-                    .configValue=${'grid_cover_size'}
-                    @value-changed=${this._valueChanged}
-                    max="450"
-                    min="50"
-                    editable
-                    pin
-                  ></paper-slider>
-                </div>
-                <div>
-                  <div>${localize('settings.grid_center_covers')}</div>
-                  <ha-switch
-                    aria-label=${`Toggle grid_center_covers ${this._hide_warning ? 'off' : 'on'}`}
-                    .checked=${this._grid_center_covers}
-                    .configValue=${'grid_center_covers'}
-                    @change=${this._valueChanged}
-                  ></ha-switch>
-                </div>
-                <span>Show Warning?</span>
-                <ha-switch
-                  aria-label=${`Toggle warning ${this._show_error ? 'off' : 'on'}`}
-                  .checked=${this._show_warning}
-                  .configValue=${'show_warning'}
-                  @change=${this._valueChanged}
-                ></ha-switch>
-                <span>Show Error?</span>
-                <ha-switch
-                  aria-label=${`Toggle error ${this._show_error ? 'off' : 'on'}`}
-                  .checked=${this._show_error}
-                  .configValue=${'show_error'}
-                  @change=${this._valueChanged}
-                ></ha-switch>
-              </div>
-            `
-          : ''}
+        ${options.appearance.show ? this.renderAppearance() : ''}
+        <div class="option" @click=${this._toggleOption} .option=${'advanced'}>
+          <div class="row">
+            <ha-icon .icon=${`mdi:${options.advanced.icon}`}></ha-icon>
+            <div class="title">${options.advanced.name}</div>
+          </div>
+          <div class="secondary">${options.advanced.secondary}</div>
+        </div>
+        ${options.advanced.show ? this.renderAdvanced() : ''}
       </div>
     `;
   }
@@ -345,6 +407,32 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
     this.requestUpdate(target.configValue);
   }
 
+  // Value changed for lists
+  private _valueChangedForList(ev: any): void {
+    if (!this._config || !this.hass) {
+      return;
+    }
+
+    const { checked } = ev.currentTarget!;
+    const configValue = ev.target.configValue;
+    const value = ev.target.innerText;
+
+    const config = JSON.parse(JSON.stringify(this._config));
+    if (!config[configValue]) {
+      config[configValue] = [];
+    }
+    if (checked) {
+      if (!config[configValue].includes(value)) {
+        config[configValue].push(value);
+      }
+    } else {
+      config[configValue] = config[configValue].filter((d) => d !== value);
+    }
+
+    fireEvent(this, 'config-changed', { config: config });
+    this.requestUpdate(configValue);
+  }
+
   static get styles(): CSSResult {
     return css`
       .option {
@@ -378,6 +466,17 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
 
       .values > *:last-child {
         border-bottom: 0;
+      }
+
+      .filter_grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        row-gap: 20px;
+        padding-bottom: 10px;
+      }
+
+      .filter_grid > .filter_grid--title {
+        grid-column: span 3;
       }
 
       ha-switch {
