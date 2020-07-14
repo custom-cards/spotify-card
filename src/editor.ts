@@ -19,7 +19,7 @@ const options = {
     icon: 'tune',
     name: localize('settings.general'),
     secondary: localize('settings.general_description'),
-    show: false,
+    show: true,
   },
   appearance: {
     icon: 'palette',
@@ -31,7 +31,7 @@ const options = {
     icon: 'pencil',
     name: localize('settings.advanced'),
     secondary: localize('settings.advanced_description'),
-    show: true,
+    show: false,
   },
 };
 
@@ -57,17 +57,10 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
     });
     this.accounts = res;
 
-    // const casts: any = await this.hass.callWS({
-    //   type: 'spotcast/castdevices',
-    // });
-    const casts = [
-      { ddd: 123, friendly_name: 'Kök' },
-      { ddd: 122, friendly_name: 'Högtalare uppe' },
-      { ddd: 112, friendly_name: 'Vardagsrum' },
-      { ddd: 345, friendly_name: 'Kök 2' },
-      { ddd: 567, friendly_name: 'Högtalare uppe 2' },
-      { ddd: 789, friendly_name: 'Vardagsrum 3' },
-    ];
+    const casts: any = await this.hass.callWS({
+      type: 'spotcast/castdevices',
+    });
+
     this.chromecast_devices = casts.map((c) => c.friendly_name);
     this.requestUpdate();
   }
