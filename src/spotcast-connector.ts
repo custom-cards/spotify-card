@@ -99,10 +99,14 @@ export class SpotcastConnector {
       return;
     }
     console.log('cache is NOT valid:', this.last_state_update_time);
-    await this.fetchDevices();
-    await this.fetchPlayer();
-    await this.fetchChromecasts();
-    this.last_state_update_time = new Date().getTime();
+    try {
+      await this.fetchDevices();
+      await this.fetchPlayer();
+      await this.fetchChromecasts();
+      this.last_state_update_time = new Date().getTime();
+    } catch (e) {
+      console.error('updateState error:', e);
+    }
   }
 
   public getCurrentPlayer(): ConnectDevice | undefined {
