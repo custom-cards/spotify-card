@@ -114,6 +114,7 @@ export class SpotcastConnector {
   }
 
   private async fetchPlayer(): Promise<void> {
+    console.log('fetchPlayer');
     const message: Message = {
       type: 'spotcast/player',
       account: this.parent.config.account,
@@ -123,6 +124,7 @@ export class SpotcastConnector {
   }
 
   private async fetchDevices(): Promise<void> {
+    console.log('fetchDevices');
     const message: Message = {
       type: 'spotcast/devices',
       account: this.parent.config.account,
@@ -137,7 +139,9 @@ export class SpotcastConnector {
    * Use HA state for now
    */
   private async fetchChromecasts(): Promise<void> {
+    console.log('fetchChromecasts2');
     const res2: any = await this.parent.hass.callWS({ type: 'spotcast/castdevices' });
+    console.log('fetchChromecasts');
     const res: any = await this.parent.hass.callWS({
       type: 'config/entity_registry/list',
     });
