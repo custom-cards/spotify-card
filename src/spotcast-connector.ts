@@ -118,7 +118,11 @@ export class SpotcastConnector {
       type: 'spotcast/player',
       account: this.parent.config.account,
     };
-    this.player = <CurrentPlayer>await this.parent.hass.callWS(message);
+    try {
+      this.player = <CurrentPlayer>await this.parent.hass.callWS(message);
+    } catch (e) {
+      console.log('Failed to fetch cast devices');
+    }
     // console.log('fetchPlayer:', JSON.stringify(this.player, null, 2));
   }
 
