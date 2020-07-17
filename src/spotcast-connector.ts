@@ -121,7 +121,7 @@ export class SpotcastConnector {
     try {
       this.player = <CurrentPlayer>await this.parent.hass.callWS(message);
     } catch (e) {
-      console.log('Failed to fetch cast devices');
+      console.log('Failed to fetch plaayer', e);
     }
     // console.log('fetchPlayer:', JSON.stringify(this.player, null, 2));
   }
@@ -147,7 +147,7 @@ export class SpotcastConnector {
       this.chromecast_devices = await this.parent.hass.callWS({ type: 'spotcast/castdevices' });
       console.log('fetchChromecasts2:', this.chromecast_devices);
     } catch (e) {
-      console.log('Failed to fetch cast devices');
+      console.log('Failed to fetch cast devices', e);
       this.chromecast_devices = [];
     }
     // console.log('fetchChromecasts2:', this.chromecast_devices);
