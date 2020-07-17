@@ -152,7 +152,7 @@ export class SpotcastConnector {
         .map((e) => this.parent.hass.states[e.entity_id])
         .filter((e) => e != null && e.state != 'unavailable');
     } catch (e) {
-      console.log('Could not gilter out chromecasts', res);
+      console.log('Could not filter out chromecasts', res);
     }
     console.log('fetchChromecasts:', this.chromecast_devices);
     console.log('fetchChromecasts2:', res2);
