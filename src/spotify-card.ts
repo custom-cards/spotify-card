@@ -92,7 +92,7 @@ export class SpotifyCard extends LitElement {
         updateDevices = true;
       }
     }
-    if (updateDevices) {
+    if (updateDevices && !document.hidden) {
       // Debounce updates to 500ms
       if (this.fetch_time_out) {
         clearTimeout(this.fetch_time_out);
