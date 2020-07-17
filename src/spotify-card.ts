@@ -159,12 +159,12 @@ export class SpotifyCard extends LitElement {
   private chromecastDeviceSelected(device: any): void {
     const current_player = this.spotcast_connector.getCurrentPlayer();
     if (current_player) {
-      return this.spotcast_connector.transferPlaybackToCastDevice(device.attributes.friendly_name);
+      return this.spotcast_connector.transferPlaybackToCastDevice(device.friendly_name);
     }
 
     const playlist = this.spotcast_connector.playlists[0];
     console.log('chromecastDeviceSelected playing first playlist');
-    this.spotcast_connector.playUriOnCastDevice(device.attributes.friendly_name, playlist.uri);
+    this.spotcast_connector.playUriOnCastDevice(device.friendly_name, playlist.uri);
   }
 
   private onShuffleSelect(): void {
@@ -290,9 +290,9 @@ export class SpotifyCard extends LitElement {
         )}
         ${this.spotcast_connector.chromecast_devices.length ? html`<p>Chromecast devices</p>` : null}
         ${this.spotcast_connector.chromecast_devices.map((device) => {
-          return hidden.includes(device.attributes.friendly_name)
+          return hidden.includes(device.friendly_name)
             ? null
-            : html`<a @click=${() => this.chromecastDeviceSelected(device)}>${device.attributes.friendly_name}</a>`;
+            : html`<a @click=${() => this.chromecastDeviceSelected(device)}>${device.friendly_name}</a>`;
         })}
       </div>
     `;

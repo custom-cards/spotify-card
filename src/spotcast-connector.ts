@@ -1,4 +1,3 @@
-import { HassEntity } from 'home-assistant-js-websocket';
 import { SpotifyCard } from './spotify-card';
 import { ConnectDevice, CurrentPlayer, Playlist } from './types';
 interface Message {
@@ -19,7 +18,7 @@ export class SpotcastConnector {
   playlists: Array<Playlist> = [];
   devices: Array<ConnectDevice> = [];
   player?: CurrentPlayer;
-  chromecast_devices: Array<HassEntity> = [];
+  chromecast_devices: Array<any> = [];
   // data is valid for 2 secs otherwise the service is spammed bcos of the entitiy changes
   state_ttl = 2000;
   last_state_update_time = 0;
@@ -139,23 +138,8 @@ export class SpotcastConnector {
    * Use HA state for now
    */
   private async fetchChromecasts(): Promise<void> {
-    console.log('fetchChromecasts2');
-    const res2: any = await this.parent.hass.callWS({ type: 'spotcast/castdevices' });
-    console.log('fetchChromecasts');
-    const res: any = await this.parent.hass.callWS({
-      type: 'config/entity_registry/list',
-    });
-
-    try {
-      this.chromecast_devices = res
-        .filter((e) => e.platform == 'cast')
-        .map((e) => this.parent.hass.states[e.entity_id])
-        .filter((e) => e != null && e.state != 'unavailable');
-    } catch (e) {
-      console.log('Could not filter out chromecasts', res);
-    }
-    console.log('fetchChromecasts:', this.chromecast_devices);
-    console.log('fetchChromecasts2:', res2);
+    this.chromecast_devices = await this.parent.hass.callWS({ type: 'spotcast/castdevices' });
+    // console.log('fetchChromecasts2:', this.chromecast_devices);
   }
 
   public async fetchPlaylists(): Promise<void> {

@@ -406,7 +406,7 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
       return;
     }
 
-    const { checked } = ev.currentTarget!;
+    const { checked } = ev.currentTarget;
     const configValue = ev.target.configValue;
     const value = ev.target.innerText;
 
