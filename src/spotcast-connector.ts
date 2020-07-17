@@ -138,7 +138,14 @@ export class SpotcastConnector {
    * Use HA state for now
    */
   private async fetchChromecasts(): Promise<void> {
-    this.chromecast_devices = await this.parent.hass.callWS({ type: 'spotcast/castdevices' });
+    console.log('fetchChromecasts2:', this.chromecast_devices);
+    try {
+      this.chromecast_devices = await this.parent.hass.callWS({ type: 'spotcast/castdevices' });
+      console.log('fetchChromecasts2:', this.chromecast_devices);
+    } catch (e) {
+      console.log('Failed to fetch cast devices');
+      this.chromecast_devices = [];
+    }
     // console.log('fetchChromecasts2:', this.chromecast_devices);
   }
 
