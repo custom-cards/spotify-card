@@ -19,8 +19,8 @@ export class SpotcastConnector {
   devices: Array<ConnectDevice> = [];
   player?: CurrentPlayer;
   chromecast_devices: Array<any> = [];
-  // data is valid for 2 secs otherwise the service is spammed bcos of the entitiy changes
-  state_ttl = 2000;
+  // data is valid for 4 secs otherwise the service is spammed bcos of the entitiy changes
+  state_ttl = 4000;
   last_state_update_time = 0;
 
   loading = false;
@@ -113,7 +113,7 @@ export class SpotcastConnector {
   }
 
   private async fetchPlayer(): Promise<void> {
-    console.log('fetchPlayer');
+    // console.log('fetchPlayer');
     const message: Message = {
       type: 'spotcast/player',
       account: this.parent.config.account,
@@ -127,7 +127,7 @@ export class SpotcastConnector {
   }
 
   private async fetchDevices(): Promise<void> {
-    console.log('fetchDevices');
+    // console.log('fetchDevices');
     const message: Message = {
       type: 'spotcast/devices',
       account: this.parent.config.account,
@@ -142,10 +142,8 @@ export class SpotcastConnector {
    * Use HA state for now
    */
   private async fetchChromecasts(): Promise<void> {
-    console.log('fetchChromecasts2:', this.chromecast_devices);
     try {
       this.chromecast_devices = await this.parent.hass.callWS({ type: 'spotcast/castdevices' });
-      console.log('fetchChromecasts2:', this.chromecast_devices);
     } catch (e) {
       console.log('Failed to fetch cast devices', e);
       this.chromecast_devices = [];

@@ -124,11 +124,11 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
     return 'List';
   }
 
-  get _grid_cover_size(): number {
+  get _grid_covers_per_row(): number {
     if (this._config) {
-      return this._config.grid_cover_size || 100;
+      return this._config.grid_covers_per_row || 5;
     }
-    return 100;
+    return 5;
   }
 
   get _grid_center_covers(): boolean {
@@ -263,13 +263,13 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
           </paper-dropdown-menu>
         </div>
         <div>
-          <div>${localize('settings.grid_cover_size')}</div>
+          <div>${localize('settings.grid_covers_per_row')}</div>
           <paper-slider
-            .value=${this._grid_cover_size}
-            .configValue=${'grid_cover_size'}
+            .value=${this._grid_covers_per_row}
+            .configValue=${'grid_covers_per_row'}
             @value-changed=${this._valueChanged}
-            max="450"
-            min="50"
+            max="10"
+            min="1"
             editable
             pin
           ></paper-slider>

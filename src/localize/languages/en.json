@@ -23,8 +23,7 @@
     "always_play_random_song": "Always play random song when starting playback",
     "title": "Title of card",
     "display_style": "Display Style",
-    "grid_cover_size": "Cover size in Grid-View in pixels",
-    "grid_center_covers": "Center the covers in Grid-View",
+    "grid_covers_per_row": "Number of covers per row",
     "account": "Account",
     "filter_out_cast_devices": "Filter out chromecast devices"
   }

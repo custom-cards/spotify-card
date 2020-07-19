@@ -20,7 +20,8 @@
     "always_play_random_song": "Spiele immer einen zufälligen Song beim Starten der Wiedergabe ab",
     "title": "Titel der Karte",
     "display_style": "Anzeige-Stil",
-    "grid_cover_size": "Cover Größe in der Karten-Ansicht in Pixeln",
-    "grid_center_covers": "Zentriere die Cover in der Karten-Ansicht"
+    "grid_covers_per_row": "Number of covers per row",
+    "account": "Account",
+    "filter_out_cast_devices": "Filter out chromecast devices"
   }
 }

@@ -3,6 +3,8 @@ import { LovelaceCardConfig } from 'custom-card-helpers';
 export interface SpotifyCardConfig extends LovelaceCardConfig {
   //card type
   type: string;
+  //optinal account
+  account?: string;
   //optinal card title
   name?: string;
   //displayed playlist type
@@ -19,10 +21,8 @@ export interface SpotifyCardConfig extends LovelaceCardConfig {
   display_style?: string;
   //start always random when clicking a playlist. usefull especially in grid-view mode
   always_play_random_song?: boolean;
-  //size of covers in grid view
-  grid_cover_size?: number;
-  //center the covers in grid view
-  grid_center_covers?: boolean;
+  //number of covers per row in grid
+  grid_covers_per_row?: number;
   //TODO implement preselected device
   device?: string;
   // locale

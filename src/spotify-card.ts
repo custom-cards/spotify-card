@@ -168,9 +168,11 @@ export class SpotifyCard extends LitElement {
   }
 
   private onShuffleSelect(): void {
-    console.log('shuffle;', this.spotify_state);
     if (this.spotify_state?.state == 'playing') {
-      this.hass.callService('media_player', 'shuffle_set', { entity_id: this.spotify_state.entity_id, shuffle: true });
+      this.hass.callService('media_player', 'shuffle_set', {
+        entity_id: this.spotify_state.entity_id,
+        shuffle: !this.spotcast_connector.player?.shuffle_state,
+      });
     }
   }
 
@@ -211,7 +213,7 @@ export class SpotifyCard extends LitElement {
       });
     } else {
       // Display spotify playlists
-      if (this.config.display_style == 'Grid') {
+      if (this.config.display_style?.toLowerCase() == 'grid') {
         content = this.generateGridView();
       } else {
         content = this.generateListView();
@@ -263,7 +265,10 @@ export class SpotifyCard extends LitElement {
           </div>
           <div class="footer__right">
             ${this.spotify_state?.state == 'playing'
-              ? html`<div class="icon playing" @click=${this.onShuffleSelect}>
+              ? html`<div
+                  class="icon ${this.spotcast_connector.player?.shuffle_state ? 'playing' : ''}"
+                  @click=${this.onShuffleSelect}
+                >
                   <svg width="24" height="24">
                     <path d="M0 0h24v24H0z" fill="none" />
                     <path
@@ -358,42 +363,40 @@ export class SpotifyCard extends LitElement {
 
   // Generate items for display style 'Grid'
   public generateGridView(): TemplateResult {
-    if (this.spotcast_connector.is_loaded()) {
-      const result: TemplateResult[] = [];
-      for (let i = 0; i < this.spotcast_connector.playlists.length; i++) {
-        const item = this.spotcast_connector.playlists[i];
-        const playing = this.spotify_state?.attributes.media_playlist === item.name;
-        this.spotify_state?.attributes.media_playlist === item.name;
-
-        result.push(html`<div
-          class="grid-item ${playing ? 'playing' : ''}"
-          @click=${() => this.spotcast_connector.playUri(item.uri)}
-        >
-          <img
-            class="grid-item-album-image"
-            src="${item.images[item.images.length - 1].url}"
-            height=${this.config.grid_cover_size ? this.config.grid_cover_size + 'px' : '100px'}
-          />
-          <div class="grid-item-overlay-icon">
-            ${playing
-              ? this.generateGridIconForCurrent()
-              : html`
-                  <svg width="24" height="24" @click=${() => this.spotcast_connector.playUri(item.uri)}>
-                    <path d="M0 0h24v24H0z" fill="none" />
-                    <path d="M8 5v14l11-7z" />
-                  </svg>
-                `}
-          </div>
-        </div>`);
-      }
-      return html`<div
-        id="cover-box"
-        style="justify-content:${this.config.grid_center_covers ? 'space-evenly' : 'left'}"
-      >
-        ${result}
-      </div>`;
+    if (!this.spotcast_connector.is_loaded()) {
+      return html``;
     }
-    return html``;
+
+    const result: TemplateResult[] = [];
+    for (let i = 0; i < this.spotcast_connector.playlists.length; i++) {
+      const item = this.spotcast_connector.playlists[i];
+      const playing = this.spotify_state?.attributes.media_playlist === item.name;
+      this.spotify_state?.attributes.media_playlist === item.name;
+
+      result.push(html`<div class="grid-item" @click=${() => this.spotcast_connector.playUri(item.uri)}>
+        <img
+          class="grid-item-album-image ${playing ? 'playing' : ''}"
+          src="${item.images[item.images.length - 1].url}"
+        />
+        <div class="grid-item-overlay-icon">
+          ${playing
+            ? this.generateGridIconForCurrent()
+            : html`
+                <svg width="24" height="24" @click=${() => this.spotcast_connector.playUri(item.uri)}>
+                  <path d="M0 0h24v24H0z" fill="none" />
+                  <path d="M8 5v14l11-7z" />
+                </svg>
+              `}
+        </div>
+      </div>`);
+    }
+
+    const configured_grid_width = this.config.grid_covers_per_row ? this.config.grid_covers_per_row : 3;
+    const grid_width = (100 - 10) / configured_grid_width;
+
+    return html`<div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(${grid_width}%, 1fr));">
+      ${result}
+    </div>`;
   }
 
   // Show warning on top of the card
@@ -534,6 +537,14 @@ export class SpotifyCard extends LitElement {
     .dropdown-content:hover {
       display: block;
     }
+
+    .icon > svg {
+      fill: var(--primary-text-color);
+    }
+
+    .icon.playing > svg {
+      fill: var(--primary-color) !important;
+    }
   `;
 
   //Style definition for the List view
@@ -574,13 +585,6 @@ export class SpotifyCard extends LitElement {
       align-items: center;
     }
 
-    .list-item > .icon > svg {
-      fill: var(--primary-text-color);
-    }
-    .list-item > .icon.playing > svg {
-      fill: var(--primary-color) !important;
-    }
-
     .list-item > p {
       margin: 0 0.5em 0 0.5em;
     }
@@ -588,25 +592,25 @@ export class SpotifyCard extends LitElement {
 
   //Style definition for the Grid view
   static gridStyles = css`
-    #cover-box {
-      display: flex;
-      flex-flow: wrap;
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(30%, 1fr));
+      grid-gap: 5px;
     }
 
     .grid-item {
       position: relative;
-      box-shadow: var(--primary-text-color) 0 0 0.2em;
-      margin: 0.2em;
-      display: flex;
       cursor: pointer;
     }
 
-    .grid-item.playing {
-      box-shadow: var(--primary-color) 0 0 0.2em 0.2em;
+    .grid-item-album-image {
+      width: 100%;
+      height: auto;
+      box-shadow: var(--primary-text-color) 0 0 0.2em;
     }
 
-    .grid-item-album-image {
-      display: block;
+    .grid-item-album-image.playing {
+      box-shadow: var(--primary-color) 0 0 0.2em 0.2em;
     }
 
     .grid-item-overlay-icon {

@@ -58,8 +58,7 @@ If you are not using the visual configuration of Lovelace you can add the card l
       hide_warning: <optional true> Hide warnings if they are displayed.
       name: <optional name> Custom title. Leave empty to hide.
       display_style: <optional Grid> Change default display style.
-      grid_cover_size: <optional number> Change the cover size in Grid-view.
-      grid_center_covers: <optional boolean> Center the covers in Grid-view.
+      grid_covers_per_row: <optional number> Number of covers per row (default 3) in Grid-view.
 ```
 
 ### General usage
