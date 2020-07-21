@@ -67,6 +67,8 @@ export class SpotifyCard extends LitElement {
 
   private fetch_time_out: any = 0;
 
+  private unsubscribe_entitites?: any;
+
   connectedCallback(): void {
     super.connectedCallback();
     this.spotcast_connector = new SpotcastConnector(this);
@@ -75,7 +77,12 @@ export class SpotifyCard extends LitElement {
       this.spotcast_installed = true;
     }
     //get all available entities and when they update
-    subscribeEntities(this.hass.connection, (entities) => this.entitiesUpdated(entities));
+    this.unsubscribe_entitites = subscribeEntities(this.hass.connection, (entities) => this.entitiesUpdated(entities));
+  }
+
+  public disconnectedCallback() {
+    super.disconnectedCallback();
+    this.unsubscribe_entitites && this.unsubscribe_entitites();
   }
 
   //Callback when hass-entity has changed
@@ -85,7 +92,7 @@ export class SpotifyCard extends LitElement {
       // Are there any changes to media players
       if (item.startsWith('media_player')) {
         // Get spotify state
-        if (item.startsWith('media_player.spotify_')) {
+        if (item.startsWith('media_player.spotify_') || item == this.config.spotify_entity) {
           this.spotify_installed = true;
           this.spotify_state = entities[item];
         }
@@ -99,7 +106,6 @@ export class SpotifyCard extends LitElement {
       }
       this.fetch_time_out = setTimeout(() => {
         this.spotcast_connector.updateState().then(() => {
-          console.log('State updated:', new Date().toISOString());
           this.requestUpdate();
         });
       }, 500);

@@ -3,6 +3,8 @@ import { LovelaceCardConfig } from 'custom-card-helpers';
 export interface SpotifyCardConfig extends LovelaceCardConfig {
   //card type
   type: string;
+  // name of the spotify entity
+  spotify_entity?: string;
   //optinal account
   account?: string;
   //optinal card title

@@ -12,6 +12,7 @@ import { HomeAssistant, fireEvent, LovelaceCardEditor } from 'custom-card-helper
 
 import { SpotifyCardConfig } from './types';
 import { localize } from './localize/localize';
+import { HassEntity } from 'home-assistant-js-websocket';
 
 //define tabs of editor
 const options = {
@@ -63,6 +64,8 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
 
     this.chromecast_devices = casts.map((c) => c.friendly_name);
     this.requestUpdate();
+
+    // for (const entityId in this.hass.states) {
   }
   public setConfig(config: SpotifyCardConfig): void {
     this._config = config;
@@ -77,7 +80,15 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
 
   get _account(): string {
     if (this._config) {
-      return this._config._account || 'default';
+      return this._config.account || 'default';
+    }
+    return '';
+  }
+
+  get _spotify_entity(): string {
+    if (this._config) {
+      const auto_detected = this.getMediaPlayerEntities().filter((e) => e.entity_id.includes('spotify'));
+      return this._config.spotify_entity || (auto_detected.length > 0 ? auto_detected[0].entity_id : '');
     }
     return '';
   }
@@ -166,7 +177,15 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
     return false;
   }
 
+  private getMediaPlayerEntities(): Array<HassEntity> {
+    return Object.keys(this.hass.states)
+      .map((key) => this.hass.states[key])
+      .filter((ent) => ent.entity_id.match('media_player[.]'));
+  }
+
   private renderGeneral(): TemplateResult {
+    const media_player_entities = this.getMediaPlayerEntities().map((e) => e.entity_id);
+
     return html`
       <div class="values">
         <div>
@@ -174,17 +193,33 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
             label=${localize('settings.account')}
             @value-changed=${this._valueChanged}
             .configValue=${'account'}
+            class="dropdown"
           >
             <paper-listbox slot="dropdown-content" .selected=${this.accounts.indexOf(this._account)}>
               ${this.accounts.map((item) => html` <paper-item>${item}</paper-item> `)}
             </paper-listbox>
           </paper-dropdown-menu>
         </div>
+
+        <div>
+          <paper-dropdown-menu
+            label=${localize('settings.spotify_entity')}
+            @value-changed=${this._valueChanged}
+            .configValue=${'spotify_entity'}
+            class="dropdown"
+          >
+            <paper-listbox slot="dropdown-content" .selected=${media_player_entities.indexOf(this._spotify_entity)}>
+              ${media_player_entities.map((item) => html` <paper-item>${item}</paper-item> `)}
+            </paper-listbox>
+          </paper-dropdown-menu>
+        </div>
+
         <div>
           <paper-dropdown-menu
             label=${localize('settings.playlist_type')}
             @value-changed=${this._valueChanged}
             .configValue=${'playlist_type'}
+            class="dropdown"
           >
             <paper-listbox slot="dropdown-content" .selected=${PLAYLIST_TYPES.indexOf(this._playlist_type)}>
               ${PLAYLIST_TYPES.map((item) => html` <paper-item>${item}</paper-item> `)}
@@ -256,6 +291,7 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
             label=${localize('settings.display_style')}
             @value-changed=${this._valueChanged}
             .configValue=${'display_style'}
+            class="dropdown"
           >
             <paper-listbox slot="dropdown-content" .selected=${DISPLAY_STYLES.indexOf(this._display_style)}>
               ${DISPLAY_STYLES.map((item) => html` <paper-item>${item}</paper-item> `)}
@@ -459,6 +495,10 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
 
       .values > *:last-child {
         border-bottom: 0;
+      }
+
+      .dropdown {
+        width: 50vw;
       }
 
       .filter_grid {
