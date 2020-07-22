@@ -84,6 +84,7 @@ export class SpotifyCard extends LitElement {
   //Callback when hass-entity has changed
   entitiesUpdated(entities: HassEntities): void {
     let updateDevices = false;
+    console.log('ENTITIES:', entities);
     for (const item in entities) {
       // Are there any changes to media players
       if (item.startsWith('media_player')) {
