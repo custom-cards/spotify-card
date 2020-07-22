@@ -10,6 +10,9 @@ assignees: ''
 **Describe the bug**
 A clear and concise description of what the bug is.
 
+Reproducable on a plain lovelace panel without card, style or theme mods [ ] 
+Using latest version of spotcast and spotify-card [ ]
+
 **To Reproduce**
 Steps to reproduce the behavior:
 1. Go to '...'
@@ -29,6 +32,9 @@ If applicable, add screenshots to help explain your problem.
  - Version
  - HA version
  - spotcast version
+
+**Configuration**
+Add your configuration
 
 **Additional context**
 Add any other context about the problem here.
