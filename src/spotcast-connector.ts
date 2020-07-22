@@ -59,6 +59,21 @@ export class SpotcastConnector {
   public playUri(uri: string): void {
     const current_player = this.getCurrentPlayer();
     if (!current_player) {
+      const default_device = this.parent.config.default_device;
+      if (default_device) {
+        const connect_device = this.devices.filter((device) => device.name == default_device);
+
+        if (connect_device.length > 0) {
+          return this.playUriOnConnectDevice(connect_device[0].id, uri);
+        } else {
+          const cast_device = this.chromecast_devices.filter((cast) => cast.friendly_name == default_device);
+          if (cast_device.length > 0) {
+            return this.playUriOnCastDevice(cast_device[0].friendly_name, uri);
+          }
+          console.error('Could not find default_device:' + default_device);
+        }
+      }
+
       console.error('No active device');
       return;
     }

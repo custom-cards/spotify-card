@@ -177,6 +177,13 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
     return false;
   }
 
+  get _default_device(): string {
+    if (this._config) {
+      return this._config.default_device || '';
+    }
+    return '';
+  }
+
   private getMediaPlayerEntities(): Array<HassEntity> {
     return Object.keys(this.hass.states)
       .map((key) => this.hass.states[key])
@@ -261,6 +268,14 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
             .configValue=${'always_play_random_song'}
             @change=${this._valueChanged}
           ></ha-switch>
+        </div>
+        <div>
+          <paper-input
+            label=${localize('settings.default_device')}
+            .value=${this._default_device}
+            .configValue=${'default_device'}
+            @value-changed=${this._valueChanged}
+          ></paper-input>
         </div>
       </div>
     `;
@@ -498,7 +513,7 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
       }
 
       .dropdown {
-        width: 50vw;
+        width: 40%;
       }
 
       .filter_grid {

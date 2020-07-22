@@ -26,6 +26,7 @@
     "grid_covers_per_row": "Number of covers per row",
     "account": "Account",
     "filter_out_cast_devices": "Filter out chromecast devices",
-    "spotify_entity": "Spotify media player entity"
+    "spotify_entity": "Spotify media player entity",
+    "default_device": "Default device name"
   }
 }

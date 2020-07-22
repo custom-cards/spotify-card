@@ -25,8 +25,8 @@ export interface SpotifyCardConfig extends LovelaceCardConfig {
   always_play_random_song?: boolean;
   //number of covers per row in grid
   grid_covers_per_row?: number;
-  //TODO implement preselected device
-  device?: string;
+  //preselected device
+  default_device?: string;
   // locale
   // used for development
   show_warning?: boolean;
