@@ -31,10 +31,10 @@ If applicable, add screenshots to help explain your problem.
 
 **Environment (please complete the following information):**
  - OS: [e.g. iOS]
- - Browser [e.g. chrome, safari]
- - Version
- - HA version
- - spotcast version
+ - Browser: [e.g. chrome, safari]
+ - Version: [ ]
+ - HA version: [ ]
+ - spotcast version: [ ]
 
 **Configuration**
 Add your configuration
