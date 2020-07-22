@@ -72,10 +72,6 @@ export class SpotifyCard extends LitElement {
   connectedCallback(): void {
     super.connectedCallback();
     this.spotcast_connector = new SpotcastConnector(this);
-    // Check for installed spotcast
-    if (servicesColl(this.hass.connection).state.spotcast !== undefined) {
-      this.spotcast_installed = true;
-    }
     //get all available entities and when they update
     this.unsubscribe_entitites = subscribeEntities(this.hass.connection, (entities) => this.entitiesUpdated(entities));
   }
@@ -199,6 +195,14 @@ export class SpotifyCard extends LitElement {
 
   protected render(): TemplateResult | void {
     let warning = html``;
+
+    if (!this.spotcast_installed) {
+      // Check for installed spotcast
+      if (this.hass.connection && servicesColl(this.hass.connection).state.spotcast !== undefined) {
+        this.spotcast_installed = true;
+      }
+    }
+
     if (this.config.show_warning) {
       warning = this.showWarning(localize('common.show_warning'));
     }
