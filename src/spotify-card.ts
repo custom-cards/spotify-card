@@ -6,6 +6,7 @@ import {
   internalProperty,
   CSSResult,
   TemplateResult,
+  PropertyValues,
   css,
 } from 'lit-element';
 
@@ -49,8 +50,7 @@ export class SpotifyCard extends LitElement {
     return {};
   }
 
-  @property({ type: Object })
-  public hass!: HomeAssistant;
+  @property() public hass!: HomeAssistant;
 
   @property({ type: Object })
   public config!: SpotifyCardConfig;
@@ -69,22 +69,27 @@ export class SpotifyCard extends LitElement {
 
   private unsubscribe_entitites?: any;
 
-  doSubscribeEntities() {
-    this.unsubscribe_entitites = subscribeEntities(this.hass.connection, (entities) => this.entitiesUpdated(entities));
+  doSubscribeEntities(): void {
+    if (this.hass?.connection && !this.unsubscribe_entitites && this.isConnected) {
+      this.unsubscribe_entitites = subscribeEntities(this.hass.connection, (entities) =>
+        this.entitiesUpdated(entities)
+      );
+    }
   }
 
   connectedCallback(): void {
     super.connectedCallback();
     this.spotcast_connector = new SpotcastConnector(this);
     //get all available entities and when they update
-    if (this.hass.connection) {
-      this.doSubscribeEntities();
-    } else {
-      setTimeout(() => this.doSubscribeEntities(), 1000);
-    }
+    this.doSubscribeEntities();
   }
 
-  public disconnectedCallback() {
+  protected updated(changedProps: PropertyValues): void {
+    super.updated(changedProps);
+    this.doSubscribeEntities();
+  }
+
+  public disconnectedCallback(): void {
     super.disconnectedCallback();
     this.unsubscribe_entitites && this.unsubscribe_entitites();
   }
