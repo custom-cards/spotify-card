@@ -73,7 +73,11 @@ export class SpotifyCard extends LitElement {
     super.connectedCallback();
     this.spotcast_connector = new SpotcastConnector(this);
     //get all available entities and when they update
-    this.unsubscribe_entitites = subscribeEntities(this.hass.connection, (entities) => this.entitiesUpdated(entities));
+    setTimeout(() => {
+      this.unsubscribe_entitites = subscribeEntities(this.hass.connection, (entities) =>
+        this.entitiesUpdated(entities)
+      );
+    }, 1000);
   }
 
   public disconnectedCallback() {
@@ -84,7 +88,6 @@ export class SpotifyCard extends LitElement {
   //Callback when hass-entity has changed
   entitiesUpdated(entities: HassEntities): void {
     let updateDevices = false;
-    console.log('ENTITIES:', entities);
     for (const item in entities) {
       // Are there any changes to media players
       if (item.startsWith('media_player')) {
