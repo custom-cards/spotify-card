@@ -69,15 +69,19 @@ export class SpotifyCard extends LitElement {
 
   private unsubscribe_entitites?: any;
 
+  doSubscribeEntities() {
+    this.unsubscribe_entitites = subscribeEntities(this.hass.connection, (entities) => this.entitiesUpdated(entities));
+  }
+
   connectedCallback(): void {
     super.connectedCallback();
     this.spotcast_connector = new SpotcastConnector(this);
     //get all available entities and when they update
-    setTimeout(() => {
-      this.unsubscribe_entitites = subscribeEntities(this.hass.connection, (entities) =>
-        this.entitiesUpdated(entities)
-      );
-    }, 1000);
+    if (this.hass.connection) {
+      this.doSubscribeEntities();
+    } else {
+      setTimeout(() => this.doSubscribeEntities(), 1000);
+    }
   }
 
   public disconnectedCallback() {
