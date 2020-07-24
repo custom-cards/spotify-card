@@ -45,7 +45,7 @@ Add the card via lovelace to your dashboard. All of the settings can be configur
 
 If you are not using the visual configuration of Lovelace you can add the card like this:
 
-```
+```yaml
   cards:
     - type: 'custom:spotify-card'
       account: <optional> which account to use for spotcast. Defaults to "default"
