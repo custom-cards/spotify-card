@@ -1,1 +1,3 @@
-###
+- Add visualization for tring to start new playback
+- Localisation
+- check why shuffle doesn't work (uses media_player.spotify)

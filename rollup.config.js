@@ -1,29 +1,32 @@
-import resolve from 'rollup-plugin-node-resolve';
+import typescript from 'rollup-plugin-typescript2';
 import commonjs from 'rollup-plugin-commonjs';
-import babel from 'rollup-plugin-babel';
+import nodeResolve from 'rollup-plugin-node-resolve';
+import babel from '@rollup/plugin-babel';
 import { terser } from 'rollup-plugin-terser';
+import json from '@rollup/plugin-json';
 
-import pkg from './package.json';
+const dev = process.env.ROLLUP_WATCH;
 
-// TODO: add node modules bundling https://github.com/kuzivany/simple-preact-rollup/blob/master/rollup.config.js
+const plugins = [
+  nodeResolve({}),
+  commonjs(),
+  typescript(),
+  json(),
+  babel({
+    exclude: 'node_modules/**',
+    babelHelpers: 'bundled',
+  }),
+  !dev && terser(),
+];
+
 export default [
-  // browser-friendly UMD build
   {
-    input: 'src/spotify-card.js',
+    input: 'src/spotify-card.ts',
     output: {
-      name: 'spotifyCard',
-      file: pkg.browser,
-      format: 'umd',
-      sourcemap: true
+      dir: 'dist',
+      format: 'es',
+      sourcemap: true,
     },
-    plugins: [
-      resolve(), // so Rollup can find `ms`
-      commonjs(), // so Rollup can convert `ms` to an ES module
-      // cdn(), // https://github.com/WebReflection/rollup-plugin-cdn
-      babel({
-        exclude: ['node_modules/**'],
-      }),
-      terser(),
-    ],
+    plugins: [...plugins],
   },
 ];
