@@ -74,7 +74,7 @@ export class SpotcastConnector {
         }
       }
 
-      console.error('No active device');
+      console.error('No active device nor default device in settings');
       return;
     }
     this.playUriOnConnectDevice(current_player.id, uri);
@@ -109,10 +109,10 @@ export class SpotcastConnector {
   public async updateState(): Promise<void> {
     const now = new Date().getTime();
     if (now - this.last_state_update_time < this.state_ttl) {
-      console.log('cache is still valid:', this.last_state_update_time);
+      // console.log('cache is still valid:', this.last_state_update_time);
       return;
     }
-    console.log('cache is NOT valid:', this.last_state_update_time);
+    // console.log('cache is NOT valid:', this.last_state_update_time);
     try {
       await this.fetchDevices();
       await this.fetchPlayer();
@@ -136,7 +136,7 @@ export class SpotcastConnector {
     try {
       this.player = <CurrentPlayer>await this.parent.hass.callWS(message);
     } catch (e) {
-      console.log('Failed to fetch plaayer', e);
+      console.error('Failed to fetch player', e);
     }
     // console.log('fetchPlayer:', JSON.stringify(this.player, null, 2));
   }
@@ -147,8 +147,12 @@ export class SpotcastConnector {
       type: 'spotcast/devices',
       account: this.parent.config.account,
     };
-    const res: any = <Array<ConnectDevice>>await this.parent.hass.callWS(message);
-    this.devices = res.devices;
+    try {
+      const res: any = <Array<ConnectDevice>>await this.parent.hass.callWS(message);
+      this.devices = res.devices;
+    } catch (e) {
+      console.error('Failed to fetch devices', e);
+    }
 
     // console.log('fetchDevices:', JSON.stringify(this.devices, null, 2));
   }
@@ -160,7 +164,7 @@ export class SpotcastConnector {
     try {
       this.chromecast_devices = await this.parent.hass.callWS({ type: 'spotcast/castdevices' });
     } catch (e) {
-      console.log('Failed to fetch cast devices', e);
+      console.error('Failed to fetch cast devices', e);
       this.chromecast_devices = [];
     }
     // console.log('fetchChromecasts2:', this.chromecast_devices);
@@ -178,9 +182,12 @@ export class SpotcastConnector {
       message.country_code = this.parent.config.country_code;
     }
     // message.locale = 'implement me later'
-
-    const res: any = <Array<Playlist>>await this.parent.hass.callWS(message);
-    this.playlists = res.items;
+    try {
+      const res: any = <Array<Playlist>>await this.parent.hass.callWS(message);
+      this.playlists = res.items;
+    } catch (e) {
+      console.error('Failed to fetch playlists', e);
+    }
     // console.log('PLAYLISTS:', JSON.stringify(this.playlists, null, 2));
   }
 }

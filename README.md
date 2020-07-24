@@ -12,13 +12,13 @@ The component uses the [Spotify Integration](https://www.home-assistant.io/integ
 
 The forum thread can be found [here](https://community.home-assistant.io/t/spotify-lovelace-card/103525)
 
-![Screenshot](/spotify-card-highlight.png)
+<img src="pics/grid.png" width="300">
 
 ## See release information on Github for release notes
 
 ### Requirements
 
-[Spotify Integration](https://www.home-assistant.io/integrations/spotify/) and [spotcast](https://github.com/fondberg/spotcast) have to be installed.
+[Spotify Integration](https://www.home-assistant.io/integrations/spotify/) and [spotcast](https://github.com/fondberg/spotcast) have to be installed (Spotcast is needed for many other things than playing on cast devices).
 This card should work in all newer major browsers. If it does not work for you please provide detailed reports in an issue ticket.
 
 ### Installation
@@ -59,7 +59,14 @@ If you are not using the visual configuration of Lovelace you can add the card l
       name: <optional name> Custom title. Leave empty to hide.
       display_style: <optional Grid> Change default display style.
       grid_covers_per_row: <optional number> Number of covers per row (default 3) in Grid-view.
+      spotify_entity: <optional> Name of your spotify media player entity if it doesn't start with "spotify"
+      default_device: <optional> Name of your spotify connect or chromecast device, e.g. "Kitchen"
 ```
+
+### Screenshots
+
+<img src="pics/list.png" height="300">
+<img src="pics/conf.png" height="300">
 
 ### General usage
 

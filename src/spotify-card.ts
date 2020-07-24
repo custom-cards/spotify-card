@@ -17,7 +17,7 @@ import { PLAYLIST_TYPES, DISPLAY_STYLES } from './editor';
 import { SpotcastConnector } from './spotcast-connector';
 
 import { SpotifyCardConfig } from './types';
-import CARD_VERSION from './const';
+import { CARD_VERSION } from './const';
 
 import { localize } from './localize/localize';
 
