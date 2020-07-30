@@ -349,7 +349,8 @@ export class SpotifyCard extends LitElement {
       const result: TemplateResult[] = [];
       for (let i = 0; i < this.spotcast_connector.playlists.length; i++) {
         const item = this.spotcast_connector.playlists[i];
-	if (item.images.length>0) { // Skip playlists with no images as they are either empty or not available
+        if (item.images.length > 0) {
+          // Skip playlists with no images as they are either empty or not available
           const playing = this.spotify_state?.attributes.media_playlist === item.name;
 
           result.push(html`<div class="list-item" @click=${() => this.spotcast_connector.playUri(item.uri)}>
@@ -366,7 +367,7 @@ export class SpotifyCard extends LitElement {
 
             <p>${item.name}</p>
           </div>`);
-	}
+        }
       }
       return html`<div>${result}</div>`;
     }
@@ -395,7 +396,8 @@ export class SpotifyCard extends LitElement {
     const result: TemplateResult[] = [];
     for (let i = 0; i < this.spotcast_connector.playlists.length; i++) {
       const item = this.spotcast_connector.playlists[i];
-      if (item.images.length>0) { // Skip playlists with no images as they are either empty or not available
+      if (item.images.length > 0) {
+        // Skip playlists with no images as they are either empty or not available
         const playing = this.spotify_state?.attributes.media_playlist === item.name;
         this.spotify_state?.attributes.media_playlist === item.name;
 
