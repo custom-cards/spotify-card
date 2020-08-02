@@ -349,24 +349,19 @@ export class SpotifyCard extends LitElement {
       const result: TemplateResult[] = [];
       for (let i = 0; i < this.spotcast_connector.playlists.length; i++) {
         const item = this.spotcast_connector.playlists[i];
-        if (item.images.length > 0) {
-          // Skip playlists with no images as they are either empty or not available
-          const playing = this.spotify_state?.attributes.media_playlist === item.name;
-          result.push(html`<div class="list-item" @click=${() => this.spotcast_connector.playUri(item.uri)}>
-            <img src="${item.images[item.images.length - 1].url}" />
-
-            ${playing
-              ? this.generateButtonForCurrent()
-              : html`<div class="icon">
-                  <svg width="24" height="24">
-                    <path d="M0 0h24v24H0z" fill="none" />
-                    <path d="M8 5v14l11-7z" />
-                  </svg>
-                </div>`}
-
-            <p>${item.name}</p>
-          </div>`);
-        }
+        const playing = this.spotify_state?.attributes.media_playlist === item.name;
+        result.push(html`<div class="list-item" @click=${() => this.spotcast_connector.playUri(item.uri)}>
+          <img src="${item.images.length > 0 ? item.images[item.images.length - 1].url : 'https://developer.spotify.com/assets/branding-guidelines/icon3@2x.png'}" />
+          ${playing
+            ? this.generateButtonForCurrent()
+            : html`<div class="icon">
+                <svg width="24" height="24">
+                  <path d="M0 0h24v24H0z" fill="none" />
+                  <path d="M8 5v14l11-7z" />
+                </svg>
+              </div>`}
+          <p>${item.name}</p>
+        </div>`);
       }
       return html`<div>${result}</div>`;
     }
@@ -395,27 +390,24 @@ export class SpotifyCard extends LitElement {
     const result: TemplateResult[] = [];
     for (let i = 0; i < this.spotcast_connector.playlists.length; i++) {
       const item = this.spotcast_connector.playlists[i];
-      if (item.images.length > 0) {
-        // Skip playlists with no images as they are either empty or not available
-        const playing = this.spotify_state?.attributes.media_playlist === item.name;
-        this.spotify_state?.attributes.media_playlist === item.name;
-        result.push(html`<div class="grid-item" @click=${() => this.spotcast_connector.playUri(item.uri)}>
-          <img
-            class="grid-item-album-image ${playing ? 'playing' : ''}"
-            src="${item.images[0].url}"
-          />
-          <div class="grid-item-overlay-icon">
-            ${playing
-              ? this.generateGridIconForCurrent()
-              : html`
-                  <svg width="24" height="24" @click=${() => this.spotcast_connector.playUri(item.uri)}>
-                    <path d="M0 0h24v24H0z" fill="none" />
-                    <path d="M8 5v14l11-7z" />
-                  </svg>
-                `}
-          </div>
-        </div>`);
-      }
+      const playing = this.spotify_state?.attributes.media_playlist === item.name;
+      this.spotify_state?.attributes.media_playlist === item.name;
+      result.push(html`<div class="grid-item" @click=${() => this.spotcast_connector.playUri(item.uri)}>
+        <img
+          class="grid-item-album-image ${playing ? 'playing' : ''}"
+          src="${item.images.length > 0 ? item.images[0].url : 'https://developer.spotify.com/assets/branding-guidelines/icon3@2x.png'}"
+        />
+        <div class="grid-item-overlay-icon">
+          ${playing
+            ? this.generateGridIconForCurrent()
+            : html`
+                <svg width="24" height="24" @click=${() => this.spotcast_connector.playUri(item.uri)}>
+                  <path d="M0 0h24v24H0z" fill="none" />
+                  <path d="M8 5v14l11-7z" />
+                </svg>
+              `}
+        </div>
+      </div>`);
     }
 
     const configured_grid_width = this.config.grid_covers_per_row ? this.config.grid_covers_per_row : 3;
