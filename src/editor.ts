@@ -357,7 +357,7 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
       <div class="values">
         <div class="filter_grid">
           <div class="filter_grid--title">${localize('settings.filter_out_cast_devices')}</div>
-          ${this.chromecast_devices.map((cast, idx) => {
+          ${this.chromecast_devices.length > 0 ? this.chromecast_devices.map((cast, idx) => {
             return html`
               <paper-checkbox
                 .idx=${idx}
@@ -368,7 +368,7 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
                 ${cast}
               </paper-checkbox>
             `;
-          })}
+          }) : 'No Chromecast devices found'}
         </div>
       </div>
     `;
