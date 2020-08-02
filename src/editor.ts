@@ -261,13 +261,12 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
           ></paper-input>
         </div>
         <div>
-          <div>${localize('settings.always_play_random_song')}</div>
           <ha-switch
             aria-label=${`Toggle always_play_random_song ${this._hide_warning ? 'off' : 'on'}`}
             .checked=${this._always_play_random_song}
             .configValue=${'always_play_random_song'}
             @change=${this._valueChanged}
-          ></ha-switch>
+          >${localize('settings.always_play_random_song')}</ha-switch>
         </div>
         <div>
           <paper-input
@@ -326,28 +325,13 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
           ></paper-slider>
         </div>
         <div>
-          <div>${localize('settings.grid_center_covers')}</div>
           <ha-switch
             aria-label=${`Toggle grid_center_covers ${this._hide_warning ? 'off' : 'on'}`}
             .checked=${this._grid_center_covers}
             .configValue=${'grid_center_covers'}
             @change=${this._valueChanged}
-          ></ha-switch>
+          >${localize('settings.grid_center_covers')}</ha-switch>       
         </div>
-        <span>Show Warning?</span>
-        <ha-switch
-          aria-label=${`Toggle warning ${this._show_error ? 'off' : 'on'}`}
-          .checked=${this._show_warning}
-          .configValue=${'show_warning'}
-          @change=${this._valueChanged}
-        ></ha-switch>
-        <span>Show Error?</span>
-        <ha-switch
-          aria-label=${`Toggle error ${this._show_error ? 'off' : 'on'}`}
-          .checked=${this._show_error}
-          .configValue=${'show_error'}
-          @change=${this._valueChanged}
-        ></ha-switch>
       </div>
     `;
   }
