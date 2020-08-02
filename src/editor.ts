@@ -184,6 +184,13 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
     return '';
   }
 
+  get _filter_devices(): string {
+    // if (this._config) {
+    //   return this._config.name || '';
+    // }
+    return '';
+  }
+
   private getMediaPlayerEntities(): Array<HassEntity> {
     return Object.keys(this.hass.states)
       .map((key) => this.hass.states[key])
@@ -353,6 +360,14 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
               </paper-checkbox>
             `;
           }) : 'No Chromecast devices found'}
+        </div>
+        <div>
+          <paper-input
+            label=${localize('settings.filter_devices')}
+            .value=${this._filter_devices}
+            .configValue=${'filter_devices'}
+            @value-changed=${this._valueChanged}
+          ></paper-input>
         </div>
       </div>
     `;
