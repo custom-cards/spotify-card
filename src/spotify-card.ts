@@ -323,18 +323,16 @@ export class SpotifyCard extends LitElement {
 
   // Generate device list
   private generateDeviceList(): TemplateResult {
-    const spotify_connect_devices_count = this.spotcast_connector.devices.filter(this.checkIfAllowedToShow, this).length;
-    const chromecast_devices_count = this.spotcast_connector.chromecast_devices.filter(this.checkIfAllowedToShow, this).length;
-    if (spotify_connect_devices_count == 0 && chromecast_devices_count == 0) {
+    const spotify_connect_devices= this.spotcast_connector.devices.filter(this.checkIfAllowedToShow, this);
+    const chromecast_devices = this.spotcast_connector.chromecast_devices.filter(this.checkIfAllowedToShow, this);
+    if (spotify_connect_devices.length == 0 && chromecast_devices.length == 0) {
       return html`<p>No devices found</p>`;
     }
     return html`
-        ${spotify_connect_devices_count > 0 ? html`<p>Spotify Connect devices</p>` : null}
-        ${this.spotcast_connector.devices
-          .filter(this.checkIfAllowedToShow, this)
-          .map((device) => html` <a @click=${() => this.spotifyDeviceSelected(device)}>${device.name}</a> `)}
-        ${chromecast_devices_count > 0 ? html`<p>Chromecast devices</p>` : null}
-        ${this.spotcast_connector.chromecast_devices.filter(this.checkIfAllowedToShow, this).map((device) => {
+        ${spotify_connect_devices.length > 0 ? html`<p>Spotify Connect devices</p>` : null}
+        ${spotify_connect_devices.map((device) => html` <a @click=${() => this.spotifyDeviceSelected(device)}>${device.name}</a> `)}
+        ${chromecast_devices.length > 0 ? html`<p>Chromecast devices</p>` : null}
+        ${chromecast_devices.map((device) => {
           html`<a @click=${() => this.chromecastDeviceSelected(device)}>${device.friendly_name}</a>`;
         })}
     `;
