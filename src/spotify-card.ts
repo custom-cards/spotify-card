@@ -16,7 +16,7 @@ import { PLAYLIST_TYPES, DISPLAY_STYLES } from './editor';
 
 import { SpotcastConnector } from './spotcast-connector';
 
-import { SpotifyCardConfig } from './types';
+import { SpotifyCardConfig, ConnectDevice } from './types';
 import { CARD_VERSION } from './const';
 
 import { localize } from './localize/localize';
@@ -284,7 +284,9 @@ export class SpotifyCard extends LitElement {
                 </div>
               </div>
             </div>
-            ${this.generateDeviceList()}
+            <div class="dropdown-content">
+              ${this.generateDeviceList()}
+            </div>
           </div>
           <div class="footer__right">
             ${this.spotify_state?.state == 'playing'
@@ -306,23 +308,35 @@ export class SpotifyCard extends LitElement {
     `;
   }
 
+  private checkIfAllowedToShow(device: ConnectDevice | any): boolean {
+    const filters =
+      this.config.filter_devices?.map((filter_str) => {
+        return new RegExp(filter_str + '$');
+      }) ?? [];
+    for (const filter of filters) {
+      if (filter.test(device.name ? device.name : device.friendly_name)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   // Generate device list
   private generateDeviceList(): TemplateResult {
-    const hidden = this.config.hidden_cast_devices ?? [];
-
+    const spotify_connect_devices_count = this.spotcast_connector.devices.filter(this.checkIfAllowedToShow, this).length;
+    const chromecast_devices_count = this.spotcast_connector.chromecast_devices.filter(this.checkIfAllowedToShow, this).length;
+    if (spotify_connect_devices_count == 0 && chromecast_devices_count == 0) {
+      return html`<p>No devices found</p>`;
+    }
     return html`
-      <div class="dropdown-content">
-        <p>Spotify Connect devices</p>
-        ${this.spotcast_connector.devices.map(
-          (device) => html` <a @click=${() => this.spotifyDeviceSelected(device)}>${device.name}</a> `
-        )}
-        ${this.spotcast_connector.chromecast_devices.length ? html`<p>Chromecast devices</p>` : null}
-        ${this.spotcast_connector.chromecast_devices.map((device) => {
-          return hidden.includes(device.friendly_name)
-            ? null
-            : html`<a @click=${() => this.chromecastDeviceSelected(device)}>${device.friendly_name}</a>`;
+        ${spotify_connect_devices_count > 0 ? html`<p>Spotify Connect devices</p>` : null}
+        ${this.spotcast_connector.devices
+          .filter(this.checkIfAllowedToShow, this)
+          .map((device) => html` <a @click=${() => this.spotifyDeviceSelected(device)}>${device.name}</a> `)}
+        ${chromecast_devices_count > 0 ? html`<p>Chromecast devices</p>` : null}
+        ${this.spotcast_connector.chromecast_devices.filter(this.checkIfAllowedToShow, this).map((device) => {
+          html`<a @click=${() => this.chromecastDeviceSelected(device)}>${device.friendly_name}</a>`;
         })}
-      </div>
     `;
   }
 

@@ -27,10 +27,10 @@ export interface SpotifyCardConfig extends LovelaceCardConfig {
   grid_covers_per_row?: number;
   //preselected device
   default_device?: string;
+
+  filter_devices?: Array<string>;
+  //TODO custom locale
   // locale
-  // used for development
-  show_warning?: boolean;
-  show_error?: boolean;
 }
 
 export interface ConnectDevice {

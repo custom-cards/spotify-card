@@ -185,9 +185,9 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
   }
 
   get _filter_devices(): string {
-    // if (this._config) {
-    //   return this._config.name || '';
-    // }
+    if (this._config) {
+      return this._config.filter_devices?.toString() || '';
+    }
     return '';
   }
 
@@ -346,21 +346,6 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
   private renderAdvanced(): TemplateResult {
     return html`
       <div class="values">
-        <div class="filter_grid">
-          <div class="filter_grid--title">${localize('settings.filter_out_cast_devices')}</div>
-          ${this.chromecast_devices.length > 0 ? this.chromecast_devices.map((cast, idx) => {
-            return html`
-              <paper-checkbox
-                .idx=${idx}
-                .checked=${this._hidden_cast_devices.includes(cast)}
-                @checked-changed=${this._valueChangedForList}
-                .configValue=${'hidden_cast_devices'}
-              >
-                ${cast}
-              </paper-checkbox>
-            `;
-          }) : 'No Chromecast devices found'}
-        </div>
         <div>
           <paper-input
             label=${localize('settings.filter_devices')}
@@ -437,12 +422,15 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
         delete clone[target.configValue];
         this._config = clone;
       } else {
+        let target_value = target.value;
         if (target.configValue == 'height') {
-          target.value = Number(target.value);
+          target_value = Number(target_value);
+        } else if (target.configValue == 'filter_devices' && target_value != '') {
+          target_value = target_value.split(',').map((value: string) => {return value.trim()}).filter((value: string) => {return value!=''});
         }
         this._config = {
           ...this._config,
-          [target.configValue]: target.checked !== undefined ? target.checked : target.value,
+          [target.configValue]: target.checked !== undefined ? target.checked : target_value,
         };
       }
     }
