@@ -43,6 +43,16 @@ If you do not have the `Resources` tab available, you have to enable the advance
 
 Add the card via lovelace to your dashboard. All of the settings can be configured via the visual editor.
 
+#### Advanced usage
+
+If you want to hide specific devices, you can do so in the advanced tab of the visual editor. If you are not using the visual editor see [YAML mode](YAML-mode).
+You can enter as many regular expressions as you like, separated by a comma. If any of these rules apply to a device-name it will be hidden. The rules are evaluated against the whole device-name so `room` will not match `bedroom`. Here are a few examples:
+
+- `.*room` hides all devices ending with room
+- `bath.*,kids.*` hides all devices which start with bath or kids
+
+#### YAML mode
+
 If you are not using the visual configuration of Lovelace you can add the card like this:
 
 ```yaml
@@ -61,6 +71,9 @@ If you are not using the visual configuration of Lovelace you can add the card l
       grid_covers_per_row: <optional number> Number of covers per row (default 3) in Grid-view.
       spotify_entity: <optional> Name of your spotify media player entity if it doesn't start with "spotify"
       default_device: <optional> Name of your spotify connect or chromecast device, e.g. "Kitchen"
+      filter_devices: <optional Array> Hides devices which matches any array entry. The entries have to be regular expressions and are matched against the full device-name. The following are examples
+        - .*room <hides all devices ending with room>
+        - bath.*,kids.* <hides all devices which start with bath or kids>
 ```
 
 ### Screenshots
