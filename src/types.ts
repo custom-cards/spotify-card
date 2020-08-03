@@ -29,7 +29,6 @@ export interface SpotifyCardConfig extends LovelaceCardConfig {
   default_device?: string;
 
   filter_devices?: Array<string>;
-  //TODO custom locale
   // locale
 }
 
