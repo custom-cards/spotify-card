@@ -273,7 +273,9 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
             .checked=${this._always_play_random_song}
             .configValue=${'always_play_random_song'}
             @change=${this._valueChanged}
-          >${localize('settings.always_play_random_song')}</ha-switch>
+            .id=${'always_play_random_song'}
+          ></ha-switch>
+          <label for=${'always_play_random_song'}>${localize('settings.always_play_random_song')}</label>
         </div>
         <div>
           <paper-input
@@ -296,8 +298,9 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
             .checked=${this._hide_warning}
             .configValue=${'hide_warning'}
             @change=${this._valueChanged}
-            >${localize('settings.hide_warning')}</ha-switch
-          >
+            .id=${'hide_warning'}
+          ></ha-switch>
+          <label for=${'hide_warning'}>${localize('settings.hide_warning')}</label>
         </div>
         <div>
           <paper-input
@@ -337,7 +340,9 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
             .checked=${this._grid_center_covers}
             .configValue=${'grid_center_covers'}
             @change=${this._valueChanged}
-          >${localize('settings.grid_center_covers')}</ha-switch>       
+            .id=${'grid_center_covers'}
+          ></ha-switch>
+          <label for=${'grid_center_covers'}>${localize('settings.grid_center_covers')}</label>
         </div>
       </div>
     `;
@@ -426,7 +431,14 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
         if (target.configValue == 'height') {
           target_value = Number(target_value);
         } else if (target.configValue == 'filter_devices' && target_value != '') {
-          target_value = target_value.split(',').map((value: string) => {return value.trim()}).filter((value: string) => {return value!=''});
+          target_value = target_value
+            .split(',')
+            .map((value: string) => {
+              return value.trim();
+            })
+            .filter((value: string) => {
+              return value != '';
+            });
         }
         this._config = {
           ...this._config,
