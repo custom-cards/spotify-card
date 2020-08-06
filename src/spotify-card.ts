@@ -101,7 +101,7 @@ export class SpotifyCard extends LitElement {
       // Are there any changes to media players
       if (item.startsWith('media_player')) {
         // Get spotify state
-        if (item.startsWith('media_player.spotify_') || item == this.config.spotify_entity) {
+        if (item.startsWith('media_player.spotify') || item == this.config.spotify_entity) {
           this.spotify_installed = true;
           this.spotify_state = entities[item];
         }

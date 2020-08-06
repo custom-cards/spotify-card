@@ -48,7 +48,6 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
   @internalProperty() private _toggle?: boolean;
 
   accounts: Array<string> = [];
-  hidden_cast_devices: Array<string> = [];
   chromecast_devices: Array<string> = [];
 
   async connectedCallback(): Promise<void> {
@@ -147,13 +146,6 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
       return this._config.grid_center_covers || false;
     }
     return false;
-  }
-
-  get _hidden_cast_devices(): Array<string> {
-    if (this._config) {
-      return this._config.hidden_cast_devices || [];
-    }
-    return [];
   }
 
   get _hide_warning(): boolean {
