@@ -1,5 +1,5 @@
-import { SpotifyCard } from './spotify-card';
 import { ConnectDevice, CurrentPlayer, Playlist } from './types';
+import { SpotifyCardLib } from './spotify-card-lib';
 interface Message {
   type: string;
   account?: string;
@@ -13,7 +13,7 @@ interface PlaylistMessage extends Message {
 }
 
 export class SpotcastConnector {
-  parent: SpotifyCard;
+  parent: SpotifyCardLib;
 
   playlists: Array<Playlist> = [];
   devices: Array<ConnectDevice> = [];
@@ -25,7 +25,7 @@ export class SpotcastConnector {
 
   loading = false;
 
-  constructor(parent: SpotifyCard) {
+  constructor(parent: SpotifyCardLib) {
     this.parent = parent;
   }
 
@@ -112,7 +112,7 @@ export class SpotcastConnector {
       // console.log('cache is still valid:', this.last_state_update_time);
       return;
     }
-    // console.log('cache is NOT valid:', this.last_state_update_time);
+     // console.log('cache is NOT valid:', this.last_state_update_time);
     try {
       await this.fetchDevices();
       await this.fetchPlayer();

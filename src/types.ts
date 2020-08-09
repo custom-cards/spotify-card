@@ -42,6 +42,10 @@ export interface ConnectDevice {
   volume_percent: number;
 }
 
+export interface ChromecastDevice {
+  friendly_name: string;
+}
+
 export interface CurrentPlayer {
   device: ConnectDevice;
   shuffle_state: boolean;

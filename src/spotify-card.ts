@@ -10,16 +10,14 @@ import {
   css,
 } from 'lit-element';
 
-import { HomeAssistant, LovelaceCardEditor, getLovelace } from 'custom-card-helpers';
-import { servicesColl, subscribeEntities, HassEntities, HassEntity } from 'home-assistant-js-websocket';
-import { PLAYLIST_TYPES, DISPLAY_STYLES } from './editor';
+import { HomeAssistant, LovelaceCardEditor } from 'custom-card-helpers';
 
-import { SpotcastConnector } from './spotcast-connector';
-
-import { SpotifyCardConfig, ConnectDevice } from './types';
 import { CARD_VERSION } from './const';
 
+import { SpotifyCardConfig } from './types';
+
 import { localize } from './localize/localize';
+import { SpotifyCardLib, DisplayStyle } from './spotify-card-lib';
 
 // Display card verion in console
 /* eslint no-console: 0 */
@@ -50,205 +48,75 @@ export class SpotifyCard extends LitElement {
     return {};
   }
 
-  @property() public hass!: HomeAssistant;
+  @property({ type: Object })
+  public hass!: HomeAssistant;
 
   @property({ type: Object })
   public config!: SpotifyCardConfig;
 
   @internalProperty()
-  private spotcast_connector!: SpotcastConnector;
+  private lib: SpotifyCardLib;
 
-  // Private variables
-  private spotcast_installed = false;
+  constructor() {
+    super();
+    this.lib = new SpotifyCardLib(this);
+  }
 
-  private spotify_installed = false;
-
-  private spotify_state?: HassEntity;
-
-  private fetch_time_out: any = 0;
-
-  private unsubscribe_entitites?: any;
-
-  doSubscribeEntities(): void {
-    if (this.hass?.connection && !this.unsubscribe_entitites && this.isConnected) {
-      this.unsubscribe_entitites = subscribeEntities(this.hass.connection, (entities) =>
-        this.entitiesUpdated(entities)
-      );
+  public setConfig(_config: SpotifyCardConfig): void {
+    //Check for errors in config
+    const var_error = this.lib.setConfig(_config);
+    // Show error if neccessary
+    if (_config.show_error || var_error != '') {
+      throw new Error(localize('common.invalid_configuration') + ': ' + var_error);
     }
   }
 
   connectedCallback(): void {
     super.connectedCallback();
-    this.spotcast_connector = new SpotcastConnector(this);
-    //get all available entities and when they update
-    this.doSubscribeEntities();
+    this.lib.connectedCallback();
   }
 
   protected updated(changedProps: PropertyValues): void {
     super.updated(changedProps);
-    this.doSubscribeEntities();
+    this.lib.updated(this.hass);
   }
 
   public disconnectedCallback(): void {
     super.disconnectedCallback();
-    this.unsubscribe_entitites && this.unsubscribe_entitites();
-  }
-
-  //Callback when hass-entity has changed
-  entitiesUpdated(entities: HassEntities): void {
-    let updateDevices = false;
-    for (const item in entities) {
-      // Are there any changes to media players
-      if (item.startsWith('media_player')) {
-        // Get spotify state
-        if (item.startsWith('media_player.spotify') || item == this.config.spotify_entity) {
-          this.spotify_installed = true;
-          this.spotify_state = entities[item];
-        }
-        updateDevices = true;
-      }
-    }
-    if (updateDevices && !document.hidden) {
-      // Debounce updates to 500ms
-      if (this.fetch_time_out) {
-        clearTimeout(this.fetch_time_out);
-      }
-      this.fetch_time_out = setTimeout(() => {
-        this.spotcast_connector.updateState().then(() => {
-          this.requestUpdate();
-        });
-      }, 500);
-    }
-  }
-
-  public getSpotifyEntityState(): string {
-    return this.spotify_state ? this.spotify_state.state : '';
-  }
-
-  public setConfig(_config: SpotifyCardConfig): void {
-    //Check for errors in config
-    let var_error = '';
-    if (_config.limit && !(typeof _config.limit === 'number')) {
-      var_error = 'limit';
-    }
-    if (_config.playlist_type && !PLAYLIST_TYPES.includes(_config.playlist_type)) {
-      var_error = 'playlist_type';
-    }
-    if (_config.country_code && !(typeof _config.country_code === 'string')) {
-      var_error = 'country_code';
-    }
-    if (_config.height && !(typeof _config.height === 'number')) {
-      var_error = 'height';
-    }
-    if (_config.display_style && !DISPLAY_STYLES.includes(_config.display_style)) {
-      var_error = 'display_style';
-    }
-    if (_config.darkmode && !(typeof _config.darkmode === 'boolean')) {
-      var_error = 'darkmode';
-    }
-
-    // Show error if neccessary
-    if (_config.show_error || var_error != '') {
-      throw new Error(localize('common.invalid_configuration') + ': ' + var_error);
-    }
-
-    // Convenience mode for developing
-    if (_config.test_gui) {
-      getLovelace().setEditMode(true);
-    }
-    this.config = {
-      ..._config,
-    };
-  }
-
-  private spotifyDeviceSelected(device: any): void {
-    const current_player = this.spotcast_connector.getCurrentPlayer();
-    if (current_player) {
-      return this.spotcast_connector.transferPlaybackToConnectDevice(device.id);
-    }
-    const playlist = this.spotcast_connector.playlists[0];
-    console.log('spotifyDeviceSelected playing first playlist');
-    this.spotcast_connector.playUriOnConnectDevice(device.id, playlist.uri);
-  }
-
-  private chromecastDeviceSelected(device: any): void {
-    const current_player = this.spotcast_connector.getCurrentPlayer();
-    if (current_player) {
-      return this.spotcast_connector.transferPlaybackToCastDevice(device.friendly_name);
-    }
-
-    const playlist = this.spotcast_connector.playlists[0];
-    console.log('chromecastDeviceSelected playing first playlist');
-    this.spotcast_connector.playUriOnCastDevice(device.friendly_name, playlist.uri);
-  }
-
-  private onShuffleSelect(): void {
-    if (this.spotify_state?.state == 'playing') {
-      this.hass.callService('media_player', 'shuffle_set', {
-        entity_id: this.spotify_state.entity_id,
-        shuffle: !this.spotcast_connector.player?.shuffle_state,
-      });
-    }
-  }
-
-  private handlePlayPauseEvent(ev: Event, command: string) {
-    ev.stopPropagation();
-    if (this.spotify_state) {
-      this.hass.callService('media_player', command, { entity_id: this.spotify_state.entity_id });
-    }
-  }
-
-  private onPauseSelect(ev: Event): void {
-    this.handlePlayPauseEvent(ev, 'media_pause');
-  }
-
-  private onResumeSelect(ev: Event): void {
-    this.handlePlayPauseEvent(ev, 'media_play');
+    this.lib.disconnectedCallback();
   }
 
   protected render(): TemplateResult | void {
     let warning = html``;
-
-    if (!this.spotcast_installed) {
-      // Check for installed spotcast
-      if (this.hass.connection && servicesColl(this.hass.connection).state.spotcast !== undefined) {
-        this.spotcast_installed = true;
-      }
-    }
-
-    if (this.config.show_warning) {
-      warning = this.showWarning(localize('common.show_warning'));
-    }
-    if (!this.spotcast_installed) {
+    if (!this.lib.isSpotcastInstalled) {
       warning = this.showWarning(localize('common.show_missing_spotcast'));
     }
 
-    if (!this.spotify_installed) {
+    if (!this.lib.spotify_installed) {
       warning = this.showWarning(localize('common.show_missing_spotify'));
     }
 
     // Display loading screen if no content available yet
     let content = html`<div>Loading...</div>`;
-    // Request playlist data from spotcast
-    if (!this.spotcast_connector.is_loading() && this.spotcast_installed) {
-      this.spotcast_connector.fetchPlaylists().then(() => {
-        this.requestUpdate();
-      });
+    // Request playlist data if not loaded
+    if (!this.lib.dataAvailable()) {
+      this.lib.requestUpdate();
     } else {
-      // Display spotify playlists
-      if (this.config.display_style?.toLowerCase() == 'grid') {
-        content = this.generateGridView();
-      } else {
-        content = this.generateListView();
+      switch (this.lib.getDisplayStyle()) {
+        case DisplayStyle.Grid: {
+          content = this.generateGridView();
+          break;
+        }
+        default: {
+          content = this.generateListView();
+          break;
+        }
       }
     }
 
-    const spotify_player_device = this.spotcast_connector.getCurrentPlayer();
-    const playing_text = spotify_player_device?.name ?? localize('common.choose_player');
-
     return html`
-      <ha-card tabindex="0" style="${this.config.height ? `height: ${this.config.height}px` : ''}"
-        >${this.config.hide_warning ? '' : warning}
+      <ha-card tabindex="0" style="${this.lib.config.height ? `height: ${this.lib.config.height}px` : ''}"
+        >${this.lib.config.hide_warning ? '' : warning}
         <div id="header">
           <div id="icon">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 559 168">
@@ -257,7 +125,7 @@ export class SpotifyCard extends LitElement {
               />
             </svg>
           </div>
-          ${this.config.name ? html`<div id="header_name">${this.config.name}</div>` : ''}
+          ${this.lib.config.name ? html`<div id="header_name">${this.lib.config.name}</div>` : ''}
           <div></div>
         </div>
         <div id="content">
@@ -280,7 +148,7 @@ export class SpotifyCard extends LitElement {
                       stroke="null"
                     />
                   </svg>
-                  ${playing_text}
+                  ${this.lib.getCurrentPlayer()?.name ?? localize('common.choose_player')}
                 </div>
               </div>
             </div>
@@ -289,10 +157,10 @@ export class SpotifyCard extends LitElement {
             </div>
           </div>
           <div class="footer__right">
-            ${this.spotify_state?.state == 'playing'
+            ${this.lib.getPlayingState()
               ? html`<div
-                  class="icon ${this.spotcast_connector.player?.shuffle_state ? 'playing' : ''}"
-                  @click=${this.onShuffleSelect}
+                  class="icon ${this.lib.getShuffleState() ? 'playing' : ''}"
+                  @click=${this.lib.onShuffleSelect}
                 >
                   <svg width="24" height="24">
                     <path d="M0 0h24v24H0z" fill="none" />
@@ -308,40 +176,26 @@ export class SpotifyCard extends LitElement {
     `;
   }
 
-  private checkIfAllowedToShow(device: ConnectDevice | any): boolean {
-    const filters =
-      this.config.filter_devices?.map((filter_str) => {
-        return new RegExp(filter_str + '$');
-      }) ?? [];
-    for (const filter of filters) {
-      if (filter.test(device.name ? device.name : device.friendly_name)) {
-        return false;
-      }
-    }
-    return true;
-  }
-
   // Generate device list
   private generateDeviceList(): TemplateResult {
-    const spotify_connect_devices = this.spotcast_connector.devices.filter(this.checkIfAllowedToShow, this);
-    const chromecast_devices = this.spotcast_connector.chromecast_devices.filter(this.checkIfAllowedToShow, this);
+    const [spotify_connect_devices, chromecast_devices] = this.lib.getFilteredDevices();
     if (spotify_connect_devices.length == 0 && chromecast_devices.length == 0) {
       return html`<p>No devices found</p>`;
     }
     return html`
       ${spotify_connect_devices.length > 0 ? html`<p>Spotify Connect devices</p>` : null}
       ${spotify_connect_devices.map((device) => {
-        return html`<a @click=${() => this.spotifyDeviceSelected(device)}>${device.name}</a>`;
+        return html`<a @click=${() => this.lib.spotifyDeviceSelected(device)}>${device.name}</a>`;
       })}
       ${chromecast_devices.length > 0 ? html`<p>Chromecast devices</p>` : null}
       ${chromecast_devices.map((device) => {
-        return html`<a @click=${() => this.chromecastDeviceSelected(device)}>${device.friendly_name}</a>`;
+        return html`<a @click=${() => this.lib.chromecastDeviceSelected(device)}>${device.friendly_name}</a>`;
       })}
     `;
   }
 
   private generateButtonForCurrent(): TemplateResult {
-    if (this.spotify_state?.state == 'playing') {
+    if (this.lib.spotify_state?.state == 'playing') {
       return html`<div class="icon playing" @click=${this.onPauseSelect}>
         <svg width="24" height="24" viewBox="0 0 500 1000">
           <path d="M0 832h192V192H0V832zM320 192v640h192V192H320z" />
@@ -359,37 +213,34 @@ export class SpotifyCard extends LitElement {
 
   // Generate items for display style 'List'
   public generateListView(): TemplateResult {
-    if (this.spotcast_connector.is_loaded()) {
-      const result: TemplateResult[] = [];
-      for (let i = 0; i < this.spotcast_connector.playlists.length; i++) {
-        const item = this.spotcast_connector.playlists[i];
-        const playing = this.spotify_state?.attributes.media_playlist === item.name;
-        result.push(html`<div class="list-item" @click=${() => this.spotcast_connector.playUri(item.uri)}>
-          ${item.images.length > 0
-            ? html`<img src=${item.images[item.images.length - 1].url} />`
-            : html`<svg viewBox="0 0 168 168">
-                <path
-                  d="M 83.996 0.277 C 37.747 0.277 0.253 37.77 0.253 84.019 C 0.253 130.27 37.747 167.76 83.996 167.76 C 130.25 167.76 167.74 130.27 167.74 84.019 C 167.74 37.773 130.25 0.281 83.995 0.281 L 83.996 0.277 L 83.996 0.277 Z M 122.4 121.057 C 120.9 123.517 117.68 124.297 115.22 122.787 C 95.558 110.777 70.806 108.057 41.656 114.717 C 38.847 115.357 36.047 113.597 35.407 110.787 C 34.764 107.977 36.517 105.177 39.333 104.537 C 71.233 97.249 98.596 100.387 120.67 113.877 C 123.13 115.387 123.91 118.597 122.4 121.057 L 122.4 121.057 Z M 132.65 98.255 C 130.76 101.327 126.74 102.297 123.67 100.407 C 101.16 86.571 66.847 82.564 40.222 90.646 C 36.769 91.689 33.122 89.743 32.074 86.296 C 31.034 82.843 32.981 79.203 36.428 78.153 C 66.841 68.925 104.65 73.395 130.5 89.28 C 133.57 91.17 134.54 95.19 132.65 98.256 L 132.65 98.255 Z M 133.53 74.511 C 106.54 58.48 62.01 57.006 36.241 64.827 C 32.103 66.082 27.727 63.746 26.473 59.608 C 25.219 55.468 27.553 51.095 31.694 49.837 C 61.275 40.857 110.45 42.592 141.524 61.039 C 145.254 63.248 146.474 68.055 144.264 71.772 C 142.064 75.494 137.244 76.721 133.534 74.511 L 133.53 74.511 Z"
-                />
-              </svg>`}
-          ${playing
-            ? this.generateButtonForCurrent()
-            : html`<div class="icon">
-                <svg width="24" height="24">
-                  <path d="M0 0h24v24H0z" fill="none" />
-                  <path d="M8 5v14l11-7z" />
-                </svg>
-              </div>`}
-          <p>${item.name}</p>
-        </div>`);
-      }
-      return html`<div>${result}</div>`;
+    const result: TemplateResult[] = [];
+    const playlists = this.lib.getPlaylists();
+    for (let i = 0; i < playlists.length; i++) {
+      const item = playlists[i];
+      result.push(html`<div class="list-item" @click=${() => this.lib.playUri(item.uri)}>
+        ${item.images.length > 0
+          ? html`<img src=${item.images[item.images.length - 1].url} />`
+          : html`<svg viewBox="0 0 168 168">
+              <path
+                d="M 83.996 0.277 C 37.747 0.277 0.253 37.77 0.253 84.019 C 0.253 130.27 37.747 167.76 83.996 167.76 C 130.25 167.76 167.74 130.27 167.74 84.019 C 167.74 37.773 130.25 0.281 83.995 0.281 L 83.996 0.277 L 83.996 0.277 Z M 122.4 121.057 C 120.9 123.517 117.68 124.297 115.22 122.787 C 95.558 110.777 70.806 108.057 41.656 114.717 C 38.847 115.357 36.047 113.597 35.407 110.787 C 34.764 107.977 36.517 105.177 39.333 104.537 C 71.233 97.249 98.596 100.387 120.67 113.877 C 123.13 115.387 123.91 118.597 122.4 121.057 L 122.4 121.057 Z M 132.65 98.255 C 130.76 101.327 126.74 102.297 123.67 100.407 C 101.16 86.571 66.847 82.564 40.222 90.646 C 36.769 91.689 33.122 89.743 32.074 86.296 C 31.034 82.843 32.981 79.203 36.428 78.153 C 66.841 68.925 104.65 73.395 130.5 89.28 C 133.57 91.17 134.54 95.19 132.65 98.256 L 132.65 98.255 Z M 133.53 74.511 C 106.54 58.48 62.01 57.006 36.241 64.827 C 32.103 66.082 27.727 63.746 26.473 59.608 C 25.219 55.468 27.553 51.095 31.694 49.837 C 61.275 40.857 110.45 42.592 141.524 61.039 C 145.254 63.248 146.474 68.055 144.264 71.772 C 142.064 75.494 137.244 76.721 133.534 74.511 L 133.53 74.511 Z"
+              />
+            </svg>`}
+        ${this.lib.isThisPlaylistPlaying(item)
+          ? this.generateButtonForCurrent()
+          : html`<div class="icon">
+              <svg width="24" height="24">
+                <path d="M0 0h24v24H0z" fill="none" />
+                <path d="M8 5v14l11-7z" />
+              </svg>
+            </div>`}
+        <p>${item.name}</p>
+      </div>`);
     }
-    return html``;
+    return html`<div>${result}</div>`;
   }
 
   private generateGridIconForCurrent(): TemplateResult {
-    if (this.spotify_state?.state == 'playing') {
+    if (this.lib.spotify_state?.state == 'playing') {
       return html` <svg width="24" height="24" viewBox="0 0 500 1000" @click=${this.onPauseSelect}>
         <path d="M0 832h192V192H0V832zM320 192v640h192V192H320z" />
       </svg>`;
@@ -403,22 +254,18 @@ export class SpotifyCard extends LitElement {
 
   // Generate items for display style 'Grid'
   public generateGridView(): TemplateResult {
-    if (!this.spotcast_connector.is_loaded()) {
-      return html``;
-    }
-
     const result: TemplateResult[] = [];
-    for (let i = 0; i < this.spotcast_connector.playlists.length; i++) {
-      const item = this.spotcast_connector.playlists[i];
-      const playing = this.spotify_state?.attributes.media_playlist === item.name;
-      this.spotify_state?.attributes.media_playlist === item.name;
-      result.push(html`<div class="grid-item" @click=${() => this.spotcast_connector.playUri(item.uri)}>
+    const playlists = this.lib.getPlaylists();
+    for (let i = 0; i < playlists.length; i++) {
+      const item = playlists[i];
+      this.lib.spotify_state?.attributes.media_playlist === item.name;
+      result.push(html`<div class="grid-item" @click=${() => this.lib.playUri(item.uri)}>
         ${item.images.length > 0
           ? html`<img
-              class="grid-item-album-image ${playing ? 'playing' : ''}"
+              class="grid-item-album-image ${this.lib.isThisPlaylistPlaying(item) ? 'playing' : ''}"
               src=${item.images[item.images.length - 1].url}
             />`
-          : html`<div class="grid-item-album-image ${playing ? 'playing' : ''}">
+          : html`<div class="grid-item-album-image ${this.lib.isThisPlaylistPlaying(item) ? 'playing' : ''}">
               <svg viewBox="0 0 168 168">
                 <path
                   d="M 83.996 0.277 C 37.747 0.277 0.253 37.77 0.253 84.019 C 0.253 130.27 37.747 167.76 83.996 167.76 C 130.25 167.76 167.74 130.27 167.74 84.019 C 167.74 37.773 130.25 0.281 83.995 0.281 L 83.996 0.277 L 83.996 0.277 Z M 122.4 121.057 C 120.9 123.517 117.68 124.297 115.22 122.787 C 95.558 110.777 70.806 108.057 41.656 114.717 C 38.847 115.357 36.047 113.597 35.407 110.787 C 34.764 107.977 36.517 105.177 39.333 104.537 C 71.233 97.249 98.596 100.387 120.67 113.877 C 123.13 115.387 123.91 118.597 122.4 121.057 L 122.4 121.057 Z M 132.65 98.255 C 130.76 101.327 126.74 102.297 123.67 100.407 C 101.16 86.571 66.847 82.564 40.222 90.646 C 36.769 91.689 33.122 89.743 32.074 86.296 C 31.034 82.843 32.981 79.203 36.428 78.153 C 66.841 68.925 104.65 73.395 130.5 89.28 C 133.57 91.17 134.54 95.19 132.65 98.256 L 132.65 98.255 Z M 133.53 74.511 C 106.54 58.48 62.01 57.006 36.241 64.827 C 32.103 66.082 27.727 63.746 26.473 59.608 C 25.219 55.468 27.553 51.095 31.694 49.837 C 61.275 40.857 110.45 42.592 141.524 61.039 C 145.254 63.248 146.474 68.055 144.264 71.772 C 142.064 75.494 137.244 76.721 133.534 74.511 L 133.53 74.511 Z"
@@ -426,10 +273,10 @@ export class SpotifyCard extends LitElement {
               </svg>
             </div>`}
         <div class="grid-item-overlay-icon">
-          ${playing
+          ${this.lib.isThisPlaylistPlaying(item)
             ? this.generateGridIconForCurrent()
             : html`
-                <svg width="24" height="24" @click=${() => this.spotcast_connector.playUri(item.uri)}>
+                <svg width="24" height="24" @click=${() => this.lib.playUri(item.uri)}>
                   <path d="M0 0h24v24H0z" fill="none" />
                   <path d="M8 5v14l11-7z" />
                 </svg>
@@ -438,12 +285,20 @@ export class SpotifyCard extends LitElement {
       </div>`);
     }
 
-    const configured_grid_width = this.config.grid_covers_per_row ? this.config.grid_covers_per_row : 3;
+    const configured_grid_width = this.lib.config.grid_covers_per_row ? this.lib.config.grid_covers_per_row : 3;
     const grid_width = (100 - 10) / configured_grid_width;
 
     return html`<div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(${grid_width}%, 1fr));">
       ${result}
     </div>`;
+  }
+
+  private onPauseSelect(ev: Event): void {
+    this.lib.handlePlayPauseEvent(ev, 'media_pause');
+  }
+
+  private onResumeSelect(ev: Event): void {
+    this.lib.handlePlayPauseEvent(ev, 'media_play');
   }
 
   // Show warning on top of the card
