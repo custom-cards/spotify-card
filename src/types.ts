@@ -32,6 +32,10 @@ export interface SpotifyCardConfig extends LovelaceCardConfig {
   // locale
 }
 
+export function isConnectDevice(object: any): object is ConnectDevice {
+  return 'name' in object;
+}
+
 export interface ConnectDevice {
   id: string;
   is_active: boolean;

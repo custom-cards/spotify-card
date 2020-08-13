@@ -1,4 +1,4 @@
-import { ConnectDevice, Playlist, ChromecastDevice } from './types';
+import { ConnectDevice, Playlist, ChromecastDevice, isConnectDevice } from './types';
 
 import { HomeAssistant} from 'custom-card-helpers';
 import { servicesColl, subscribeEntities, HassEntities, HassEntity } from 'home-assistant-js-websocket';
@@ -31,8 +31,8 @@ export interface ISpotifyCardLib {
   connectedCallback(): void;
   disconnectedCallback(): void;
   doSubscribeEntities(): void;
-  getFilteredDevices(): [ConnectDevice[], any[]];
-  getPlaylists(): any;
+  getFilteredDevices(): [ConnectDevice[], ChromecastDevice[]];
+  getPlaylists(): Playlist[];
   isThisPlaylistPlaying(item: Playlist): boolean;
   playUri(uri: string): void;
   onShuffleSelect(): void;
@@ -119,7 +119,7 @@ export class SpotifyCardLib implements ISpotifyCardLib {
   }
 
   public requestUpdate(): void {
-    if (!this._spotcast_connector.is_loading() && this.isSpotcastInstalled()) {
+    if (this.isSpotcastInstalled() && !this._spotcast_connector.is_loading()) {
       this._spotcast_connector.fetchPlaylists().then(() => {
         this._parent.requestUpdate();
       });
@@ -184,26 +184,26 @@ export class SpotifyCardLib implements ISpotifyCardLib {
     }
   }
 
-  public checkIfAllowedToShow(device: ConnectDevice | any): boolean {
+  public checkIfAllowedToShow(device: ConnectDevice | ChromecastDevice): boolean {
     const filters =
       this.config.filter_devices?.map((filter_str) => {
         return new RegExp(filter_str + '$');
       }) ?? [];
     for (const filter of filters) {
-      if (filter.test(device.name ? device.name : device.friendly_name)) {
+      if (filter.test(isConnectDevice(device) ? device.name : device.friendly_name)) {
         return false;
       }
     }
     return true;
   }
 
-  public getFilteredDevices(): [ConnectDevice[], any[]] {
+  public getFilteredDevices(): [ConnectDevice[], ChromecastDevice[]] {
     const spotify_connect_devices = this._spotcast_connector.devices.filter(this.checkIfAllowedToShow, this);
     const chromecast_devices = this._spotcast_connector.chromecast_devices.filter(this.checkIfAllowedToShow, this);
     return [spotify_connect_devices, chromecast_devices];
   }
 
-  public getPlaylists(): any {
+  public getPlaylists(): Playlist[] {
     return this._spotcast_connector.playlists;
   }
 
