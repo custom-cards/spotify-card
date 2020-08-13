@@ -13,19 +13,46 @@ export enum DisplayStyle {
   List,
 }
 
-export class SpotifyCardLib {
-  private _parent: SpotifyCard;
+export interface ISpotifyCardLib {
+  hass: HomeAssistant;
+  config: SpotifyCardConfig;
+  spotify_state?: HassEntity;
+  setConfig(config: SpotifyCardConfig): string;
+  getDisplayStyle(): DisplayStyle;
+  getPlayingState(): boolean;
+  getShuffleState(): boolean;
+  getSpotifyEntityState(): string;
+  isSpotcastInstalled(): boolean;
+  isSpotifyInstalled(): boolean;
+  requestUpdate(): void;
+  getCurrentPlayer(): ConnectDevice | undefined;
+  dataAvailable(): boolean;
+  updated(hass: HomeAssistant): void;
+  connectedCallback(): void;
+  disconnectedCallback(): void;
+  doSubscribeEntities(): void;
+  getFilteredDevices(): [ConnectDevice[], any[]];
+  getPlaylists(): any;
+  isThisPlaylistPlaying(item: Playlist): boolean;
+  playUri(uri: string): void;
+  onShuffleSelect(): void;
+  handlePlayPauseEvent(ev: Event, command: string): void;
+  spotifyDeviceSelected(device: ConnectDevice): void;
+  chromecastDeviceSelected(device: ChromecastDevice): void;
+}
+
+export class SpotifyCardLib implements ISpotifyCardLib {
+  public _parent: SpotifyCard;
   public hass!: HomeAssistant;
-  private _spotcast_connector!: SpotcastConnector;
   public config!: SpotifyCardConfig;
-
-  private unsubscribe_entitites?: any;
-
-  public spotify_installed = false;
-
-  private fetch_time_out: any = 0;
-
   public spotify_state?: HassEntity;
+  
+  // These are 'private'
+  public _spotcast_connector!: SpotcastConnector;
+  public _unsubscribe_entitites?: any;
+  public _spotify_installed = false;
+  public _fetch_time_out: any = 0;
+
 
   constructor(parent: SpotifyCard) {
     this._parent = parent;
@@ -55,6 +82,7 @@ export class SpotifyCardLib {
       return '';
   }
 
+  // Tested
   public getDisplayStyle(): DisplayStyle {
     // Display spotify playlists
     if (this.config.display_style?.toLowerCase() == 'grid') {
@@ -64,23 +92,30 @@ export class SpotifyCardLib {
     }
   }
 
+  // Tested
   public getPlayingState(): boolean {
     return this.spotify_state?.state == 'playing' ?? false;
   }
 
+  // Tested
   public getShuffleState(): boolean {
     return this._spotcast_connector.player?.shuffle_state ?? false;
   }
 
+  //Tested
   public getSpotifyEntityState(): string {
     return this.spotify_state ? this.spotify_state.state : '';
   }
 
   public isSpotcastInstalled(): boolean {
-    if (this.hass.connection && servicesColl(this.hass.connection).state.spotcast !== undefined) {
+    if (this.hass?.connection && servicesColl(this.hass.connection).state.spotcast !== undefined) {
       return true;
     }
     return false;
+  }
+
+  public isSpotifyInstalled(): boolean {
+    return this._spotify_installed;
   }
 
   public requestUpdate(): void {
@@ -111,26 +146,26 @@ export class SpotifyCardLib {
   }
 
   public disconnectedCallback(): void {
-    this.unsubscribe_entitites && this.unsubscribe_entitites();
+    this._unsubscribe_entitites && this._unsubscribe_entitites();
   }
 
-  private doSubscribeEntities(): void {
-    if (this.hass?.connection && !this.unsubscribe_entitites && this._parent.isConnected) {
-      this.unsubscribe_entitites = subscribeEntities(this.hass.connection, (entities) =>
+  public doSubscribeEntities(): void {
+    if (this.hass?.connection && !this._unsubscribe_entitites && this._parent.isConnected) {
+      this._unsubscribe_entitites = subscribeEntities(this.hass.connection, (entities) =>
         this.entitiesUpdated(entities)
       );
     }
   }
 
   //Callback when hass-entity has changed
-  entitiesUpdated(entities: HassEntities): void {
+  public entitiesUpdated(entities: HassEntities): void {
     let updateDevices = false;
     for (const item in entities) {
       // Are there any changes to media players
       if (item.startsWith('media_player')) {
         // Get spotify state
         if (item.startsWith('media_player.spotify') || item == this.config.spotify_entity) {
-          this.spotify_installed = true;
+          this._spotify_installed = true;
           this.spotify_state = entities[item];
         }
         updateDevices = true;
@@ -138,10 +173,10 @@ export class SpotifyCardLib {
     }
     if (updateDevices && !document.hidden) {
       // Debounce updates to 500ms
-      if (this.fetch_time_out) {
-        clearTimeout(this.fetch_time_out);
+      if (this._fetch_time_out) {
+        clearTimeout(this._fetch_time_out);
       }
-      this.fetch_time_out = setTimeout(() => {
+      this._fetch_time_out = setTimeout(() => {
         this._spotcast_connector.updateState().then(() => {
           this.requestUpdate();
         });
@@ -149,7 +184,7 @@ export class SpotifyCardLib {
     }
   }
 
-  private checkIfAllowedToShow(device: ConnectDevice | any): boolean {
+  public checkIfAllowedToShow(device: ConnectDevice | any): boolean {
     const filters =
       this.config.filter_devices?.map((filter_str) => {
         return new RegExp(filter_str + '$');

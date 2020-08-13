@@ -17,7 +17,7 @@ import { CARD_VERSION } from './const';
 import { SpotifyCardConfig } from './types';
 
 import { localize } from './localize/localize';
-import { SpotifyCardLib, DisplayStyle } from './spotify-card-lib';
+import { SpotifyCardLib, ISpotifyCardLib, DisplayStyle } from './spotify-card-lib';
 
 // Display card verion in console
 /* eslint no-console: 0 */
@@ -55,7 +55,7 @@ export class SpotifyCard extends LitElement {
   public config!: SpotifyCardConfig;
 
   @internalProperty()
-  private lib: SpotifyCardLib;
+  private lib: ISpotifyCardLib;
 
   constructor() {
     super();
@@ -88,11 +88,11 @@ export class SpotifyCard extends LitElement {
 
   protected render(): TemplateResult | void {
     let warning = html``;
-    if (!this.lib.isSpotcastInstalled) {
+    if (!this.lib.isSpotcastInstalled()) {
       warning = this.showWarning(localize('common.show_missing_spotcast'));
     }
 
-    if (!this.lib.spotify_installed) {
+    if (!this.lib.isSpotifyInstalled()) {
       warning = this.showWarning(localize('common.show_missing_spotify'));
     }
 

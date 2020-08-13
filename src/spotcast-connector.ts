@@ -1,5 +1,5 @@
 import { ConnectDevice, CurrentPlayer, Playlist } from './types';
-import { SpotifyCardLib } from './spotify-card-lib';
+import { ISpotifyCardLib } from './spotify-card-lib';
 interface Message {
   type: string;
   account?: string;
@@ -13,7 +13,7 @@ interface PlaylistMessage extends Message {
 }
 
 export class SpotcastConnector {
-  parent: SpotifyCardLib;
+  parent: ISpotifyCardLib;
 
   playlists: Array<Playlist> = [];
   devices: Array<ConnectDevice> = [];
@@ -25,7 +25,7 @@ export class SpotcastConnector {
 
   loading = false;
 
-  constructor(parent: SpotifyCardLib) {
+  constructor(parent: ISpotifyCardLib) {
     this.parent = parent;
   }
 
