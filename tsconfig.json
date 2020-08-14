@@ -13,6 +13,7 @@
     "skipLibCheck": true,
     "resolveJsonModule": true,
     "experimentalDecorators": true,
+    "esModuleInterop": true,
     "plugins": [
       {
         "name": "ts-lit-plugin",

@@ -14,6 +14,8 @@ import { SpotifyCardConfig } from './types';
 import { localize } from './localize/localize';
 import { HassEntity } from 'home-assistant-js-websocket';
 
+import { PLAYLIST_TYPES, DISPLAY_STYLES } from './types';
+
 //define tabs of editor
 const options = {
   general: {
@@ -35,9 +37,6 @@ const options = {
     show: false,
   },
 };
-
-export const PLAYLIST_TYPES = ['Default', 'featured', 'discover-weekly'];
-export const DISPLAY_STYLES = ['List', 'Grid'];
 
 @customElement('spotify-card-editor')
 export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor {

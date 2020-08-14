@@ -1,5 +1,8 @@
 import { LovelaceCardConfig } from 'custom-card-helpers';
 
+export const PLAYLIST_TYPES = ['Default', 'featured', 'discover-weekly'];
+export const DISPLAY_STYLES = ['List', 'Grid'];
+
 export interface SpotifyCardConfig extends LovelaceCardConfig {
   //card type
   type: string;
@@ -14,7 +17,7 @@ export interface SpotifyCardConfig extends LovelaceCardConfig {
   //country code for featured playlist
   country_code?: string;
   //optional height of the card
-  height?: string;
+  height?: number;
   //amount of playlist shown
   limit?: number;
   //hide warnings if some are present

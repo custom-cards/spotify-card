@@ -1,12 +1,12 @@
 import { ConnectDevice, Playlist, ChromecastDevice, isConnectDevice } from './types';
 
 import { HomeAssistant} from 'custom-card-helpers';
-import { servicesColl, subscribeEntities, HassEntities, HassEntity } from 'home-assistant-js-websocket';
+import { servicesColl, subscribeEntities, HassEntities, HassEntity, Collection, HassServices } from 'home-assistant-js-websocket';
 
 import { SpotifyCardConfig } from './types';
 import { SpotcastConnector } from './spotcast-connector';
 import { SpotifyCard } from './spotify-card';
-import { PLAYLIST_TYPES, DISPLAY_STYLES } from './editor';
+import { PLAYLIST_TYPES, DISPLAY_STYLES } from './types';
 
 export enum DisplayStyle {
   Grid,
@@ -53,7 +53,6 @@ export class SpotifyCardLib implements ISpotifyCardLib {
   public _spotify_installed = false;
   public _fetch_time_out: any = 0;
 
-
   constructor(parent: SpotifyCard) {
     this._parent = parent;
     this.hass = parent.hass;
@@ -61,28 +60,15 @@ export class SpotifyCardLib implements ISpotifyCardLib {
 
   public setConfig(config: SpotifyCardConfig): string {
       this.config = config;
-    if (this.config.limit && !(typeof this.config.limit === 'number')) {
-        return 'limit';
-      }
       if (this.config.playlist_type && !PLAYLIST_TYPES.includes(this.config.playlist_type)) {
-        return 'playlist_type';
-      }
-      if (this.config.country_code && !(typeof this.config.country_code === 'string')) {
-        return 'country_code';
-      }
-      if (this.config.height && !(typeof this.config.height === 'number')) {
-        return 'height';
+        return 'playlist_type'; 
       }
       if (this.config.display_style && !DISPLAY_STYLES.includes(this.config.display_style)) {
         return 'display_style';
       }
-      if (this.config.darkmode && !(typeof this.config.darkmode === 'boolean')) {
-        return 'darkmode';
-      }
       return '';
   }
 
-  // Tested
   public getDisplayStyle(): DisplayStyle {
     // Display spotify playlists
     if (this.config.display_style?.toLowerCase() == 'grid') {
@@ -92,26 +78,27 @@ export class SpotifyCardLib implements ISpotifyCardLib {
     }
   }
 
-  // Tested
   public getPlayingState(): boolean {
     return this.spotify_state?.state == 'playing' ?? false;
   }
 
-  // Tested
   public getShuffleState(): boolean {
     return this._spotcast_connector.player?.shuffle_state ?? false;
   }
 
-  //Tested
   public getSpotifyEntityState(): string {
     return this.spotify_state ? this.spotify_state.state : '';
   }
 
   public isSpotcastInstalled(): boolean {
-    if (this.hass?.connection && servicesColl(this.hass.connection).state.spotcast !== undefined) {
+    if (this.hass?.connection && this.getHassConnection().state.spotcast !== undefined) {
       return true;
     }
     return false;
+  }
+
+  public getHassConnection(): Collection<HassServices> {
+    return servicesColl(this.hass.connection);
   }
 
   public isSpotifyInstalled(): boolean {
@@ -135,7 +122,7 @@ export class SpotifyCardLib implements ISpotifyCardLib {
   }
 
   public updated(hass: HomeAssistant): void {
-      this.hass = hass;
+    this.hass = hass;
     this.doSubscribeEntities();
   }
 

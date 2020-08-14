@@ -1,4 +1,4 @@
-import { ConnectDevice, CurrentPlayer, Playlist } from './types';
+import { ConnectDevice, CurrentPlayer, Playlist, ChromecastDevice } from './types';
 import { ISpotifyCardLib } from './spotify-card-lib';
 interface Message {
   type: string;
@@ -18,7 +18,7 @@ export class SpotcastConnector {
   playlists: Array<Playlist> = [];
   devices: Array<ConnectDevice> = [];
   player?: CurrentPlayer;
-  chromecast_devices: Array<any> = [];
+  chromecast_devices: Array<ChromecastDevice> = [];
   // data is valid for 4 secs otherwise the service is spammed bcos of the entitiy changes
   state_ttl = 4000;
   last_state_update_time = 0;
