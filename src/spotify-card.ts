@@ -86,6 +86,11 @@ export class SpotifyCard extends LitElement {
     this.lib.disconnectedCallback();
   }
 
+  //Helper function for testing
+  public isHASSConnected(): boolean {
+    return this.isConnected;
+  }
+
   protected render(): TemplateResult | void {
     let warning = html``;
     if (!this.lib.isSpotcastInstalled()) {

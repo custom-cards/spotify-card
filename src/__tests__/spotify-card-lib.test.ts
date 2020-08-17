@@ -1,7 +1,7 @@
 import { SpotifyCard } from '../spotify-card';
 import { SpotcastConnector } from '../spotcast-connector';
 import { SpotifyCardLib, DisplayStyle } from '../spotify-card-lib';
-import { SpotifyCardConfig, CurrentPlayer, ConnectDevice, ChromecastDevice } from '../types';
+import { SpotifyCardConfig, CurrentPlayer, ConnectDevice, ChromecastDevice, Playlist } from '../types';
 import {
   HassEntity,
   Connection,
@@ -216,22 +216,34 @@ describe('SpotifyCardLib', () => {
   });
 
   describe('doSubscribeEntities', () => {
-    test('undefined', () => {
-      expect(spotify_card_lib._unsubscribe_entitites).toBeUndefined();
+    beforeEach(() => {
+      spotify_card_lib.entitiesUpdated = jest.fn();
     });
-    test('undefined_with_connection', () => {
+    test('with_connection', () => {
       spotify_card_lib.hass = jest.genMockFromModule<HomeAssistant>('home-assistant-js-websocket');
       spotify_card_lib.hass.connection = jest.genMockFromModule<Connection>('home-assistant-js-websocket');
-      expect(spotify_card_lib._unsubscribe_entitites).toBeUndefined();
+      spotify_card_lib.hass.connection.subscribeEvents = jest.fn();
+      spotify_card_lib.hass.connection.addEventListener = jest.fn();
+      spotify_card_lib.doSubscribeEntities();
+      expect(spotify_card_lib.hass.connection.subscribeEvents).not.toHaveBeenCalled();
     });
-    test('undefined_with_unsubscribe_entities', () => {
+    test('with_unsubscribe_entities', () => {
       spotify_card_lib.hass = jest.genMockFromModule<HomeAssistant>('home-assistant-js-websocket');
       spotify_card_lib.hass.connection = jest.genMockFromModule<Connection>('home-assistant-js-websocket');
-      const mockFunction = jest.fn();
-      spotify_card_lib._unsubscribe_entitites = mockFunction;
-      expect(spotify_card_lib._unsubscribe_entitites).toBe(mockFunction);
+      spotify_card_lib.hass.connection.subscribeEvents = jest.fn();
+      spotify_card_lib.hass.connection.addEventListener = jest.fn();
+      spotify_card_lib.doSubscribeEntities();
+      expect(spotify_card_lib.hass.connection.subscribeEvents).not.toHaveBeenCalled();
     });
-    // undefined_with_parent_connected
+    test('with_parent_connected', () => {
+      spotify_card_lib.hass = jest.genMockFromModule<HomeAssistant>('home-assistant-js-websocket');
+      spotify_card_lib.hass.connection = jest.genMockFromModule<Connection>('home-assistant-js-websocket');
+      spotify_card_lib.hass.connection.subscribeEvents = jest.fn();
+      spotify_card_lib.hass.connection.addEventListener = jest.fn();
+      spotify_card_lib._parent.isHASSConnected = jest.fn().mockRejectedValueOnce(true);
+      spotify_card_lib.doSubscribeEntities();
+      expect(spotify_card_lib.hass.connection.subscribeEvents).toHaveBeenCalled();
+    });
   });
 
   describe('entitiesUpdated', () => {
@@ -366,36 +378,86 @@ describe('SpotifyCardLib', () => {
       spotify_card_lib.hass.callService = jest.fn();
     });
     test('spotify_state not set', () => {
-      spotify_card_lib.onShuffleSelect()
-      expect(spotify_card_lib.hass.callService).not.toHaveBeenCalled();   
+      spotify_card_lib.onShuffleSelect();
+      expect(spotify_card_lib.hass.callService).not.toHaveBeenCalled();
     });
     test('spotify_state not playing', () => {
       spotify_card_lib.spotify_state = jest.genMockFromModule<HassEntity>('home-assistant-js-websocket');
       spotify_card_lib.spotify_state.state = 'not_playing';
-      spotify_card_lib.onShuffleSelect()
+      spotify_card_lib.onShuffleSelect();
       expect(spotify_card_lib.hass.callService).not.toHaveBeenCalled();
     });
     test('spotify_state playing', () => {
       spotify_card_lib.spotify_state = jest.genMockFromModule<HassEntity>('home-assistant-js-websocket');
       spotify_card_lib.spotify_state.state = 'playing';
-      spotify_card_lib.onShuffleSelect()
+      spotify_card_lib.onShuffleSelect();
       expect(spotify_card_lib.hass.callService).toHaveBeenCalled();
     });
   });
-  describe.only('handlePlayPauseEvent', () => {
+  describe('handlePlayPauseEvent', () => {
     test('stop propagation', () => {
-      const ev = new Event("Test");
+      const ev = new Event('Test');
       ev.stopPropagation = jest.fn();
-      spotify_card_lib.handlePlayPauseEvent(ev,"test");
-      expect(ev.stopPropagation).toHaveBeenCalled();   
+      spotify_card_lib.handlePlayPauseEvent(ev, 'test');
+      expect(ev.stopPropagation).toHaveBeenCalled();
     });
     test('callService', () => {
-      const ev = new Event("Test");
+      const ev = new Event('Test');
       spotify_card_lib.spotify_state = jest.genMockFromModule<HassEntity>('home-assistant-js-websocket');
       spotify_card_lib.hass = jest.genMockFromModule<HomeAssistant>('home-assistant-js-websocket');
       spotify_card_lib.hass.callService = jest.fn();
-      spotify_card_lib.handlePlayPauseEvent(ev,"test");
-      expect(spotify_card_lib.hass.callService).toHaveBeenCalled();   
+      spotify_card_lib.handlePlayPauseEvent(ev, 'test');
+      expect(spotify_card_lib.hass.callService).toHaveBeenCalled();
+    });
+  });
+  describe('spotifyDeviceSelected', () => {
+    beforeEach(() => {
+      spotify_card_lib._spotcast_connector = jest.genMockFromModule<SpotcastConnector>('../spotcast-connector');
+    });
+    test('start play', () => {
+      spotify_card_lib._spotcast_connector.getCurrentPlayer = jest.fn().mockReturnValueOnce(undefined);
+      spotify_card_lib._spotcast_connector.playUriOnConnectDevice = jest.fn();
+      const device = jest.genMockFromModule<ConnectDevice>('../types');
+      device.id = 'test_id';
+      const playlist = jest.genMockFromModule<Playlist>('../types');
+      playlist.uri = 'test_uri';
+      spotify_card_lib._spotcast_connector.playlists = [playlist];
+      spotify_card_lib.spotifyDeviceSelected(device);
+      expect(spotify_card_lib._spotcast_connector.playUriOnConnectDevice).toHaveBeenCalledWith('test_id', 'test_uri');
+    });
+    test('transfer playback', () => {
+      const current_device = jest.genMockFromModule<ConnectDevice>('../types');
+      spotify_card_lib._spotcast_connector.getCurrentPlayer = jest.fn().mockReturnValueOnce(current_device);
+      spotify_card_lib._spotcast_connector.transferPlaybackToConnectDevice = jest.fn();
+      const device = jest.genMockFromModule<ConnectDevice>('../types');
+      device.id = 'test_id';
+      spotify_card_lib.spotifyDeviceSelected(device);
+      expect(spotify_card_lib._spotcast_connector.transferPlaybackToConnectDevice).toHaveBeenCalledWith('test_id');
+    });
+  });
+  describe('chromecastDeviceSelected', () => {
+    beforeEach(() => {
+      spotify_card_lib._spotcast_connector = jest.genMockFromModule<SpotcastConnector>('../spotcast-connector');
+    });
+    test('start play', () => {
+      spotify_card_lib._spotcast_connector.getCurrentPlayer = jest.fn().mockReturnValueOnce(undefined);
+      spotify_card_lib._spotcast_connector.playUriOnCastDevice = jest.fn();
+      const device = jest.genMockFromModule<ChromecastDevice>('../types');
+      device.friendly_name = 'test_name';
+      const playlist = jest.genMockFromModule<Playlist>('../types');
+      playlist.uri = 'test_uri';
+      spotify_card_lib._spotcast_connector.playlists = [playlist];
+      spotify_card_lib.chromecastDeviceSelected(device);
+      expect(spotify_card_lib._spotcast_connector.playUriOnCastDevice).toHaveBeenCalledWith('test_name', 'test_uri');
+    });
+    test('transfer playback', () => {
+      const current_device = jest.genMockFromModule<ConnectDevice>('../types');
+      spotify_card_lib._spotcast_connector.getCurrentPlayer = jest.fn().mockReturnValueOnce(current_device);
+      spotify_card_lib._spotcast_connector.transferPlaybackToCastDevice = jest.fn();
+      const device = jest.genMockFromModule<ChromecastDevice>('../types');
+      device.friendly_name = 'test_name';
+      spotify_card_lib.chromecastDeviceSelected(device);
+      expect(spotify_card_lib._spotcast_connector.transferPlaybackToCastDevice).toHaveBeenCalledWith('test_name');
     });
   });
 });

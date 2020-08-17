@@ -137,7 +137,7 @@ export class SpotifyCardLib implements ISpotifyCardLib {
   }
 
   public doSubscribeEntities(): void {
-    if (this.hass?.connection && !this._unsubscribe_entitites && this._parent.isConnected) {
+    if (this.hass?.connection && !this._unsubscribe_entitites && this._parent.isHASSConnected) {
       this._unsubscribe_entitites = subscribeEntities(this.hass.connection, (entities) =>
         this.entitiesUpdated(entities)
       );
