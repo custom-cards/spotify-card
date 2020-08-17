@@ -359,4 +359,43 @@ describe('SpotifyCardLib', () => {
       expect(spotify_card_lib.getFilteredDevices()).toStrictEqual([[connect_device_1], [chromecast_device_1]]);
     });
   });
+  describe('onShuffleSelect', () => {
+    beforeEach(() => {
+      spotify_card_lib._spotcast_connector = jest.genMockFromModule<SpotcastConnector>('../spotcast-connector');
+      spotify_card_lib.hass = jest.genMockFromModule<HomeAssistant>('home-assistant-js-websocket');
+      spotify_card_lib.hass.callService = jest.fn();
+    });
+    test('spotify_state not set', () => {
+      spotify_card_lib.onShuffleSelect()
+      expect(spotify_card_lib.hass.callService).not.toHaveBeenCalled();   
+    });
+    test('spotify_state not playing', () => {
+      spotify_card_lib.spotify_state = jest.genMockFromModule<HassEntity>('home-assistant-js-websocket');
+      spotify_card_lib.spotify_state.state = 'not_playing';
+      spotify_card_lib.onShuffleSelect()
+      expect(spotify_card_lib.hass.callService).not.toHaveBeenCalled();
+    });
+    test('spotify_state playing', () => {
+      spotify_card_lib.spotify_state = jest.genMockFromModule<HassEntity>('home-assistant-js-websocket');
+      spotify_card_lib.spotify_state.state = 'playing';
+      spotify_card_lib.onShuffleSelect()
+      expect(spotify_card_lib.hass.callService).toHaveBeenCalled();
+    });
+  });
+  describe.only('handlePlayPauseEvent', () => {
+    test('stop propagation', () => {
+      const ev = new Event("Test");
+      ev.stopPropagation = jest.fn();
+      spotify_card_lib.handlePlayPauseEvent(ev,"test");
+      expect(ev.stopPropagation).toHaveBeenCalled();   
+    });
+    test('callService', () => {
+      const ev = new Event("Test");
+      spotify_card_lib.spotify_state = jest.genMockFromModule<HassEntity>('home-assistant-js-websocket');
+      spotify_card_lib.hass = jest.genMockFromModule<HomeAssistant>('home-assistant-js-websocket');
+      spotify_card_lib.hass.callService = jest.fn();
+      spotify_card_lib.handlePlayPauseEvent(ev,"test");
+      expect(spotify_card_lib.hass.callService).toHaveBeenCalled();   
+    });
+  });
 });

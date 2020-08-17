@@ -204,7 +204,7 @@ export class SpotifyCardLib implements ISpotifyCardLib {
 
   public onShuffleSelect(): void {
     if (this.spotify_state?.state == 'playing') {
-      this._parent.hass.callService('media_player', 'shuffle_set', {
+      this.hass.callService('media_player', 'shuffle_set', {
         entity_id: this.spotify_state.entity_id,
         shuffle: !this._spotcast_connector.player?.shuffle_state,
       });
@@ -214,7 +214,7 @@ export class SpotifyCardLib implements ISpotifyCardLib {
   public handlePlayPauseEvent(ev: Event, command: string): void {
     ev.stopPropagation();
     if (this.spotify_state) {
-      this._parent.hass.callService('media_player', command, { entity_id: this.spotify_state.entity_id });
+      this.hass.callService('media_player', command, { entity_id: this.spotify_state.entity_id });
     }
   }
 
