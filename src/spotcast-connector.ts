@@ -1,4 +1,4 @@
-import { ConnectDevice, CurrentPlayer, Playlist, ChromecastDevice } from './types';
+import { ConnectDevice, CurrentPlayer, Playlist, ChromecastDevice, PlaybackOptions } from './types';
 import { ISpotifyCardLib } from './spotify-card-lib';
 interface Message {
   type: string;
@@ -12,13 +12,30 @@ interface PlaylistMessage extends Message {
   locale?: string;
 }
 
-export class SpotcastConnector {
+export interface ISpotcastConnector {
   parent: ISpotifyCardLib;
-
-  playlists: Array<Playlist> = [];
-  devices: Array<ConnectDevice> = [];
+  playlists: Array<Playlist>;
+  devices: Array<ConnectDevice>;
   player?: CurrentPlayer;
-  chromecast_devices: Array<ChromecastDevice> = [];
+  chromecast_devices: Array<ChromecastDevice>;
+  is_loading(): boolean;
+  is_loaded(): boolean;
+  playUri(uri: string): void;
+  transferPlaybackToCastDevice(device_name: string): void;
+  transferPlaybackToConnectDevice(device_id: string): void;
+  playUriOnCastDevice(device_name: string, uri: string): void;
+  playUriOnConnectDevice(device_id: string, uri: string): void;
+  updateState(): Promise<void>;
+  getCurrentPlayer(): ConnectDevice | undefined;
+  fetchPlaylists(): Promise<void>;
+}
+
+export class SpotcastConnector implements ISpotcastConnector {
+  public parent: ISpotifyCardLib;
+  public playlists: Array<Playlist> = [];
+  public devices: Array<ConnectDevice> = [];
+  public player?: CurrentPlayer;
+  public chromecast_devices: Array<ChromecastDevice> = [];
   // data is valid for 4 secs otherwise the service is spammed bcos of the entitiy changes
   state_ttl = 4000;
   last_state_update_time = 0;
@@ -34,7 +51,7 @@ export class SpotcastConnector {
     return this.loading;
   }
 
-  private set_loading_off() {
+  public set_loading_off(): void {
     this.loading = false;
   }
 
@@ -45,14 +62,13 @@ export class SpotcastConnector {
     return false;
   }
 
-  private getPlaybackOptions(uri: string): any {
-    const options: any = {
+  public getPlaybackOptions(uri: string): PlaybackOptions {
+    const options: PlaybackOptions = {
       uri: uri,
       force_playback: this.parent.getSpotifyEntityState() == 'playing',
       random_song: this.parent.config.always_play_random_song || false,
       account: this.parent.config.account,
     };
-
     return options;
   }
 
@@ -62,7 +78,6 @@ export class SpotcastConnector {
       const default_device = this.parent.config.default_device;
       if (default_device) {
         const connect_device = this.devices.filter((device) => device.name == default_device);
-
         if (connect_device.length > 0) {
           return this.playUriOnConnectDevice(connect_device[0].id, uri);
         } else {
@@ -70,12 +85,10 @@ export class SpotcastConnector {
           if (cast_device.length > 0) {
             return this.playUriOnCastDevice(cast_device[0].friendly_name, uri);
           }
-          console.error('Could not find default_device:' + default_device);
+          throw new Error('Could not find default_device: ' + default_device);
         }
       }
-
-      console.error('No active device nor default device in settings');
-      return;
+      throw new Error('No active device nor default device in settings');
     }
     this.playUriOnConnectDevice(current_player.id, uri);
   }
@@ -97,12 +110,12 @@ export class SpotcastConnector {
   }
 
   public playUriOnCastDevice(device_name: string, uri: string): void {
-    const options: any = { ...this.getPlaybackOptions(uri), device_name: device_name };
+    const options: PlaybackOptions = { ...this.getPlaybackOptions(uri), device_name: device_name };
     this.parent.hass.callService('spotcast', 'start', options);
   }
 
   public playUriOnConnectDevice(device_id: string, uri: string): void {
-    const options: any = { ...this.getPlaybackOptions(uri), spotify_device_id: device_id };
+    const options: PlaybackOptions = { ...this.getPlaybackOptions(uri), spotify_device_id: device_id };
     this.parent.hass.callService('spotcast', 'start', options);
   }
 
@@ -119,7 +132,7 @@ export class SpotcastConnector {
       await this.fetchChromecasts();
       this.last_state_update_time = new Date().getTime();
     } catch (e) {
-      console.error('updateState error:', e);
+      throw Error('updateState error: ' + e);
     }
   }
 
@@ -127,7 +140,7 @@ export class SpotcastConnector {
     return this.player?.device;
   }
 
-  private async fetchPlayer(): Promise<void> {
+  public async fetchPlayer(): Promise<void> {
     // console.log('fetchPlayer');
     const message: Message = {
       type: 'spotcast/player',
@@ -136,12 +149,12 @@ export class SpotcastConnector {
     try {
       this.player = <CurrentPlayer>await this.parent.hass.callWS(message);
     } catch (e) {
-      console.error('Failed to fetch player', e);
+      throw Error('Failed to fetch player: ' + e);
     }
     // console.log('fetchPlayer:', JSON.stringify(this.player, null, 2));
   }
 
-  private async fetchDevices(): Promise<void> {
+  public async fetchDevices(): Promise<void> {
     // console.log('fetchDevices');
     const message: Message = {
       type: 'spotcast/devices',
@@ -151,21 +164,20 @@ export class SpotcastConnector {
       const res: any = <Array<ConnectDevice>>await this.parent.hass.callWS(message);
       this.devices = res.devices;
     } catch (e) {
-      console.error('Failed to fetch devices', e);
+      throw Error('Failed to fetch devices: '+ e);
     }
-
     // console.log('fetchDevices:', JSON.stringify(this.devices, null, 2));
   }
 
   /**
    * Use HA state for now
    */
-  private async fetchChromecasts(): Promise<void> {
+  public async fetchChromecasts(): Promise<void> {
     try {
       this.chromecast_devices = await this.parent.hass.callWS({ type: 'spotcast/castdevices' });
     } catch (e) {
-      console.error('Failed to fetch cast devices', e);
       this.chromecast_devices = [];
+      throw Error('Failed to fetch devices: ' + e);
     }
     // console.log('fetchChromecasts2:', this.chromecast_devices);
   }
@@ -186,7 +198,7 @@ export class SpotcastConnector {
       const res: any = <Array<Playlist>>await this.parent.hass.callWS(message);
       this.playlists = res.items;
     } catch (e) {
-      console.error('Failed to fetch playlists', e);
+      throw Error('Failed to fetch playlists: ' + e);
     }
     // console.log('PLAYLISTS:', JSON.stringify(this.playlists, null, 2));
   }

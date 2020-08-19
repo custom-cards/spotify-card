@@ -4,7 +4,7 @@ import { HomeAssistant} from 'custom-card-helpers';
 import { servicesColl, subscribeEntities, HassEntities, HassEntity, Collection, HassServices } from 'home-assistant-js-websocket';
 
 import { SpotifyCardConfig } from './types';
-import { SpotcastConnector } from './spotcast-connector';
+import { SpotcastConnector, ISpotcastConnector } from './spotcast-connector';
 import { SpotifyCard } from './spotify-card';
 import { PLAYLIST_TYPES, DISPLAY_STYLES } from './types';
 
@@ -48,7 +48,7 @@ export class SpotifyCardLib implements ISpotifyCardLib {
   public spotify_state?: HassEntity;
   
   // These are 'private'
-  public _spotcast_connector!: SpotcastConnector;
+  public _spotcast_connector!: ISpotcastConnector;
   public _unsubscribe_entitites?: any;
   public _spotify_installed = false;
   public _fetch_time_out: any = 0;

@@ -35,8 +35,18 @@ export interface SpotifyCardConfig extends LovelaceCardConfig {
   // locale
 }
 
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export function isConnectDevice(object: any): object is ConnectDevice {
   return 'name' in object;
+}
+
+export interface PlaybackOptions {
+  uri: string,
+  force_playback: boolean,
+  random_song: boolean,
+  account?: string,
+  device_name?: string;
+  spotify_device_id?: string;
 }
 
 export interface ConnectDevice {

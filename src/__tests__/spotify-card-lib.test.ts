@@ -162,6 +162,7 @@ describe('SpotifyCardLib', () => {
     test('was called', () => {
       spotify_card_lib.isSpotcastInstalled = jest.fn().mockReturnValueOnce(true);
       spotify_card_lib._spotcast_connector.is_loading = jest.fn().mockReturnValueOnce(false);
+      spotify_card_lib._parent.requestUpdate = jest.fn();
       spotify_card_lib.requestUpdate();
       expect(spotify_card_lib._spotcast_connector.fetchPlaylists).toHaveBeenCalled();
     });
