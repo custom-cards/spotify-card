@@ -1,17 +1,25 @@
-import { ConnectDevice, Playlist, ChromecastDevice, isConnectDevice } from './types';
+import {
+  ConnectDevice,
+  Playlist,
+  ChromecastDevice,
+  isConnectDevice,
+  DisplayStyle,
+  SpotifyCardConfig,
+  PlaylistType,
+} from './types';
 
-import { HomeAssistant} from 'custom-card-helpers';
-import { servicesColl, subscribeEntities, HassEntities, HassEntity, Collection, HassServices } from 'home-assistant-js-websocket';
-
-import { SpotifyCardConfig } from './types';
+import { HomeAssistant } from 'custom-card-helpers';
+import {
+  servicesColl,
+  subscribeEntities,
+  HassEntities,
+  HassEntity,
+  Collection,
+  HassServices,
+} from 'home-assistant-js-websocket';
 import { SpotcastConnector, ISpotcastConnector } from './spotcast-connector';
 import { SpotifyCard } from './spotify-card';
-import { PLAYLIST_TYPES, DISPLAY_STYLES } from './types';
-
-export enum DisplayStyle {
-  Grid,
-  List,
-}
+import { PLAYLIST_TYPES } from './editor';
 
 export interface ISpotifyCardLib {
   hass: HomeAssistant;
@@ -42,12 +50,12 @@ export interface ISpotifyCardLib {
 }
 
 export class SpotifyCardLib implements ISpotifyCardLib {
-  public _parent: SpotifyCard;
   public hass!: HomeAssistant;
   public config!: SpotifyCardConfig;
   public spotify_state?: HassEntity;
-  
+
   // These are 'private'
+  public _parent: SpotifyCard;
   public _spotcast_connector!: ISpotcastConnector;
   public _unsubscribe_entitites?: any;
   public _spotify_installed = false;
@@ -59,14 +67,21 @@ export class SpotifyCardLib implements ISpotifyCardLib {
   }
 
   public setConfig(config: SpotifyCardConfig): string {
-      this.config = config;
-      if (this.config.playlist_type && !PLAYLIST_TYPES.includes(this.config.playlist_type)) {
-        return 'playlist_type'; 
-      }
-      if (this.config.display_style && !DISPLAY_STYLES.includes(this.config.display_style)) {
-        return 'display_style';
-      }
-      return '';
+    this.config = config;
+    const bug = PLAYLIST_TYPES;
+    if (
+      this.config.playlist_type &&
+      !(Object.values(PlaylistType) as Array<string>).includes(this.config.playlist_type.toLowerCase())
+    ) {
+      return 'playlist_type';
+    }
+    if (
+      this.config.display_style &&
+      !(Object.values(DisplayStyle) as Array<string>).includes(this.config.display_style.toLowerCase())
+    ) {
+      return 'display_style';
+    }
+    return '';
   }
 
   public getDisplayStyle(): DisplayStyle {

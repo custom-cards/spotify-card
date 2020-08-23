@@ -1,7 +1,32 @@
 import { LovelaceCardConfig } from 'custom-card-helpers';
 
-export const PLAYLIST_TYPES = ['Default', 'featured', 'discover-weekly'];
-export const DISPLAY_STYLES = ['List', 'Grid'];
+export enum DisplayStyle {
+  Grid = 'grid',
+  List = 'list',
+}
+
+export enum PlaylistType {
+  default = 'default',
+  featured = 'featured',
+  discover_weekly = 'discover-weekly',
+}
+
+export enum ConfigEntry {
+  Name,
+  Account,
+  Spotify_Entity,
+  Country_Code,
+  Limit,
+  Playlist_Type,
+  Always_Play_Random_Song,
+  Height,
+  Display_Style,
+  Grid_Covers_Per_Row,
+  Grid_Center_Covers,
+  Hide_Warning,
+  Default_Device,
+  Filter_Devices,
+}
 
 export interface SpotifyCardConfig extends LovelaceCardConfig {
   //card type
@@ -41,10 +66,10 @@ export function isConnectDevice(object: any): object is ConnectDevice {
 }
 
 export interface PlaybackOptions {
-  uri: string,
-  force_playback: boolean,
-  random_song: boolean,
-  account?: string,
+  uri: string;
+  force_playback: boolean;
+  random_song: boolean;
+  account?: string;
   device_name?: string;
   spotify_device_id?: string;
 }
