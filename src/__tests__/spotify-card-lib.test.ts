@@ -1,7 +1,7 @@
 import { SpotifyCard } from '../spotify-card';
 import { SpotcastConnector } from '../spotcast-connector';
-import { SpotifyCardLib, DisplayStyle } from '../spotify-card-lib';
-import { SpotifyCardConfig, CurrentPlayer, ConnectDevice, ChromecastDevice, Playlist } from '../types';
+import { SpotifyCardLib } from '../spotify-card-lib';
+import { SpotifyCardConfig, CurrentPlayer, ConnectDevice, ChromecastDevice, Playlist, DisplayStyle } from '../types';
 import {
   HassEntity,
   Connection,

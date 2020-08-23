@@ -3,6 +3,8 @@ import { SpotifyCardConfig, ConnectDevice, ChromecastDevice, Playlist } from '..
 import { SpotcastConnector } from '../spotcast-connector';
 import { HomeAssistant } from 'custom-card-helpers';
 
+jest.mock('../editor');
+
 let spotify_card_lib!: SpotifyCardLib;
 let spotcast_connector!: SpotcastConnector;
 
