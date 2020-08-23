@@ -206,3 +206,7 @@ export interface Tracks {
   href: string;
   total: number;
 }
+
+export interface ValueChangedEvent {
+  target?: any;
+}

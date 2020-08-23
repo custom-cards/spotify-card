@@ -19,7 +19,7 @@ import { SpotifyCardConfig, DisplayStyle } from './types';
 import { localize } from './localize/localize';
 import { SpotifyCardLib, ISpotifyCardLib } from './spotify-card-lib';
 
-// Display card verion in console
+// Display card version in console
 /* eslint no-console: 0 */
 console.info(
   `%c  SPOTIFY-CARD \n%c  ${localize('common.version')} ${CARD_VERSION}    `,

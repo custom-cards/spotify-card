@@ -1,6 +1,6 @@
 import { SpotifyCardEditor } from './editor';
 import { HomeAssistant, fireEvent } from 'custom-card-helpers';
-import { ChromecastDevice, ConfigEntry } from './types';
+import { ChromecastDevice, ConfigEntry, ValueChangedEvent } from './types';
 
 export class SpotifyCardEditorLib {
   public hass!: HomeAssistant;
@@ -14,7 +14,7 @@ export class SpotifyCardEditorLib {
   }
 
   public async connectedCallback(): Promise<void> {
-    this.hass = this._parent.hass;
+    this.hass = this.hass || this._parent.hass;
     const res: any = await this.hass.callWS({
       type: 'spotcast/accounts',
     });
@@ -24,34 +24,39 @@ export class SpotifyCardEditorLib {
       type: 'spotcast/castdevices',
     });
 
-    this.chromecast_devices = casts.map((c: ChromecastDevice) => c.friendly_name);
+    this.chromecast_devices = casts?.map((c: ChromecastDevice) => c.friendly_name);
     this._parent.requestUpdate();
   }
 
   public getMediaPlayerEntities(): Array<string> {
-    return Object.keys(this.hass.states)
-      .map((key) => this.hass.states[key])
+    return Object.values(this.hass.states)
       .filter((ent) => ent.entity_id.match('media_player[.]'))
       .map((e) => e.entity_id);
   }
 
+  //this is SpotifyCardEditor in this context
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   public valueChanged(this, ev: any): void {
-    this;
+    this.lib.valueChangedFunction(this,ev);
+  }
+
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+  public valueChangedFunction(editor: SpotifyCardEditor, ev: ValueChangedEvent): void {
     // ev.target.offsetParent checks if editor visible or freetext input is used
-    if (!this.config || !this.hass || ev.target.offsetParent === null) {
+    if (!editor.config || !editor.hass || ev.target.offsetParent === null) {
       return;
     }
     const { target } = ev;
-    if (this[`_${target.configValue}`] === target.value) {
+    if (editor[`_${target.configValue}`] === target.value) {
       return;
     }
+    //Checked till here
     if (target.configValue) {
       // Delete item if false or empty
       if (target.checked === false || target.value === '') {
-        const clone = { ...this.config };
+        const clone = { ...editor.config };
         delete clone[target.configValue];
-        this.config = clone;
+        editor.config = clone;
       } else {
         let target_value = target.value;
         if (target.configValue == 'height') {
@@ -66,41 +71,15 @@ export class SpotifyCardEditorLib {
               return value != '';
             });
         }
-        this.config = {
-          ...this.config,
+        editor.config = {
+          ...editor.config,
           [target.configValue]: target.checked !== undefined ? target.checked : target_value,
         };
       }
     }
-    fireEvent(this, 'config-changed', { config: this.config });
-    this.requestUpdate(target.configValue);
+    fireEvent(editor, 'config-changed', { config: editor.config });
+    editor.requestUpdate(target.configValue);
   }
-
-  // Value changed for lists
-  //   private _valueChangedForList(ev: any): void {
-  //     if (!this._parent.config || !this.hass) {
-  //       return;
-  //     }
-
-  //     const { checked } = ev.currentTarget;
-  //     const configValue = ev.target.configValue;
-  //     const value = ev.target.innerText;
-
-  //     const config = JSON.parse(JSON.stringify(this._parent.config));
-  //     if (!config[configValue]) {
-  //       config[configValue] = [];
-  //     }
-  //     if (checked) {
-  //       if (!config[configValue].includes(value)) {
-  //         config[configValue].push(value);
-  //       }
-  //     } else {
-  //       config[configValue] = config[configValue].filter((d) => d !== value);
-  //     }
-
-  //     fireEvent(this._parent, 'config-changed', { config: config });
-  //     this._parent.requestUpdate(configValue);
-  //   }
 
   public getValue(value: ConfigEntry): any {
     switch (value) {
@@ -117,7 +96,7 @@ export class SpotifyCardEditorLib {
       case ConfigEntry.Limit:
         return this._parent.config?.limit ?? 10;
       case ConfigEntry.Playlist_Type:
-        return this._parent.config?.playlist_type ?? 'Default';
+        return this._parent.config?.playlist_type ?? 'default';
       case ConfigEntry.Always_Play_Random_Song:
         return this._parent.config?.always_play_random_song ?? false;
       case ConfigEntry.Height:

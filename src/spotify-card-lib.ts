@@ -68,6 +68,8 @@ export class SpotifyCardLib implements ISpotifyCardLib {
 
   public setConfig(config: SpotifyCardConfig): string {
     this.config = config;
+    // I don't know why, but if PLAYLIST_TYPES is not used. The card gives an error which is hard to debug.
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const bug = PLAYLIST_TYPES;
     if (
       this.config.playlist_type &&

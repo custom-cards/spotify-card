@@ -86,7 +86,6 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
             </paper-listbox>
           </paper-dropdown-menu>
         </div>
-
         <div>
           <paper-dropdown-menu
             label=${localize('settings.spotify_entity')}
@@ -102,7 +101,6 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
             </paper-listbox>
           </paper-dropdown-menu>
         </div>
-
         <div>
           <paper-dropdown-menu
             label=${localize('settings.playlist_type')}
