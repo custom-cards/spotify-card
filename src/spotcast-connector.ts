@@ -125,7 +125,7 @@ export class SpotcastConnector implements ISpotcastConnector {
       // console.log('cache is still valid:', this.last_state_update_time);
       return;
     }
-     // console.log('cache is NOT valid:', this.last_state_update_time);
+    // console.log('cache is NOT valid:', this.last_state_update_time);
     try {
       await this.fetchDevices();
       await this.fetchPlayer();
@@ -164,7 +164,7 @@ export class SpotcastConnector implements ISpotcastConnector {
       const res: any = <Array<ConnectDevice>>await this.parent.hass.callWS(message);
       this.devices = res.devices;
     } catch (e) {
-      throw Error('Failed to fetch devices: '+ e);
+      throw Error('Failed to fetch devices: ' + e);
     }
     // console.log('fetchDevices:', JSON.stringify(this.devices, null, 2));
   }

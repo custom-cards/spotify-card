@@ -34,12 +34,6 @@ export class SpotifyCardEditorLib {
       .map((e) => e.entity_id);
   }
 
-  //this is SpotifyCardEditor in this context
-  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-  public valueChanged(this, ev: any): void {
-    this.lib.valueChangedFunction(this,ev);
-  }
-
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   public valueChangedFunction(editor: SpotifyCardEditor, ev: ValueChangedEvent): void {
     // ev.target.offsetParent checks if editor visible or freetext input is used
@@ -47,10 +41,9 @@ export class SpotifyCardEditorLib {
       return;
     }
     const { target } = ev;
-    if (editor[`_${target.configValue}`] === target.value) {
+    if (target.value && editor[`_${target.configValue}`] === target.value) {
       return;
     }
-    //Checked till here
     if (target.configValue) {
       // Delete item if false or empty
       if (target.checked === false || target.value === '') {
@@ -61,7 +54,7 @@ export class SpotifyCardEditorLib {
         let target_value = target.value;
         if (target.configValue == 'height') {
           target_value = Number(target_value);
-        } else if (target.configValue == 'filter_devices' && target_value != '') {
+        } else if (target.configValue == 'filter_devices') {
           target_value = target_value
             .split(',')
             .map((value: string) => {
@@ -102,7 +95,7 @@ export class SpotifyCardEditorLib {
       case ConfigEntry.Height:
         return this._parent.config?.height ?? '';
       case ConfigEntry.Display_Style:
-        return this._parent.config?.display_style ?? 'List';
+        return this._parent.config?.display_style ?? 'list';
       case ConfigEntry.Grid_Covers_Per_Row:
         return this._parent.config?.grid_covers_per_row ?? 5;
       case ConfigEntry.Grid_Center_Covers:

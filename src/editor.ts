@@ -13,7 +13,7 @@ import { HomeAssistant, LovelaceCardEditor } from 'custom-card-helpers';
 import { SpotifyCardConfig, ConfigEntry, DisplayStyle, PlaylistType } from './types';
 import { localize } from './localize/localize';
 
-import { SpotifyCardEditorLib } from './editor-lib';
+import { SpotifyCardEditorLib, ISpotifyCardEditorLib } from './editor-lib';
 
 export const PLAYLIST_TYPES = ['default', 'featured', 'discover-weekly'];
 
@@ -48,7 +48,7 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
   @internalProperty() public _toggle?: boolean;
 
   @internalProperty()
-  private lib: SpotifyCardEditorLib;
+  private lib: ISpotifyCardEditorLib;
 
   accounts: Array<string> = [];
   chromecast_devices: Array<string> = [];
@@ -74,7 +74,7 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
         <div>
           <paper-dropdown-menu
             label=${localize('settings.account')}
-            @value-changed=${this.lib.valueChanged}
+            @value-changed=${this.valueChanged}
             .configValue=${'account'}
             class="dropdown"
           >
@@ -89,7 +89,7 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
         <div>
           <paper-dropdown-menu
             label=${localize('settings.spotify_entity')}
-            @value-changed=${this.lib.valueChanged}
+            @value-changed=${this.valueChanged}
             .configValue=${'spotify_entity'}
             class="dropdown"
           >
@@ -104,7 +104,7 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
         <div>
           <paper-dropdown-menu
             label=${localize('settings.playlist_type')}
-            @value-changed=${this.lib.valueChanged}
+            @value-changed=${this.valueChanged}
             .configValue=${'playlist_type'}
             class="dropdown"
           >
@@ -123,7 +123,7 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
           <paper-slider
             .value=${this.lib.getValue(ConfigEntry.Limit)}
             .configValue=${'limit'}
-            @value-changed=${this.lib.valueChanged}
+            @value-changed=${this.valueChanged}
             max="50"
             editable
             pin
@@ -134,7 +134,7 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
             label=${localize('settings.height')}
             .value=${this.lib.getValue(ConfigEntry.Height)}
             .configValue=${'height'}
-            @value-changed=${this.lib.valueChanged}
+            @value-changed=${this.valueChanged}
           ></paper-input>
         </div>
         <div>
@@ -142,14 +142,14 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
             label=${localize('settings.country_code')}
             .value=${this.lib.getValue(ConfigEntry.Country_Code)}
             .configValue=${'country_code'}
-            @value-changed=${this.lib.valueChanged}
+            @value-changed=${this.valueChanged}
           ></paper-input>
         </div>
         <div>
           <ha-switch
             .checked=${this.lib.getValue(ConfigEntry.Always_Play_Random_Song)}
             .configValue=${'always_play_random_song'}
-            @change=${this.lib.valueChanged}
+            @change=${this.valueChanged}
             .id=${'always_play_random_song'}
           ></ha-switch>
           <label for=${'always_play_random_song'}>${localize('settings.always_play_random_song')}</label>
@@ -159,7 +159,7 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
             label=${localize('settings.default_device')}
             .value=${this.lib.getValue(ConfigEntry.Default_Device)}
             .configValue=${'default_device'}
-            @value-changed=${this.lib.valueChanged}
+            @value-changed=${this.valueChanged}
           ></paper-input>
         </div>
       </div>
@@ -173,7 +173,7 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
           <ha-switch
             .checked=${this.lib.getValue(ConfigEntry.Hide_Warning)}
             .configValue=${'hide_warning'}
-            @change=${this.lib.valueChanged}
+            @change=${this.valueChanged}
             .id=${'hide_warning'}
           ></ha-switch>
           <label for=${'hide_warning'}>${localize('settings.hide_warning')}</label>
@@ -183,13 +183,13 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
             label=${localize('settings.title')}
             .value=${this.lib.getValue(ConfigEntry.Name)}
             .configValue=${'name'}
-            @value-changed=${this.lib.valueChanged}
+            @value-changed=${this.valueChanged}
           ></paper-input>
         </div>
         <div>
           <paper-dropdown-menu
             label=${localize('settings.display_style')}
-            @value-changed=${this.lib.valueChanged}
+            @value-changed=${this.valueChanged}
             .configValue=${'display_style'}
             class="dropdown"
           >
@@ -208,7 +208,7 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
           <paper-slider
             .value=${this.lib.getValue(ConfigEntry.Grid_Covers_Per_Row)}
             .configValue=${'grid_covers_per_row'}
-            @value-changed=${this.lib.valueChanged}
+            @value-changed=${this.valueChanged}
             max="10"
             min="1"
             editable
@@ -219,7 +219,7 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
           <ha-switch
             .checked=${this.lib.getValue(ConfigEntry.Grid_Center_Covers)}
             .configValue=${'grid_center_covers'}
-            @change=${this.lib.valueChanged}
+            @change=${this.valueChanged}
             .id=${'grid_center_covers'}
           ></ha-switch>
           <label for=${'grid_center_covers'}>${localize('settings.grid_center_covers')}</label>
@@ -236,7 +236,7 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
             label=${localize('settings.filter_devices')}
             .value=${this.lib.getValue(ConfigEntry.Filter_Devices)}
             .configValue=${'filter_devices'}
-            @value-changed=${this.lib.valueChanged}
+            @value-changed=${this.valueChanged}
           ></paper-input>
         </div>
       </div>
@@ -289,6 +289,10 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
     }
     optionList[ev.target.option].show = show;
     this._toggle = !this._toggle;
+  }
+
+  public valueChanged(ev: CustomEvent): void {
+    this.lib.valueChangedFunction(this, ev);
   }
 
   static get styles(): CSSResult {

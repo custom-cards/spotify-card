@@ -10,7 +10,7 @@ import {
   css,
 } from 'lit-element';
 
-import { HomeAssistant, LovelaceCardEditor, getLovelace } from 'custom-card-helpers';
+import { HomeAssistant, LovelaceCardEditor } from 'custom-card-helpers';
 
 import { CARD_VERSION } from './const';
 
@@ -65,7 +65,6 @@ export class SpotifyCard extends LitElement {
   public setConfig(_config: SpotifyCardConfig): void {
     //Check for errors in config
     const var_error = this.lib.setConfig(_config);
-    //getLovelace().setEditMode(true);
     // Show error if neccessary
     if (_config.show_error || var_error != '') {
       throw new Error(localize('common.invalid_configuration') + ': ' + var_error);
