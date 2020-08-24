@@ -123,10 +123,12 @@ export class SpotifyCardLib implements ISpotifyCardLib {
     return this._spotify_installed;
   }
 
-  public requestUpdate(): void {
+  public async requestUpdate(): Promise<void> {
     if (this.isSpotcastInstalled() && !this._spotcast_connector.is_loading()) {
-      this._spotcast_connector.fetchPlaylists().then(() => {
-        this._parent.requestUpdate();
+      await this._spotcast_connector.updateState().then(async () => {
+        await this._spotcast_connector.fetchPlaylists().then(async () => {
+          await this._parent.requestUpdate();
+        });
       });
     }
   }
@@ -148,6 +150,10 @@ export class SpotifyCardLib implements ISpotifyCardLib {
     this._spotcast_connector = new SpotcastConnector(this);
     //get all available entities and when they update
     this.doSubscribeEntities();
+    //keep devices list in cache. So 10 minutes update
+    if (this.hass) {
+      this.requestUpdate();
+    }
   }
 
   public disconnectedCallback(): void {
@@ -155,7 +161,7 @@ export class SpotifyCardLib implements ISpotifyCardLib {
   }
 
   public doSubscribeEntities(): void {
-    if (this.hass?.connection && !this._unsubscribe_entitites && this._parent.isHASSConnected) {
+    if (this.hass?.connection && !this._unsubscribe_entitites && this._parent.isHASSConnected()) {
       this._unsubscribe_entitites = subscribeEntities(this.hass.connection, (entities) =>
         this.entitiesUpdated(entities)
       );
@@ -182,9 +188,7 @@ export class SpotifyCardLib implements ISpotifyCardLib {
         clearTimeout(this._fetch_time_out);
       }
       this._fetch_time_out = setTimeout(() => {
-        this._spotcast_connector.updateState().then(() => {
-          this.requestUpdate();
-        });
+        this.requestUpdate();
       }, 500);
     }
   }

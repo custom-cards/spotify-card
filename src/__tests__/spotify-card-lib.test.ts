@@ -146,25 +146,26 @@ describe('SpotifyCardLib', () => {
   describe('requestUpdate', () => {
     beforeEach(() => {
       spotify_card_lib._spotcast_connector = jest.genMockFromModule<SpotcastConnector>('../spotcast-connector');
+      spotify_card_lib._spotcast_connector.updateState = jest.fn().mockResolvedValue(true);
+      spotify_card_lib._parent.requestUpdate = jest.fn();
       spotify_card_lib._spotcast_connector.fetchPlaylists = jest.fn().mockResolvedValue(true);
     });
     test('no_spotcast', () => {
       spotify_card_lib.isSpotcastInstalled = jest.fn().mockReturnValueOnce(false);
       spotify_card_lib.requestUpdate();
-      expect(spotify_card_lib._spotcast_connector.fetchPlaylists).not.toHaveBeenCalled();
+      expect(spotify_card_lib._parent.requestUpdate).not.toHaveBeenCalled();
     });
     test('is_loading', () => {
       spotify_card_lib.isSpotcastInstalled = jest.fn().mockReturnValueOnce(true);
       spotify_card_lib._spotcast_connector.is_loading = jest.fn().mockReturnValueOnce(true);
       spotify_card_lib.requestUpdate();
-      expect(spotify_card_lib._spotcast_connector.fetchPlaylists).not.toHaveBeenCalled();
+      expect(spotify_card_lib._parent.requestUpdate).not.toHaveBeenCalled();
     });
-    test('was called', () => {
+    test('was called', async () => {
       spotify_card_lib.isSpotcastInstalled = jest.fn().mockReturnValueOnce(true);
       spotify_card_lib._spotcast_connector.is_loading = jest.fn().mockReturnValueOnce(false);
-      spotify_card_lib._parent.requestUpdate = jest.fn();
-      spotify_card_lib.requestUpdate();
-      expect(spotify_card_lib._spotcast_connector.fetchPlaylists).toHaveBeenCalled();
+      await spotify_card_lib.requestUpdate();
+      expect(spotify_card_lib._parent.requestUpdate).toHaveBeenCalled();
     });
   });
 
@@ -195,6 +196,7 @@ describe('SpotifyCardLib', () => {
     test('doSubscribeEntities', () => {
       const hass = jest.genMockFromModule<HomeAssistant>('home-assistant-js-websocket');
       spotify_card_lib.doSubscribeEntities = jest.fn();
+      spotify_card_lib._parent.isHASSConnected = jest.fn().mockReturnValue(true);
       spotify_card_lib.updated(hass);
       expect(spotify_card_lib.doSubscribeEntities).toHaveBeenCalled();
     });
@@ -225,6 +227,7 @@ describe('SpotifyCardLib', () => {
       spotify_card_lib.hass.connection = jest.genMockFromModule<Connection>('home-assistant-js-websocket');
       spotify_card_lib.hass.connection.subscribeEvents = jest.fn();
       spotify_card_lib.hass.connection.addEventListener = jest.fn();
+      spotify_card_lib._parent.isHASSConnected = jest.fn().mockReturnValue(false);
       spotify_card_lib.doSubscribeEntities();
       expect(spotify_card_lib.hass.connection.subscribeEvents).not.toHaveBeenCalled();
     });
@@ -233,6 +236,8 @@ describe('SpotifyCardLib', () => {
       spotify_card_lib.hass.connection = jest.genMockFromModule<Connection>('home-assistant-js-websocket');
       spotify_card_lib.hass.connection.subscribeEvents = jest.fn();
       spotify_card_lib.hass.connection.addEventListener = jest.fn();
+      spotify_card_lib._unsubscribe_entitites = jest.fn();
+      spotify_card_lib._parent.isHASSConnected = jest.fn().mockReturnValue(false);
       spotify_card_lib.doSubscribeEntities();
       expect(spotify_card_lib.hass.connection.subscribeEvents).not.toHaveBeenCalled();
     });
