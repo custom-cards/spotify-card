@@ -2,6 +2,16 @@ import { SpotifyCardEditor } from './editor';
 import { HomeAssistant, fireEvent } from 'custom-card-helpers';
 import { ChromecastDevice, ConfigEntry, ValueChangedEvent } from './types';
 
+export interface ISpotifyCardEditorLib {
+  hass: HomeAssistant;
+  accounts: Array<string>;
+  chromecast_devices: Array<string>;
+  connectedCallback(): Promise<void>;
+  getMediaPlayerEntities(): Array<string>;
+  valueChangedFunction(editor: SpotifyCardEditor, ev: ValueChangedEvent): void;
+  getValue(value: ConfigEntry): any;
+}
+
 export class SpotifyCardEditorLib {
   public hass!: HomeAssistant;
   public accounts: Array<string> = [];

@@ -39,10 +39,11 @@ export interface ISpotifyCardLib {
   connectedCallback(): void;
   disconnectedCallback(): void;
   doSubscribeEntities(): void;
+  getDefaultDevice(): string | undefined;
   getFilteredDevices(): [ConnectDevice[], ChromecastDevice[]];
   getPlaylists(): Playlist[];
   isThisPlaylistPlaying(item: Playlist): boolean;
-  playUri(uri: string): void;
+  playUri(elem: MouseEvent, uri: string): void;
   onShuffleSelect(): void;
   handlePlayPauseEvent(ev: Event, command: string): void;
   spotifyDeviceSelected(device: ConnectDevice): void;
@@ -201,6 +202,20 @@ export class SpotifyCardLib implements ISpotifyCardLib {
     return true;
   }
 
+  public getDefaultDevice(): string | undefined {
+    let [spotify_connect_devices, chromecast_devices] = this.getFilteredDevices();
+    spotify_connect_devices = spotify_connect_devices.filter((device) => {
+      return device.name == this.config.default_device;
+    });
+    chromecast_devices = chromecast_devices.filter((device) => {
+      return device.friendly_name == this.config.default_device;
+    });
+    if (spotify_connect_devices.length > 0 || chromecast_devices.length > 0) {
+      return this.config.default_device;
+    }
+    return;
+  }
+
   public getFilteredDevices(): [ConnectDevice[], ChromecastDevice[]] {
     const spotify_connect_devices = this._spotcast_connector.devices.filter(this.checkIfAllowedToShow, this);
     const chromecast_devices = this._spotcast_connector.chromecast_devices.filter(this.checkIfAllowedToShow, this);
@@ -215,7 +230,12 @@ export class SpotifyCardLib implements ISpotifyCardLib {
     return this.spotify_state?.attributes.media_playlist === item.name;
   }
 
-  public playUri(uri: string): void {
+  public playUri(elem: MouseEvent, uri: string): void {
+    const loading = 'loading';
+    const srcElement = elem.srcElement as any;
+    if (srcElement?.localName == 'div') srcElement.children[1].classList.add(loading);
+    else if (srcElement?.localName == 'svg') srcElement.parentElement.classList.add(loading);
+    else if (srcElement?.localName == 'path') srcElement.parentElement.parentElement.classList.add(loading);
     this._spotcast_connector.playUri(uri);
   }
 

@@ -153,7 +153,9 @@ export class SpotifyCard extends LitElement {
                       stroke="null"
                     />
                   </svg>
-                  ${this.lib.getCurrentPlayer()?.name ?? localize('common.choose_player')}
+                  ${this.lib.getCurrentPlayer()?.name ??
+                  this.lib.getDefaultDevice() ??
+                  localize('common.choose_player')}
                 </div>
               </div>
             </div>
@@ -222,7 +224,7 @@ export class SpotifyCard extends LitElement {
     const playlists = this.lib.getPlaylists();
     for (let i = 0; i < playlists.length; i++) {
       const item = playlists[i];
-      result.push(html`<div class="list-item" @click=${() => this.lib.playUri(item.uri)}>
+      result.push(html`<div class="list-item" @click=${(elem) => this.lib.playUri(elem, item.uri)}>
         ${item.images.length > 0
           ? html`<img src=${item.images[item.images.length - 1].url} />`
           : html`<svg viewBox="0 0 168 168">
@@ -264,7 +266,7 @@ export class SpotifyCard extends LitElement {
     for (let i = 0; i < playlists.length; i++) {
       const item = playlists[i];
       this.lib.spotify_state?.attributes.media_playlist === item.name;
-      result.push(html`<div class="grid-item" @click=${() => this.lib.playUri(item.uri)}>
+      result.push(html`<div class="grid-item" @click=${(elem) => this.lib.playUri(elem, item.uri)}>
         ${item.images.length > 0
           ? html`<img
               class="grid-item-album-image ${this.lib.isThisPlaylistPlaying(item) ? 'playing' : ''}"
@@ -281,7 +283,7 @@ export class SpotifyCard extends LitElement {
           ${this.lib.isThisPlaylistPlaying(item)
             ? this.generateGridIconForCurrent()
             : html`
-                <svg width="24" height="24" @click=${() => this.lib.playUri(item.uri)}>
+                <svg width="24" height="24" @click=${(elem) => this.lib.playUri(elem, item.uri)}>
                   <path d="M0 0h24v24H0z" fill="none" />
                   <path d="M8 5v14l11-7z" />
                 </svg>
@@ -325,6 +327,13 @@ export class SpotifyCard extends LitElement {
       --footer-height: 3.5em;
       padding-left: 0.5em;
       padding-right: 0.5em;
+    }
+
+    hui-warning {
+      position: absolute;
+      right: 0;
+      left: 0;
+      text-align: center;
     }
 
     #header {
@@ -461,6 +470,25 @@ export class SpotifyCard extends LitElement {
       --placeholder-padding: 4px;
     }
 
+    @keyframes loading {
+      0% {
+        opacity: 100%;
+      }
+      50% {
+        opacity: 0%;
+      }
+      100% {
+        opacity: 100%;
+      }
+    }
+
+    .loading {
+      animation-name: loading;
+      animation-duration: 1s;
+      animation-iteration-count: 5;
+      animation-timing-function: ease-in;
+    }
+
     .list-item {
       /* height: var(--list-item-height); */
       align-items: center;
@@ -489,6 +517,7 @@ export class SpotifyCard extends LitElement {
     }
 
     .list-item > .icon {
+      opacity: 100%;
       height: var(--list-item-height);
       width: var(--list-item-height);
       min-height: var(--list-item-height);
