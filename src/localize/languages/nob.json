@@ -1,0 +1,34 @@
+{
+  "common": {
+    "version": "Versjon",
+    "description": "Et tilpasset kort for visning av Spotify-Playlist og start avspilling",
+    "invalid_configuration": "Ugyldig konfigurasjon",
+    "show_warning": "Vis Advarsel",
+    "show_missing_spotcast": "Spotcast-integrasjon må installeres for at denne komponenten skal fungere",
+    "show_missing_spotify": "Spotify-integrasjon må installeres for informasjon om avspilling",
+    "choose_player": "Velg spiller"
+  },
+  "settings": {
+    "general": "Generell",
+    "general_description": "Generelle innstillinger for dette kortet",
+    "appearance": "Utseende",
+    "appearance_description": "Tilpass stilen, ikonet osv",
+    "advanced": "Avansert",
+    "advanced_description": "Tilpass avanserte innstillinger",
+    "hide_warning": "Skjul advarsler",
+    "playlist_type": "Type spilleliste",
+    "limit": "Mengde spillelister som vises",
+    "height": "Kortets høyde",
+    "country_code": "Landskode for utvalgte spillelister",
+    "always_play_random_song": "Spill alltid tilfeldig sang når du starter avspillingen",
+    "title": "Tittel på kortet",
+    "display_style": "Skjermstil",
+    "grid_covers_per_row": "Antall omslag per rad",
+    "grid_center_covers": "Omslag sentrert",
+    "account": "Konto",
+    "filter_out_cast_devices": "Filtrer ut Chromecast-enheter",
+    "spotify_entity": "Spotify mediespillerenhet",
+    "default_device": "Standard enhetsnavn",
+    "filter_devices": "Skjul enheter (se dokumentasjonen under 'Avansert bruk')"
+  }
+}
