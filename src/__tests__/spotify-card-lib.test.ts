@@ -214,7 +214,7 @@ describe('SpotifyCardLib', () => {
     test('_unsubscribe_entitites', () => {
       spotify_card_lib._unsubscribe_entitites = jest.fn();
       spotify_card_lib.disconnectedCallback();
-      expect(spotify_card_lib._unsubscribe_entitites).toHaveBeenCalled();
+      expect(spotify_card_lib._unsubscribe_entitites).toBeUndefined();
     });
   });
 
@@ -337,21 +337,21 @@ describe('SpotifyCardLib', () => {
     beforeEach(() => {
       spotify_card_lib.config = jest.genMockFromModule<SpotifyCardConfig>('../types');
       const connect_device = jest.genMockFromModule<ConnectDevice>('../types');
-      connect_device.name = "connect_device";
+      connect_device.name = 'connect_device';
       const chromecast_device = jest.genMockFromModule<ChromecastDevice>('../types');
-      chromecast_device.friendly_name = "cast_device";
+      chromecast_device.friendly_name = 'cast_device';
       spotify_card_lib.getFilteredDevices = jest.fn().mockReturnValue([[connect_device], [chromecast_device]]);
     });
     test('no default_device set', () => {
       expect(spotify_card_lib.getDefaultDevice()).toBeUndefined();
     });
     test('in connect devices', () => {
-      spotify_card_lib.config.default_device = "connect_device";
-      expect(spotify_card_lib.getDefaultDevice()).toBe("connect_device");
+      spotify_card_lib.config.default_device = 'connect_device';
+      expect(spotify_card_lib.getDefaultDevice()).toBe('connect_device');
     });
     test('in cast devices', () => {
-      spotify_card_lib.config.default_device = "cast_device";
-      expect(spotify_card_lib.getDefaultDevice()).toBe("cast_device");
+      spotify_card_lib.config.default_device = 'cast_device';
+      expect(spotify_card_lib.getDefaultDevice()).toBe('cast_device');
     });
   });
 
