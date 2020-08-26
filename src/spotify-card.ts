@@ -236,7 +236,7 @@ export class SpotifyCard extends LitElement {
       result.push(html`<div class="list-item" @click=${(elem) => this.lib.playUri(elem, item.uri)}>
         <div
           class="cover"
-          data-spotify-image-url="${item.images.length > 0 ? item.images[item.images.length - 1].url : ''}"
+          data-spotify-image-url="${item.images.length > 0 ? item.images[0].url : ''}"
         >
           <svg viewBox="0 0 168 168">
             <path
@@ -281,7 +281,7 @@ export class SpotifyCard extends LitElement {
       result.push(html`<div class="grid-item" @click=${(elem) => this.lib.playUri(elem, item.uri)}>
         <div
           class="grid-item-album-image ${this.lib.isThisPlaylistPlaying(item) ? 'playing' : ''}"
-          data-spotify-image-url="${item.images.length > 0 ? item.images[item.images.length - 1].url : ''}"
+          data-spotify-image-url="${item.images.length > 0 ? item.images[0].url : ''}"
         >
           <svg viewBox="0 0 168 168">
             <path
