@@ -461,14 +461,6 @@ export class SpotifyCard extends LitElement {
     .icon.playing > svg {
       fill: var(--primary-color) !important;
     }
-  `;
-
-  //Style definition for the List view
-  static listStyles = css`
-    ha-card {
-      --list-item-height: 3em;
-      --placeholder-padding: 4px;
-    }
 
     @keyframes loading {
       0% {
@@ -487,6 +479,14 @@ export class SpotifyCard extends LitElement {
       animation-duration: 1s;
       animation-iteration-count: 5;
       animation-timing-function: ease-in;
+    }
+  `;
+
+  //Style definition for the List view
+  static listStyles = css`
+    ha-card {
+      --list-item-height: 3em;
+      --placeholder-padding: 4px;
     }
 
     .list-item {

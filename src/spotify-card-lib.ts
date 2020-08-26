@@ -243,6 +243,9 @@ export class SpotifyCardLib implements ISpotifyCardLib {
     if (srcElement?.localName == 'div') srcElement.children[1].classList.add(loading);
     else if (srcElement?.localName == 'svg') srcElement.parentElement.classList.add(loading);
     else if (srcElement?.localName == 'path') srcElement.parentElement.parentElement.classList.add(loading);
+    else if (srcElement?.localName == 'img') srcElement.nextElementSibling.classList.add(loading);
+    else if (srcElement?.localName == 'p') srcElement.parentElement.children[1].classList.add(loading);
+    else console.log(srcElement);
     this._spotcast_connector.playUri(uri);
   }
 
