@@ -125,9 +125,9 @@ export class SpotifyCardLib implements ISpotifyCardLib {
 
   public async requestUpdate(): Promise<void> {
     if (this.isSpotcastInstalled() && !this._spotcast_connector.is_loading()) {
-      await this._spotcast_connector.updateState().then(async () => {
-        await this._spotcast_connector.fetchPlaylists().then(async () => {
-          await this._parent.requestUpdate();
+      this._spotcast_connector.updateState().then(() => {
+        this._spotcast_connector.fetchPlaylists().then(() => {
+          this._parent.requestUpdate();
         });
       });
     }
@@ -157,7 +157,7 @@ export class SpotifyCardLib implements ISpotifyCardLib {
   }
 
   public disconnectedCallback(): void {
-    this._unsubscribe_entitites && this._unsubscribe_entitites();
+    this._unsubscribe_entitites ?? this._unsubscribe_entitites();
   }
 
   public doSubscribeEntities(): void {
