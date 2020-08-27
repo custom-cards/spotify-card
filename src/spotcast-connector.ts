@@ -46,10 +46,6 @@ export class SpotcastConnector implements ISpotcastConnector {
     this.parent = parent;
   }
 
-  static get properties(): any { 
-    return { last_state_update_time: { reflect: true, noAccessor: true } };
-  }
-
   public is_loading(): boolean {
     setTimeout(this.set_loading_off, 100);
     return this.loading;
