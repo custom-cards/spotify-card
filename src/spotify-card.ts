@@ -76,10 +76,10 @@ export class SpotifyCard extends LitElement {
     this.lib.connectedCallback();
   }
 
-  protected async updated(changedProps: PropertyValues): Promise<void> {
+  protected updated(changedProps: PropertyValues): void {
     super.updated(changedProps);
     this.lib.updated(this.hass);
-    await this.updateComplete.then(() => {
+    this.updateComplete.then(() => {
       for (const cover of this.renderRoot.querySelectorAll('[data-spotify-image-url]') as NodeListOf<HTMLDivElement>) {
         const downloadingImage = new Image();
         downloadingImage.onload = function (event) {
