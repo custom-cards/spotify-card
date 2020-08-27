@@ -8,12 +8,10 @@ import {
   CSSResult,
   css,
 } from 'lit-element';
-import { HomeAssistant, LovelaceCardEditor } from 'custom-card-helpers';
+import { HomeAssistant, LovelaceCardEditor, fireEvent } from 'custom-card-helpers';
 
-import { SpotifyCardConfig, ConfigEntry, DisplayStyle, PlaylistType } from './types';
+import { SpotifyCardConfig, ConfigEntry, DisplayStyle, PlaylistType, ChromecastDevice, ValueChangedEvent } from './types';
 import { localize } from './localize/localize';
-
-import { SpotifyCardEditorLib, ISpotifyCardEditorLib } from './editor-lib';
 
 export const PLAYLIST_TYPES = ['default', 'featured', 'discover-weekly'];
 
@@ -43,32 +41,130 @@ const options = {
 export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor {
   @property({ type: Object }) public hass!: HomeAssistant;
 
-  @internalProperty() public config?: SpotifyCardConfig;
+  @internalProperty() private config?: SpotifyCardConfig;
 
-  @internalProperty() public _toggle?: boolean;
-
-  @internalProperty()
-  private lib: ISpotifyCardEditorLib;
+  @internalProperty() private _toggle?: boolean;
 
   accounts: Array<string> = [];
   chromecast_devices: Array<string> = [];
 
-  constructor() {
-    super();
-    this.lib = new SpotifyCardEditorLib(this);
-  }
-
   async connectedCallback(): Promise<void> {
     super.connectedCallback();
-    await this.lib.connectedCallback();
+    const res: any = await this.hass.callWS({
+      type: 'spotcast/accounts',
+    });
+    this.accounts = res;
+
+    const casts: any = await this.hass.callWS({
+      type: 'spotcast/castdevices',
+    });
+
+    this.chromecast_devices = casts?.map((c: ChromecastDevice) => c.friendly_name);
+    this.requestUpdate();
   }
 
   public setConfig(_config: SpotifyCardConfig): void {
     this.config = _config;
   }
 
+  public getMediaPlayerEntities(): Array<string> {
+    return Object.values(this.hass.states)
+      .filter((ent) => ent.entity_id.match('media_player[.]'))
+      .map((e) => e.entity_id);
+  }
+
+  private _toggleOption(ev): void {
+    this._toggleThing(ev, options);
+  }
+
+  private _toggleThing(ev, optionList): void {
+    const show = !optionList[ev.target.option].show;
+    for (const [key] of Object.entries(optionList)) {
+      optionList[key].show = false;
+    }
+    optionList[ev.target.option].show = show;
+    this._toggle = !this._toggle;
+  }
+
+  public valueChanged(ev: ValueChangedEvent): void {
+    // ev.target.offsetParent checks if this visible or freetext input is used
+    if (!this.config || !this.hass || ev.target.offsetParent === null) {
+      return;
+    }
+    const { target } = ev;
+    if (target.value && this[`_${target.configValue}`] === target.value) {
+      return;
+    }
+    if (target.configValue) {
+      // Delete item if false or empty
+      if (target.checked === false || target.value === '') {
+        const clone = { ...this.config };
+        delete clone[target.configValue];
+        this.config = clone;
+      } else {
+        let target_value = target.value;
+        if (target.configValue == 'height') {
+          target_value = Number(target_value);
+        } else if (target.configValue == 'filter_devices') {
+          target_value = target_value
+            .split(',')
+            .map((value: string) => {
+              return value.trim();
+            })
+            .filter((value: string) => {
+              return value != '';
+            });
+        }
+        this.config = {
+          ...this.config,
+          [target.configValue]: target.checked !== undefined ? target.checked : target_value,
+        };
+      }
+    }
+    fireEvent(this, 'config-changed', { config: this.config });
+    this.requestUpdate(target.configValue);
+  }
+
+  public getValue(value: ConfigEntry): any {
+    switch (value) {
+      case ConfigEntry.Name:
+        return this.config?.name ?? '';
+      case ConfigEntry.Account:
+        return this.config?.account ?? 'default';
+      case ConfigEntry.Spotify_Entity:
+        // eslint-disable-next-line no-case-declarations
+        const auto_detected = this.getMediaPlayerEntities().filter((e) => e.includes('spotify'));
+        return this.config?.spotify_entity ?? (auto_detected.length > 0 ? auto_detected[0] : '');
+      case ConfigEntry.Country_Code:
+        return this.config?.country_code ?? '';
+      case ConfigEntry.Limit:
+        return this.config?.limit ?? 10;
+      case ConfigEntry.Playlist_Type:
+        return this.config?.playlist_type ?? 'default';
+      case ConfigEntry.Always_Play_Random_Song:
+        return this.config?.always_play_random_song ?? false;
+      case ConfigEntry.Height:
+        return this.config?.height ?? '';
+      case ConfigEntry.Display_Style:
+        return this.config?.display_style ?? 'list';
+      case ConfigEntry.Grid_Covers_Per_Row:
+        return this.config?.grid_covers_per_row ?? 5;
+      case ConfigEntry.Grid_Center_Covers:
+        return this.config?.grid_center_covers ?? false;
+      case ConfigEntry.Hide_Warning:
+        return this.config?.hide_warning ?? false;
+      case ConfigEntry.Default_Device:
+        return this.config?.default_device ?? '';
+      case ConfigEntry.Filter_Devices:
+        return this.config?.filter_devices?.toString() ?? '';
+
+      default:
+        break;
+    }
+  }
+
   private renderGeneral(): TemplateResult {
-    const media_player_entities = this.lib.getMediaPlayerEntities();
+    const media_player_entities = this.getMediaPlayerEntities();
     return html`
       <div class="values">
         <div>
@@ -80,7 +176,7 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
           >
             <paper-listbox
               slot="dropdown-content"
-              .selected=${this.accounts.indexOf(this.lib.getValue(ConfigEntry.Account))}
+              .selected=${this.accounts.indexOf(this.getValue(ConfigEntry.Account))}
             >
               ${this.accounts.map((item) => html` <paper-item>${item}</paper-item> `)}
             </paper-listbox>
@@ -95,7 +191,7 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
           >
             <paper-listbox
               slot="dropdown-content"
-              .selected=${media_player_entities.indexOf(this.lib.getValue(ConfigEntry.Spotify_Entity))}
+              .selected=${media_player_entities.indexOf(this.getValue(ConfigEntry.Spotify_Entity))}
             >
               ${media_player_entities.map((item) => html` <paper-item>${item}</paper-item> `)}
             </paper-listbox>
@@ -111,7 +207,7 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
             <paper-listbox
               slot="dropdown-content"
               .selected=${(Object.values(PlaylistType) as Array<string>).indexOf(
-                this.lib.getValue(ConfigEntry.Playlist_Type)
+                this.getValue(ConfigEntry.Playlist_Type)
               )}
             >
               ${(Object.values(PlaylistType) as Array<string>).map((item) => html` <paper-item>${item}</paper-item> `)}
@@ -121,7 +217,7 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
         <div>
           <div>${localize('settings.limit')}</div>
           <paper-slider
-            .value=${this.lib.getValue(ConfigEntry.Limit)}
+            .value=${this.getValue(ConfigEntry.Limit)}
             .configValue=${'limit'}
             @value-changed=${this.valueChanged}
             max="50"
@@ -132,7 +228,7 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
         <div>
           <paper-input
             label=${localize('settings.height')}
-            .value=${this.lib.getValue(ConfigEntry.Height)}
+            .value=${this.getValue(ConfigEntry.Height)}
             .configValue=${'height'}
             @value-changed=${this.valueChanged}
           ></paper-input>
@@ -140,14 +236,14 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
         <div>
           <paper-input
             label=${localize('settings.country_code')}
-            .value=${this.lib.getValue(ConfigEntry.Country_Code)}
+            .value=${this.getValue(ConfigEntry.Country_Code)}
             .configValue=${'country_code'}
             @value-changed=${this.valueChanged}
           ></paper-input>
         </div>
         <div>
           <ha-switch
-            .checked=${this.lib.getValue(ConfigEntry.Always_Play_Random_Song)}
+            .checked=${this.getValue(ConfigEntry.Always_Play_Random_Song)}
             .configValue=${'always_play_random_song'}
             @change=${this.valueChanged}
             .id=${'always_play_random_song'}
@@ -157,7 +253,7 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
         <div>
           <paper-input
             label=${localize('settings.default_device')}
-            .value=${this.lib.getValue(ConfigEntry.Default_Device)}
+            .value=${this.getValue(ConfigEntry.Default_Device)}
             .configValue=${'default_device'}
             @value-changed=${this.valueChanged}
           ></paper-input>
@@ -171,7 +267,7 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
       <div class="values">
         <div>
           <ha-switch
-            .checked=${this.lib.getValue(ConfigEntry.Hide_Warning)}
+            .checked=${this.getValue(ConfigEntry.Hide_Warning)}
             .configValue=${'hide_warning'}
             @change=${this.valueChanged}
             .id=${'hide_warning'}
@@ -181,7 +277,7 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
         <div>
           <paper-input
             label=${localize('settings.title')}
-            .value=${this.lib.getValue(ConfigEntry.Name)}
+            .value=${this.getValue(ConfigEntry.Name)}
             .configValue=${'name'}
             @value-changed=${this.valueChanged}
           ></paper-input>
@@ -196,7 +292,7 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
             <paper-listbox
               slot="dropdown-content"
               .selected=${(Object.values(DisplayStyle) as Array<string>).indexOf(
-                this.lib.getValue(ConfigEntry.Display_Style)
+                this.getValue(ConfigEntry.Display_Style)
               )}
             >
               ${(Object.values(DisplayStyle) as Array<string>).map((item) => html` <paper-item>${item}</paper-item> `)}
@@ -206,7 +302,7 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
         <div>
           <div>${localize('settings.grid_covers_per_row')}</div>
           <paper-slider
-            .value=${this.lib.getValue(ConfigEntry.Grid_Covers_Per_Row)}
+            .value=${this.getValue(ConfigEntry.Grid_Covers_Per_Row)}
             .configValue=${'grid_covers_per_row'}
             @value-changed=${this.valueChanged}
             max="10"
@@ -217,7 +313,7 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
         </div>
         <div>
           <ha-switch
-            .checked=${this.lib.getValue(ConfigEntry.Grid_Center_Covers)}
+            .checked=${this.getValue(ConfigEntry.Grid_Center_Covers)}
             .configValue=${'grid_center_covers'}
             @change=${this.valueChanged}
             .id=${'grid_center_covers'}
@@ -234,7 +330,7 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
         <div>
           <paper-input
             label=${localize('settings.filter_devices')}
-            .value=${this.lib.getValue(ConfigEntry.Filter_Devices)}
+            .value=${this.getValue(ConfigEntry.Filter_Devices)}
             .configValue=${'filter_devices'}
             @value-changed=${this.valueChanged}
           ></paper-input>
@@ -276,23 +372,6 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
         ${options.advanced.show ? this.renderAdvanced() : ''}
       </div>
     `;
-  }
-
-  private _toggleOption(ev): void {
-    this._toggleThing(ev, options);
-  }
-
-  private _toggleThing(ev, optionList): void {
-    const show = !optionList[ev.target.option].show;
-    for (const [key] of Object.entries(optionList)) {
-      optionList[key].show = false;
-    }
-    optionList[ev.target.option].show = show;
-    this._toggle = !this._toggle;
-  }
-
-  public valueChanged(ev: CustomEvent): void {
-    this.lib.valueChangedFunction(this, ev);
   }
 
   static get styles(): CSSResult {
