@@ -1,5 +1,5 @@
 import { ConnectDevice, CurrentPlayer, Playlist, ChromecastDevice, PlaybackOptions } from './types';
-import { ISpotifyCardLib } from './spotify-card-lib';
+import { SpotifyCard } from './spotify-card';
 interface Message {
   type: string;
   account?: string;
@@ -13,7 +13,7 @@ interface PlaylistMessage extends Message {
 }
 
 export interface ISpotcastConnector {
-  parent: ISpotifyCardLib;
+  parent: SpotifyCard;
   playlists: Array<Playlist>;
   devices: Array<ConnectDevice>;
   player?: CurrentPlayer;
@@ -31,7 +31,7 @@ export interface ISpotcastConnector {
 }
 
 export class SpotcastConnector implements ISpotcastConnector {
-  public parent: ISpotifyCardLib;
+  public parent: SpotifyCard;
   public playlists: Array<Playlist> = [];
   public devices: Array<ConnectDevice> = [];
   public player?: CurrentPlayer;
@@ -42,8 +42,12 @@ export class SpotcastConnector implements ISpotcastConnector {
 
   loading = false;
 
-  constructor(parent: ISpotifyCardLib) {
+  constructor(parent: SpotifyCard) {
     this.parent = parent;
+  }
+
+  static get properties(): any { 
+    return { last_state_update_time: { reflect: true, noAccessor: true } };
   }
 
   public is_loading(): boolean {

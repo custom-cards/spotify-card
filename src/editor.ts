@@ -10,7 +10,14 @@ import {
 } from 'lit-element';
 import { HomeAssistant, LovelaceCardEditor, fireEvent } from 'custom-card-helpers';
 
-import { SpotifyCardConfig, ConfigEntry, DisplayStyle, PlaylistType, ChromecastDevice, ValueChangedEvent } from './types';
+import {
+  SpotifyCardConfig,
+  ConfigEntry,
+  DisplayStyle,
+  PlaylistType,
+  ChromecastDevice,
+  ValueChangedEvent,
+} from './types';
 import { localize } from './localize/localize';
 
 export const PLAYLIST_TYPES = ['default', 'featured', 'discover-weekly'];
