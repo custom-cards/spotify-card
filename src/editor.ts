@@ -53,6 +53,8 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
   @internalProperty() private _toggle?: boolean;
 
   accounts: Array<string> = [];
+
+  @internalProperty()
   chromecast_devices: Array<string> = [];
 
   async connectedCallback(): Promise<void> {
@@ -67,7 +69,6 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
     });
 
     this.chromecast_devices = casts?.map((c: ChromecastDevice) => c.friendly_name);
-    this.requestUpdate();
   }
 
   public setConfig(_config: SpotifyCardConfig): void {
@@ -129,7 +130,6 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
       }
     }
     fireEvent(this, 'config-changed', { config: this.config });
-    this.requestUpdate(target.configValue);
   }
 
   public getValue(value: ConfigEntry): any {
