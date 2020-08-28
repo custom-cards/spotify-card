@@ -1,4 +1,4 @@
-import { ConnectDevice, CurrentPlayer, Playlist, ChromecastDevice, PlaybackOptions } from './types';
+import { ConnectDevice, CurrentPlayer, Playlist, PlaybackOptions } from './types';
 import { SpotifyCard } from './spotify-card';
 interface Message {
   type: string;

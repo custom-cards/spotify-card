@@ -198,15 +198,6 @@ export class SpotifyCard extends LitElement {
     }
   }
 
-  //Only for logging purposes. Remove for release
-  protected shouldUpdate(changedProperties): any {
-    changedProperties.forEach((oldValue, propName) => {
-      console.log(`${propName} changed. oldValue: ${oldValue}`);
-      console.log(oldValue);
-    });
-    return true;
-  }
-
   protected updated(changedProps: PropertyValues): void {
     super.updated(changedProps);
     this.updateComplete.then(() => {
