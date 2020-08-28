@@ -65,6 +65,11 @@ export function isConnectDevice(object: any): object is ConnectDevice {
   return 'name' in object;
 }
 
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+export function isCurrentPlayer(object: any): object is CurrentPlayer {
+  return 'currently_playing_type' in object;
+}
+
 export interface PlaybackOptions {
   uri: string;
   force_playback: boolean;
@@ -85,6 +90,7 @@ export interface ConnectDevice {
 }
 
 export interface ChromecastDevice {
+  id: string;
   friendly_name: string;
 }
 
