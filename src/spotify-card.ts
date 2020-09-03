@@ -141,7 +141,7 @@ export class SpotifyCard extends LitElement {
     this.config = _config;
   }
 
-  async connectedCallback(): Promise<void> {
+  connectedCallback(): void {
     super.connectedCallback();
     this.doSubscribeEntities();
     this.updateSpotcast();
@@ -338,10 +338,10 @@ export class SpotifyCard extends LitElement {
     if (!this.isSpotcastInstalled()) {
       warning = this.showWarning(localize('common.show_missing_spotcast'));
     }
+    // if (!this._spotify_installed) {
+    //   warning = this.showWarning(localize('common.show_missing_spotify'));
+    // }
 
-    if (!this._spotify_installed) {
-      warning = this.showWarning(localize('common.show_missing_spotify'));
-    }
 
     // Display loading screen if no content available yet
     let content = html`<div>Loading...</div>`;
