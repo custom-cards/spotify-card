@@ -29,6 +29,7 @@
     "filter_out_cast_devices": "Filter out chromecast devices",
     "spotify_entity": "Spotify media player entity",
     "default_device": "Default device name",
-    "filter_devices": "Hide devices (see documentation under 'Advanced usage')"
+    "filter_devices": "Hide devices (see documentation under 'Advanced usage')",
+    "hide_top_header": "Hide header"
   }
 }

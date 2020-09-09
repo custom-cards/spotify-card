@@ -26,6 +26,7 @@ export enum ConfigEntry {
   Hide_Warning,
   Default_Device,
   Filter_Devices,
+  Hide_Top_Header
 }
 
 export interface SpotifyCardConfig extends LovelaceCardConfig {
@@ -55,8 +56,10 @@ export interface SpotifyCardConfig extends LovelaceCardConfig {
   grid_covers_per_row?: number;
   //preselected device
   default_device?: string;
-
+  //filter the devices based on regex
   filter_devices?: Array<string>;
+  //hide the top header row and display the spotify icon at the bottom
+  hide_top_header?: boolean;
   // locale
 }
 
