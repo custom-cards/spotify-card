@@ -5,7 +5,8 @@
     "invalid_configuration": "Ungültige Konfiguration",
     "show_warning": "Warnung",
     "show_missing_spotcast": "Die Spotcast-Integration muss installiert sein, damit diese Karte funktioniert",
-    "show_missing_spotify": "Die Spotify-Integration muss installiert sein, damit der Spotify-Status angezeigt werden kann"
+    "show_missing_spotify": "Die Spotify-Integration muss installiert sein, damit der Spotify-Status angezeigt werden kann",
+    "choose_player": "Player auswählen"
   },
   "settings": {
     "general": "Generell",
@@ -24,6 +25,8 @@
     "account": "Account",
     "filter_out_cast_devices": "Filter out chromecast devices",
     "spotify_entity": "Spotify media player entity",
-    "default_device": "Default device name"
+    "default_device": "Default device name",
+    "filter_devices": "Verstecke Geräte (siehe Dokumentation unter 'Advanced usage')",
+    "hide_top_header": "Verstecke Kopfzeile"
   }
 }
