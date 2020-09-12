@@ -641,7 +641,7 @@ export class SpotifyCard extends LitElement {
     }
 
     .small-icon svg {
-      height: 3em;
+      height: 2em;
     }
 
     .controls {
