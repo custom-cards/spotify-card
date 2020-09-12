@@ -772,6 +772,7 @@ export class SpotifyCard extends LitElement {
 
     .cover > img {
       height: 100%;
+      max-width: var(--list-item-height); /* enforce square playlist icons */
     }
 
     .cover > svg {
