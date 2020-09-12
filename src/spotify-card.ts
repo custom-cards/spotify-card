@@ -617,7 +617,7 @@ export class SpotifyCard extends LitElement {
       align-items: center;
       justify-content: space-between;
       height: var(--footer-height);
-      margin-top: 0.5em;
+      padding: 0.5rem;
     }
 
     .footer__right {
@@ -645,7 +645,6 @@ export class SpotifyCard extends LitElement {
     }
 
     .controls {
-      padding: 0.5em;
       display: flex;
     }
 
