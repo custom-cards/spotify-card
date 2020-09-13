@@ -617,7 +617,7 @@ export class SpotifyCard extends LitElement {
       align-items: center;
       justify-content: space-between;
       height: var(--footer-height);
-      margin-top: 0.5em;
+      padding: 0.5rem;
     }
 
     .footer__right {
@@ -641,11 +641,10 @@ export class SpotifyCard extends LitElement {
     }
 
     .small-icon svg {
-      height: 3em;
+      height: 2em;
     }
 
     .controls {
-      padding: 0.5em;
       display: flex;
     }
 
@@ -667,10 +666,6 @@ export class SpotifyCard extends LitElement {
       margin-right: 10px;
       border: thin solid var(--primary-text-color);
       border-radius: 50%;
-    }
-
-    .mediaplayer_speaker_icon > path {
-      fill: var(--primary-text-color);
     }
 
     .dropdown-wrapper {
@@ -716,12 +711,12 @@ export class SpotifyCard extends LitElement {
       display: block;
     }
 
-    .icon > svg {
+    svg {
       fill: var(--primary-text-color);
     }
 
     .icon.playing > svg {
-      fill: var(--primary-color) !important;
+      fill: var(--primary-color);
     }
 
     @keyframes loading {
@@ -777,6 +772,7 @@ export class SpotifyCard extends LitElement {
 
     .cover > img {
       height: 100%;
+      max-width: var(--list-item-height); /* enforce square playlist icons */
     }
 
     .cover > svg {
@@ -826,7 +822,6 @@ export class SpotifyCard extends LitElement {
     .grid-item-album-image > svg {
       width: 100%;
       margin: 10px;
-      fill: var(--primary-text-color);
     }
 
     .grid-item-album-image.playing {
@@ -845,9 +840,6 @@ export class SpotifyCard extends LitElement {
     .grid-item-overlay-icon:hover {
       transform: scale(2);
       opacity: 1;
-    }
-    .grid-item-overlay-icon > svg {
-      fill: white;
     }
   `;
 }
