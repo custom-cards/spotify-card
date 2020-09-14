@@ -812,7 +812,7 @@ export class SpotifyCard extends LitElement {
 
     .grid-item-album-image {
       width: 100%;
-      display: flex;
+      display: grid;
     }
 
     .grid-item-album-image > img {
