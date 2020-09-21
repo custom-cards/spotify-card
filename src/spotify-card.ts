@@ -566,6 +566,8 @@ export class SpotifyCard extends LitElement {
       --header-height: 4em;
       --footer-height: 2.5em;
       padding: 0.5em;
+      display: flex;
+      flex-direction: column;
     }
 
     hui-warning {
@@ -586,7 +588,6 @@ export class SpotifyCard extends LitElement {
     }
 
     #content {
-      height: calc(100% - var(--header-height) - var(--footer-height));
       border: solid 2px var(--divider-color);
       border-radius: 0.2em;
       overflow: auto;
@@ -618,6 +619,7 @@ export class SpotifyCard extends LitElement {
       justify-content: space-between;
       height: var(--footer-height);
       padding: 0.5rem;
+      padding-bottom: 0;
     }
 
     .footer__right {

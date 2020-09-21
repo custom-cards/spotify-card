@@ -12,34 +12,14 @@ LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
 OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
 PERFORMANCE OF THIS SOFTWARE.
 ***************************************************************************** */
-function e(e,t,i,s){var n,a=arguments.length,r=a<3?t:null===s?s=Object.getOwnPropertyDescriptor(t,i):s;if("object"==typeof Reflect&&"function"==typeof Reflect.decorate)r=Reflect.decorate(e,t,i,s);else for(var o=e.length-1;o>=0;o--)(n=e[o])&&(r=(a<3?n(r):a>3?n(t,i,r):n(t,i))||r);return a>3&&r&&Object.defineProperty(t,i,r),r
-/**
- * @license
- * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
- * This code may only be used under the BSD style license found at
- * http://polymer.github.io/LICENSE.txt
- * The complete set of authors may be found at
- * http://polymer.github.io/AUTHORS.txt
- * The complete set of contributors may be found at
- * http://polymer.github.io/CONTRIBUTORS.txt
- * Code distributed by Google as part of the polymer project is also
- * subject to an additional IP rights grant found at
- * http://polymer.github.io/PATENTS.txt
- */}const t="undefined"!=typeof window&&null!=window.customElements&&void 0!==window.customElements.polyfillWrapFlushCallback,i=(e,t,i=null)=>{for(;t!==i;){const i=t.nextSibling;e.removeChild(t),t=i}},s=`{{lit-${String(Math.random()).slice(2)}}}`,n=`\x3c!--${s}--\x3e`,a=new RegExp(`${s}|${n}`);class r{constructor(e,t){this.parts=[],this.element=t;const i=[],n=[],r=document.createTreeWalker(t.content,133,null,!1);let l=0,h=-1,p=0;const{strings:u,values:{length:g}}=e;for(;p<g;){const e=r.nextNode();if(null!==e){if(h++,1===e.nodeType){if(e.hasAttributes()){const t=e.attributes,{length:i}=t;let s=0;for(let e=0;e<i;e++)o(t[e].name,"$lit$")&&s++;for(;s-- >0;){const t=u[p],i=d.exec(t)[2],s=i.toLowerCase()+"$lit$",n=e.getAttribute(s);e.removeAttribute(s);const r=n.split(a);this.parts.push({type:"attribute",index:h,name:i,strings:r}),p+=r.length-1}}"TEMPLATE"===e.tagName&&(n.push(e),r.currentNode=e.content)}else if(3===e.nodeType){const t=e.data;if(t.indexOf(s)>=0){const s=e.parentNode,n=t.split(a),r=n.length-1;for(let t=0;t<r;t++){let i,a=n[t];if(""===a)i=c();else{const e=d.exec(a);null!==e&&o(e[2],"$lit$")&&(a=a.slice(0,e.index)+e[1]+e[2].slice(0,-"$lit$".length)+e[3]),i=document.createTextNode(a)}s.insertBefore(i,e),this.parts.push({type:"node",index:++h})}""===n[r]?(s.insertBefore(c(),e),i.push(e)):e.data=n[r],p+=r}}else if(8===e.nodeType)if(e.data===s){const t=e.parentNode;null!==e.previousSibling&&h!==l||(h++,t.insertBefore(c(),e)),l=h,this.parts.push({type:"node",index:h}),null===e.nextSibling?e.data="":(i.push(e),h--),p++}else{let t=-1;for(;-1!==(t=e.data.indexOf(s,t+1));)this.parts.push({type:"node",index:-1}),p++}}else r.currentNode=n.pop()}for(const e of i)e.parentNode.removeChild(e)}}const o=(e,t)=>{const i=e.length-t.length;return i>=0&&e.slice(i)===t},l=e=>-1!==e.index,c=()=>document.createComment(""),d=/([ \x09\x0a\x0c\x0d])([^\0-\x1F\x7F-\x9F "'>=/]+)([ \x09\x0a\x0c\x0d]*=[ \x09\x0a\x0c\x0d]*(?:[^ \x09\x0a\x0c\x0d"'`<>=]*|"[^"]*|'[^']*))$/;function h(e,t){const{element:{content:i},parts:s}=e,n=document.createTreeWalker(i,133,null,!1);let a=u(s),r=s[a],o=-1,l=0;const c=[];let d=null;for(;n.nextNode();){o++;const e=n.currentNode;for(e.previousSibling===d&&(d=null),t.has(e)&&(c.push(e),null===d&&(d=e)),null!==d&&l++;void 0!==r&&r.index===o;)r.index=null!==d?-1:r.index-l,a=u(s,a),r=s[a]}c.forEach(e=>e.parentNode.removeChild(e))}const p=e=>{let t=11===e.nodeType?0:1;const i=document.createTreeWalker(e,133,null,!1);for(;i.nextNode();)t++;return t},u=(e,t=-1)=>{for(let i=t+1;i<e.length;i++){const t=e[i];if(l(t))return i}return-1};
-/**
- * @license
- * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
- * This code may only be used under the BSD style license found at
- * http://polymer.github.io/LICENSE.txt
- * The complete set of authors may be found at
- * http://polymer.github.io/AUTHORS.txt
- * The complete set of contributors may be found at
- * http://polymer.github.io/CONTRIBUTORS.txt
- * Code distributed by Google as part of the polymer project is also
- * subject to an additional IP rights grant found at
- * http://polymer.github.io/PATENTS.txt
- */
-const g=new WeakMap,v=e=>"function"==typeof e&&g.has(e),f={},m={};
+
+function __decorate(decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+}
+
 /**
  * @license
  * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
@@ -53,59 +33,25 @@ const g=new WeakMap,v=e=>"function"==typeof e&&g.has(e),f={},m={};
  * subject to an additional IP rights grant found at
  * http://polymer.github.io/PATENTS.txt
  */
-class y{constructor(e,t,i){this.__parts=[],this.template=e,this.processor=t,this.options=i}update(e){let t=0;for(const i of this.__parts)void 0!==i&&i.setValue(e[t]),t++;for(const e of this.__parts)void 0!==e&&e.commit()}_clone(){const e=t?this.template.element.content.cloneNode(!0):document.importNode(this.template.element.content,!0),i=[],s=this.template.parts,n=document.createTreeWalker(e,133,null,!1);let a,r=0,o=0,c=n.nextNode();for(;r<s.length;)if(a=s[r],l(a)){for(;o<a.index;)o++,"TEMPLATE"===c.nodeName&&(i.push(c),n.currentNode=c.content),null===(c=n.nextNode())&&(n.currentNode=i.pop(),c=n.nextNode());if("node"===a.type){const e=this.processor.handleTextExpression(this.options);e.insertAfterNode(c.previousSibling),this.__parts.push(e)}else this.__parts.push(...this.processor.handleAttributeExpressions(c,a.name,a.strings,this.options));r++}else this.__parts.push(void 0),r++;return t&&(document.adoptNode(e),customElements.upgrade(e)),e}}
 /**
- * @license
- * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
- * This code may only be used under the BSD style license found at
- * http://polymer.github.io/LICENSE.txt
- * The complete set of authors may be found at
- * http://polymer.github.io/AUTHORS.txt
- * The complete set of contributors may be found at
- * http://polymer.github.io/CONTRIBUTORS.txt
- * Code distributed by Google as part of the polymer project is also
- * subject to an additional IP rights grant found at
- * http://polymer.github.io/PATENTS.txt
- */const _=window.trustedTypes&&trustedTypes.createPolicy("lit-html",{createHTML:e=>e}),w=` ${s} `;class S{constructor(e,t,i,s){this.strings=e,this.values=t,this.type=i,this.processor=s}getHTML(){const e=this.strings.length-1;let t="",i=!1;for(let a=0;a<e;a++){const e=this.strings[a],r=e.lastIndexOf("\x3c!--");i=(r>-1||i)&&-1===e.indexOf("--\x3e",r+1);const o=d.exec(e);t+=null===o?e+(i?w:n):e.substr(0,o.index)+o[1]+o[2]+"$lit$"+o[3]+s}return t+=this.strings[e],t}getTemplateElement(){const e=document.createElement("template");let t=this.getHTML();return void 0!==_&&(t=_.createHTML(t)),e.innerHTML=t,e}}
+ * True if the custom elements polyfill is in use.
+ */
+const isCEPolyfill = typeof window !== 'undefined' &&
+    window.customElements != null &&
+    window.customElements.polyfillWrapFlushCallback !==
+        undefined;
 /**
- * @license
- * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
- * This code may only be used under the BSD style license found at
- * http://polymer.github.io/LICENSE.txt
- * The complete set of authors may be found at
- * http://polymer.github.io/AUTHORS.txt
- * The complete set of contributors may be found at
- * http://polymer.github.io/CONTRIBUTORS.txt
- * Code distributed by Google as part of the polymer project is also
- * subject to an additional IP rights grant found at
- * http://polymer.github.io/PATENTS.txt
- */const b=e=>null===e||!("object"==typeof e||"function"==typeof e),C=e=>Array.isArray(e)||!(!e||!e[Symbol.iterator]);class x{constructor(e,t,i){this.dirty=!0,this.element=e,this.name=t,this.strings=i,this.parts=[];for(let e=0;e<i.length-1;e++)this.parts[e]=this._createPart()}_createPart(){return new P(this)}_getValue(){const e=this.strings,t=e.length-1,i=this.parts;if(1===t&&""===e[0]&&""===e[1]){const e=i[0].value;if("symbol"==typeof e)return String(e);if("string"==typeof e||!C(e))return e}let s="";for(let n=0;n<t;n++){s+=e[n];const t=i[n];if(void 0!==t){const e=t.value;if(b(e)||!C(e))s+="string"==typeof e?e:String(e);else for(const t of e)s+="string"==typeof t?t:String(t)}}return s+=e[t],s}commit(){this.dirty&&(this.dirty=!1,this.element.setAttribute(this.name,this._getValue()))}}class P{constructor(e){this.value=void 0,this.committer=e}setValue(e){e===f||b(e)&&e===this.value||(this.value=e,v(e)||(this.committer.dirty=!0))}commit(){for(;v(this.value);){const e=this.value;this.value=f,e(this)}this.value!==f&&this.committer.commit()}}class ${constructor(e){this.value=void 0,this.__pendingValue=void 0,this.options=e}appendInto(e){this.startNode=e.appendChild(c()),this.endNode=e.appendChild(c())}insertAfterNode(e){this.startNode=e,this.endNode=e.nextSibling}appendIntoPart(e){e.__insert(this.startNode=c()),e.__insert(this.endNode=c())}insertAfterPart(e){e.__insert(this.startNode=c()),this.endNode=e.endNode,e.endNode=this.startNode}setValue(e){this.__pendingValue=e}commit(){if(null===this.startNode.parentNode)return;for(;v(this.__pendingValue);){const e=this.__pendingValue;this.__pendingValue=f,e(this)}const e=this.__pendingValue;e!==f&&(b(e)?e!==this.value&&this.__commitText(e):e instanceof S?this.__commitTemplateResult(e):e instanceof Node?this.__commitNode(e):C(e)?this.__commitIterable(e):e===m?(this.value=m,this.clear()):this.__commitText(e))}__insert(e){this.endNode.parentNode.insertBefore(e,this.endNode)}__commitNode(e){this.value!==e&&(this.clear(),this.__insert(e),this.value=e)}__commitText(e){const t=this.startNode.nextSibling,i="string"==typeof(e=null==e?"":e)?e:String(e);t===this.endNode.previousSibling&&3===t.nodeType?t.data=i:this.__commitNode(document.createTextNode(i)),this.value=e}__commitTemplateResult(e){const t=this.options.templateFactory(e);if(this.value instanceof y&&this.value.template===t)this.value.update(e.values);else{const i=new y(t,e.processor,this.options),s=i._clone();i.update(e.values),this.__commitNode(s),this.value=i}}__commitIterable(e){Array.isArray(this.value)||(this.value=[],this.clear());const t=this.value;let i,s=0;for(const n of e)i=t[s],void 0===i&&(i=new $(this.options),t.push(i),0===s?i.appendIntoPart(this):i.insertAfterPart(t[s-1])),i.setValue(n),i.commit(),s++;s<t.length&&(t.length=s,this.clear(i&&i.endNode))}clear(e=this.startNode){i(this.startNode.parentNode,e.nextSibling,this.endNode)}}class k{constructor(e,t,i){if(this.value=void 0,this.__pendingValue=void 0,2!==i.length||""!==i[0]||""!==i[1])throw new Error("Boolean attributes can only contain a single expression");this.element=e,this.name=t,this.strings=i}setValue(e){this.__pendingValue=e}commit(){for(;v(this.__pendingValue);){const e=this.__pendingValue;this.__pendingValue=f,e(this)}if(this.__pendingValue===f)return;const e=!!this.__pendingValue;this.value!==e&&(e?this.element.setAttribute(this.name,""):this.element.removeAttribute(this.name),this.value=e),this.__pendingValue=f}}class M extends x{constructor(e,t,i){super(e,t,i),this.single=2===i.length&&""===i[0]&&""===i[1]}_createPart(){return new D(this)}_getValue(){return this.single?this.parts[0].value:super._getValue()}commit(){this.dirty&&(this.dirty=!1,this.element[this.name]=this._getValue())}}class D extends P{}let N=!1;(()=>{try{const e={get capture(){return N=!0,!1}};window.addEventListener("test",e,e),window.removeEventListener("test",e,e)}catch(e){}})();class T{constructor(e,t,i){this.value=void 0,this.__pendingValue=void 0,this.element=e,this.eventName=t,this.eventContext=i,this.__boundHandleEvent=e=>this.handleEvent(e)}setValue(e){this.__pendingValue=e}commit(){for(;v(this.__pendingValue);){const e=this.__pendingValue;this.__pendingValue=f,e(this)}if(this.__pendingValue===f)return;const e=this.__pendingValue,t=this.value,i=null==e||null!=t&&(e.capture!==t.capture||e.once!==t.once||e.passive!==t.passive),s=null!=e&&(null==t||i);i&&this.element.removeEventListener(this.eventName,this.__boundHandleEvent,this.__options),s&&(this.__options=E(e),this.element.addEventListener(this.eventName,this.__boundHandleEvent,this.__options)),this.value=e,this.__pendingValue=f}handleEvent(e){"function"==typeof this.value?this.value.call(this.eventContext||this.element,e):this.value.handleEvent(e)}}const E=e=>e&&(N?{capture:e.capture,passive:e.passive,once:e.once}:e.capture)
-/**
- * @license
- * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
- * This code may only be used under the BSD style license found at
- * http://polymer.github.io/LICENSE.txt
- * The complete set of authors may be found at
- * http://polymer.github.io/AUTHORS.txt
- * The complete set of contributors may be found at
- * http://polymer.github.io/CONTRIBUTORS.txt
- * Code distributed by Google as part of the polymer project is also
- * subject to an additional IP rights grant found at
- * http://polymer.github.io/PATENTS.txt
- */;function V(e){let t=A.get(e.type);void 0===t&&(t={stringsArray:new WeakMap,keyString:new Map},A.set(e.type,t));let i=t.stringsArray.get(e.strings);if(void 0!==i)return i;const n=e.strings.join(s);return i=t.keyString.get(n),void 0===i&&(i=new r(e,e.getTemplateElement()),t.keyString.set(n,i)),t.stringsArray.set(e.strings,i),i}const A=new Map,O=new WeakMap;
-/**
- * @license
- * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
- * This code may only be used under the BSD style license found at
- * http://polymer.github.io/LICENSE.txt
- * The complete set of authors may be found at
- * http://polymer.github.io/AUTHORS.txt
- * The complete set of contributors may be found at
- * http://polymer.github.io/CONTRIBUTORS.txt
- * Code distributed by Google as part of the polymer project is also
- * subject to an additional IP rights grant found at
- * http://polymer.github.io/PATENTS.txt
- */const z=new
+ * Removes nodes, starting from `start` (inclusive) to `end` (exclusive), from
+ * `container`.
+ */
+const removeNodes = (container, start, end = null) => {
+    while (start !== end) {
+        const n = start.nextSibling;
+        container.removeChild(start);
+        start = n;
+    }
+};
+
 /**
  * @license
  * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
@@ -119,33 +65,208 @@ class y{constructor(e,t,i){this.__parts=[],this.template=e,this.processor=t,this
  * subject to an additional IP rights grant found at
  * http://polymer.github.io/PATENTS.txt
  */
-class{handleAttributeExpressions(e,t,i,s){const n=t[0];if("."===n){return new M(e,t.slice(1),i).parts}if("@"===n)return[new T(e,t.slice(1),s.eventContext)];if("?"===n)return[new k(e,t.slice(1),i)];return new x(e,t,i).parts}handleTextExpression(e){return new $(e)}};
 /**
- * @license
- * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
- * This code may only be used under the BSD style license found at
- * http://polymer.github.io/LICENSE.txt
- * The complete set of authors may be found at
- * http://polymer.github.io/AUTHORS.txt
- * The complete set of contributors may be found at
- * http://polymer.github.io/CONTRIBUTORS.txt
- * Code distributed by Google as part of the polymer project is also
- * subject to an additional IP rights grant found at
- * http://polymer.github.io/PATENTS.txt
- */"undefined"!=typeof window&&(window.litHtmlVersions||(window.litHtmlVersions=[])).push("1.3.0");const H=(e,...t)=>new S(e,t,"html",z)
+ * An expression marker with embedded unique key to avoid collision with
+ * possible text in templates.
+ */
+const marker = `{{lit-${String(Math.random()).slice(2)}}}`;
 /**
- * @license
- * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
- * This code may only be used under the BSD style license found at
- * http://polymer.github.io/LICENSE.txt
- * The complete set of authors may be found at
- * http://polymer.github.io/AUTHORS.txt
- * The complete set of contributors may be found at
- * http://polymer.github.io/CONTRIBUTORS.txt
- * Code distributed by Google as part of the polymer project is also
- * subject to an additional IP rights grant found at
- * http://polymer.github.io/PATENTS.txt
- */,L=(e,t)=>`${e}--${t}`;let U=!0;void 0===window.ShadyCSS?U=!1:void 0===window.ShadyCSS.prepareTemplateDom&&(console.warn("Incompatible ShadyCSS version detected. Please update to at least @webcomponents/webcomponentsjs@2.0.2 and @webcomponents/shadycss@1.3.1."),U=!1);const j=e=>t=>{const i=L(t.type,e);let n=A.get(i);void 0===n&&(n={stringsArray:new WeakMap,keyString:new Map},A.set(i,n));let a=n.stringsArray.get(t.strings);if(void 0!==a)return a;const o=t.strings.join(s);if(a=n.keyString.get(o),void 0===a){const i=t.getTemplateElement();U&&window.ShadyCSS.prepareTemplateDom(i,e),a=new r(t,i),n.keyString.set(o,a)}return n.stringsArray.set(t.strings,a),a},R=["html","svg"],F=new Set,Y=(e,t,i)=>{F.add(e);const s=i?i.element:document.createElement("template"),n=t.querySelectorAll("style"),{length:a}=n;if(0===a)return void window.ShadyCSS.prepareTemplateStyles(s,e);const r=document.createElement("style");for(let e=0;e<a;e++){const t=n[e];t.parentNode.removeChild(t),r.textContent+=t.textContent}(e=>{R.forEach(t=>{const i=A.get(L(t,e));void 0!==i&&i.keyString.forEach(e=>{const{element:{content:t}}=e,i=new Set;Array.from(t.querySelectorAll("style")).forEach(e=>{i.add(e)}),h(e,i)})})})(e);const o=s.content;i?function(e,t,i=null){const{element:{content:s},parts:n}=e;if(null==i)return void s.appendChild(t);const a=document.createTreeWalker(s,133,null,!1);let r=u(n),o=0,l=-1;for(;a.nextNode();)for(l++,a.currentNode===i&&(o=p(t),i.parentNode.insertBefore(t,i));-1!==r&&n[r].index===l;){if(o>0){for(;-1!==r;)n[r].index+=o,r=u(n,r);return}r=u(n,r)}}(i,r,o.firstChild):o.insertBefore(r,o.firstChild),window.ShadyCSS.prepareTemplateStyles(s,e);const l=o.querySelector("style");if(window.ShadyCSS.nativeShadow&&null!==l)t.insertBefore(l.cloneNode(!0),t.firstChild);else if(i){o.insertBefore(r,o.firstChild);const e=new Set;e.add(r),h(i,e)}};window.JSCompiler_renameProperty=(e,t)=>e;const I={toAttribute(e,t){switch(t){case Boolean:return e?"":null;case Object:case Array:return null==e?e:JSON.stringify(e)}return e},fromAttribute(e,t){switch(t){case Boolean:return null!==e;case Number:return null===e?null:Number(e);case Object:case Array:return JSON.parse(e)}return e}},W=(e,t)=>t!==e&&(t==t||e==e),q={attribute:!0,type:String,converter:I,reflect:!1,hasChanged:W};class G extends HTMLElement{constructor(){super(),this.initialize()}static get observedAttributes(){this.finalize();const e=[];return this._classProperties.forEach((t,i)=>{const s=this._attributeNameForProperty(i,t);void 0!==s&&(this._attributeToPropertyMap.set(s,i),e.push(s))}),e}static _ensureClassProperties(){if(!this.hasOwnProperty(JSCompiler_renameProperty("_classProperties",this))){this._classProperties=new Map;const e=Object.getPrototypeOf(this)._classProperties;void 0!==e&&e.forEach((e,t)=>this._classProperties.set(t,e))}}static createProperty(e,t=q){if(this._ensureClassProperties(),this._classProperties.set(e,t),t.noAccessor||this.prototype.hasOwnProperty(e))return;const i="symbol"==typeof e?Symbol():"__"+e,s=this.getPropertyDescriptor(e,i,t);void 0!==s&&Object.defineProperty(this.prototype,e,s)}static getPropertyDescriptor(e,t,i){return{get(){return this[t]},set(s){const n=this[e];this[t]=s,this.requestUpdateInternal(e,n,i)},configurable:!0,enumerable:!0}}static getPropertyOptions(e){return this._classProperties&&this._classProperties.get(e)||q}static finalize(){const e=Object.getPrototypeOf(this);if(e.hasOwnProperty("finalized")||e.finalize(),this.finalized=!0,this._ensureClassProperties(),this._attributeToPropertyMap=new Map,this.hasOwnProperty(JSCompiler_renameProperty("properties",this))){const e=this.properties,t=[...Object.getOwnPropertyNames(e),..."function"==typeof Object.getOwnPropertySymbols?Object.getOwnPropertySymbols(e):[]];for(const i of t)this.createProperty(i,e[i])}}static _attributeNameForProperty(e,t){const i=t.attribute;return!1===i?void 0:"string"==typeof i?i:"string"==typeof e?e.toLowerCase():void 0}static _valueHasChanged(e,t,i=W){return i(e,t)}static _propertyValueFromAttribute(e,t){const i=t.type,s=t.converter||I,n="function"==typeof s?s:s.fromAttribute;return n?n(e,i):e}static _propertyValueToAttribute(e,t){if(void 0===t.reflect)return;const i=t.type,s=t.converter;return(s&&s.toAttribute||I.toAttribute)(e,i)}initialize(){this._updateState=0,this._updatePromise=new Promise(e=>this._enableUpdatingResolver=e),this._changedProperties=new Map,this._saveInstanceProperties(),this.requestUpdateInternal()}_saveInstanceProperties(){this.constructor._classProperties.forEach((e,t)=>{if(this.hasOwnProperty(t)){const e=this[t];delete this[t],this._instanceProperties||(this._instanceProperties=new Map),this._instanceProperties.set(t,e)}})}_applyInstanceProperties(){this._instanceProperties.forEach((e,t)=>this[t]=e),this._instanceProperties=void 0}connectedCallback(){this.enableUpdating()}enableUpdating(){void 0!==this._enableUpdatingResolver&&(this._enableUpdatingResolver(),this._enableUpdatingResolver=void 0)}disconnectedCallback(){}attributeChangedCallback(e,t,i){t!==i&&this._attributeToProperty(e,i)}_propertyToAttribute(e,t,i=q){const s=this.constructor,n=s._attributeNameForProperty(e,i);if(void 0!==n){const e=s._propertyValueToAttribute(t,i);if(void 0===e)return;this._updateState=8|this._updateState,null==e?this.removeAttribute(n):this.setAttribute(n,e),this._updateState=-9&this._updateState}}_attributeToProperty(e,t){if(8&this._updateState)return;const i=this.constructor,s=i._attributeToPropertyMap.get(e);if(void 0!==s){const e=i.getPropertyOptions(s);this._updateState=16|this._updateState,this[s]=i._propertyValueFromAttribute(t,e),this._updateState=-17&this._updateState}}requestUpdateInternal(e,t,i){let s=!0;if(void 0!==e){const n=this.constructor;i=i||n.getPropertyOptions(e),n._valueHasChanged(this[e],t,i.hasChanged)?(this._changedProperties.has(e)||this._changedProperties.set(e,t),!0!==i.reflect||16&this._updateState||(void 0===this._reflectingProperties&&(this._reflectingProperties=new Map),this._reflectingProperties.set(e,i))):s=!1}!this._hasRequestedUpdate&&s&&(this._updatePromise=this._enqueueUpdate())}requestUpdate(e,t){return this.requestUpdateInternal(e,t),this.updateComplete}async _enqueueUpdate(){this._updateState=4|this._updateState;try{await this._updatePromise}catch(e){}const e=this.performUpdate();return null!=e&&await e,!this._hasRequestedUpdate}get _hasRequestedUpdate(){return 4&this._updateState}get hasUpdated(){return 1&this._updateState}performUpdate(){if(!this._hasRequestedUpdate)return;this._instanceProperties&&this._applyInstanceProperties();let e=!1;const t=this._changedProperties;try{e=this.shouldUpdate(t),e?this.update(t):this._markUpdated()}catch(t){throw e=!1,this._markUpdated(),t}e&&(1&this._updateState||(this._updateState=1|this._updateState,this.firstUpdated(t)),this.updated(t))}_markUpdated(){this._changedProperties=new Map,this._updateState=-5&this._updateState}get updateComplete(){return this._getUpdateComplete()}_getUpdateComplete(){return this._updatePromise}shouldUpdate(e){return!0}update(e){void 0!==this._reflectingProperties&&this._reflectingProperties.size>0&&(this._reflectingProperties.forEach((e,t)=>this._propertyToAttribute(t,this[t],e)),this._reflectingProperties=void 0),this._markUpdated()}updated(e){}firstUpdated(e){}}G.finalized=!0;
+ * An expression marker used text-positions, multi-binding attributes, and
+ * attributes with markup-like text values.
+ */
+const nodeMarker = `<!--${marker}-->`;
+const markerRegex = new RegExp(`${marker}|${nodeMarker}`);
+/**
+ * Suffix appended to all bound attribute names.
+ */
+const boundAttributeSuffix = '$lit$';
+/**
+ * An updatable Template that tracks the location of dynamic parts.
+ */
+class Template {
+    constructor(result, element) {
+        this.parts = [];
+        this.element = element;
+        const nodesToRemove = [];
+        const stack = [];
+        // Edge needs all 4 parameters present; IE11 needs 3rd parameter to be null
+        const walker = document.createTreeWalker(element.content, 133 /* NodeFilter.SHOW_{ELEMENT|COMMENT|TEXT} */, null, false);
+        // Keeps track of the last index associated with a part. We try to delete
+        // unnecessary nodes, but we never want to associate two different parts
+        // to the same index. They must have a constant node between.
+        let lastPartIndex = 0;
+        let index = -1;
+        let partIndex = 0;
+        const { strings, values: { length } } = result;
+        while (partIndex < length) {
+            const node = walker.nextNode();
+            if (node === null) {
+                // We've exhausted the content inside a nested template element.
+                // Because we still have parts (the outer for-loop), we know:
+                // - There is a template in the stack
+                // - The walker will find a nextNode outside the template
+                walker.currentNode = stack.pop();
+                continue;
+            }
+            index++;
+            if (node.nodeType === 1 /* Node.ELEMENT_NODE */) {
+                if (node.hasAttributes()) {
+                    const attributes = node.attributes;
+                    const { length } = attributes;
+                    // Per
+                    // https://developer.mozilla.org/en-US/docs/Web/API/NamedNodeMap,
+                    // attributes are not guaranteed to be returned in document order.
+                    // In particular, Edge/IE can return them out of order, so we cannot
+                    // assume a correspondence between part index and attribute index.
+                    let count = 0;
+                    for (let i = 0; i < length; i++) {
+                        if (endsWith(attributes[i].name, boundAttributeSuffix)) {
+                            count++;
+                        }
+                    }
+                    while (count-- > 0) {
+                        // Get the template literal section leading up to the first
+                        // expression in this attribute
+                        const stringForPart = strings[partIndex];
+                        // Find the attribute name
+                        const name = lastAttributeNameRegex.exec(stringForPart)[2];
+                        // Find the corresponding attribute
+                        // All bound attributes have had a suffix added in
+                        // TemplateResult#getHTML to opt out of special attribute
+                        // handling. To look up the attribute value we also need to add
+                        // the suffix.
+                        const attributeLookupName = name.toLowerCase() + boundAttributeSuffix;
+                        const attributeValue = node.getAttribute(attributeLookupName);
+                        node.removeAttribute(attributeLookupName);
+                        const statics = attributeValue.split(markerRegex);
+                        this.parts.push({ type: 'attribute', index, name, strings: statics });
+                        partIndex += statics.length - 1;
+                    }
+                }
+                if (node.tagName === 'TEMPLATE') {
+                    stack.push(node);
+                    walker.currentNode = node.content;
+                }
+            }
+            else if (node.nodeType === 3 /* Node.TEXT_NODE */) {
+                const data = node.data;
+                if (data.indexOf(marker) >= 0) {
+                    const parent = node.parentNode;
+                    const strings = data.split(markerRegex);
+                    const lastIndex = strings.length - 1;
+                    // Generate a new text node for each literal section
+                    // These nodes are also used as the markers for node parts
+                    for (let i = 0; i < lastIndex; i++) {
+                        let insert;
+                        let s = strings[i];
+                        if (s === '') {
+                            insert = createMarker();
+                        }
+                        else {
+                            const match = lastAttributeNameRegex.exec(s);
+                            if (match !== null && endsWith(match[2], boundAttributeSuffix)) {
+                                s = s.slice(0, match.index) + match[1] +
+                                    match[2].slice(0, -boundAttributeSuffix.length) + match[3];
+                            }
+                            insert = document.createTextNode(s);
+                        }
+                        parent.insertBefore(insert, node);
+                        this.parts.push({ type: 'node', index: ++index });
+                    }
+                    // If there's no text, we must insert a comment to mark our place.
+                    // Else, we can trust it will stick around after cloning.
+                    if (strings[lastIndex] === '') {
+                        parent.insertBefore(createMarker(), node);
+                        nodesToRemove.push(node);
+                    }
+                    else {
+                        node.data = strings[lastIndex];
+                    }
+                    // We have a part for each match found
+                    partIndex += lastIndex;
+                }
+            }
+            else if (node.nodeType === 8 /* Node.COMMENT_NODE */) {
+                if (node.data === marker) {
+                    const parent = node.parentNode;
+                    // Add a new marker node to be the startNode of the Part if any of
+                    // the following are true:
+                    //  * We don't have a previousSibling
+                    //  * The previousSibling is already the start of a previous part
+                    if (node.previousSibling === null || index === lastPartIndex) {
+                        index++;
+                        parent.insertBefore(createMarker(), node);
+                    }
+                    lastPartIndex = index;
+                    this.parts.push({ type: 'node', index });
+                    // If we don't have a nextSibling, keep this node so we have an end.
+                    // Else, we can remove it to save future costs.
+                    if (node.nextSibling === null) {
+                        node.data = '';
+                    }
+                    else {
+                        nodesToRemove.push(node);
+                        index--;
+                    }
+                    partIndex++;
+                }
+                else {
+                    let i = -1;
+                    while ((i = node.data.indexOf(marker, i + 1)) !== -1) {
+                        // Comment node has a binding marker inside, make an inactive part
+                        // The binding won't work, but subsequent bindings will
+                        // TODO (justinfagnani): consider whether it's even worth it to
+                        // make bindings in comments work
+                        this.parts.push({ type: 'node', index: -1 });
+                        partIndex++;
+                    }
+                }
+            }
+        }
+        // Remove text binding nodes after the walk to not disturb the TreeWalker
+        for (const n of nodesToRemove) {
+            n.parentNode.removeChild(n);
+        }
+    }
+}
+const endsWith = (str, suffix) => {
+    const index = str.length - suffix.length;
+    return index >= 0 && str.slice(index) === suffix;
+};
+const isTemplatePartActive = (part) => part.index !== -1;
+// Allows `document.createComment('')` to be renamed for a
+// small manual size-savings.
+const createMarker = () => document.createComment('');
+/**
+ * This regex extracts the attribute name preceding an attribute-position
+ * expression. It does this by matching the syntax allowed for attributes
+ * against the string literal directly preceding the expression, assuming that
+ * the expression is in an attribute-value position.
+ *
+ * See attributes in the HTML spec:
+ * https://www.w3.org/TR/html5/syntax.html#elements-attributes
+ *
+ * " \x09\x0a\x0c\x0d" are HTML space characters:
+ * https://www.w3.org/TR/html5/infrastructure.html#space-characters
+ *
+ * "\0-\x1F\x7F-\x9F" are Unicode control characters, which includes every
+ * space character except " ".
+ *
+ * So an attribute is:
+ *  * The name: any character except a control character, space character, ('),
+ *    ("), ">", "=", or "/"
+ *  * Followed by zero or more space characters
+ *  * Followed by "="
+ *  * Followed by zero or more space characters
+ *  * Followed by:
+ *    * Any character except space, ('), ("), "<", ">", "=", (`), or
+ *    * (") then any non-("), or
+ *    * (') then any non-(')
+ */
+const lastAttributeNameRegex = 
+// eslint-disable-next-line no-control-regex
+/([ \x09\x0a\x0c\x0d])([^\0-\x1F\x7F-\x9F "'>=/]+)([ \x09\x0a\x0c\x0d]*=[ \x09\x0a\x0c\x0d]*(?:[^ \x09\x0a\x0c\x0d"'`<>=]*|"[^"]*|'[^']*))$/;
+
 /**
  * @license
  * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
@@ -159,7 +280,2102 @@ class{handleAttributeExpressions(e,t,i,s){const n=t[0];if("."===n){return new M(
  * subject to an additional IP rights grant found at
  * http://polymer.github.io/PATENTS.txt
  */
-const B=e=>t=>"function"==typeof t?((e,t)=>(window.customElements.define(e,t),t))(e,t):((e,t)=>{const{kind:i,elements:s}=t;return{kind:i,elements:s,finisher(t){window.customElements.define(e,t)}}})(e,t),Z=(e,t)=>"method"===t.kind&&t.descriptor&&!("value"in t.descriptor)?Object.assign(Object.assign({},t),{finisher(i){i.createProperty(t.key,e)}}):{kind:"field",key:Symbol(),placement:"own",descriptor:{},initializer(){"function"==typeof t.initializer&&(this[t.key]=t.initializer.call(this))},finisher(i){i.createProperty(t.key,e)}};function J(e){return(t,i)=>void 0!==i?((e,t,i)=>{t.constructor.createProperty(i,e)})(e,t,i):Z(e,t)}function K(e){return J({attribute:!1,hasChanged:null==e?void 0:e.hasChanged})}
+const walkerNodeFilter = 133 /* NodeFilter.SHOW_{ELEMENT|COMMENT|TEXT} */;
+/**
+ * Removes the list of nodes from a Template safely. In addition to removing
+ * nodes from the Template, the Template part indices are updated to match
+ * the mutated Template DOM.
+ *
+ * As the template is walked the removal state is tracked and
+ * part indices are adjusted as needed.
+ *
+ * div
+ *   div#1 (remove) <-- start removing (removing node is div#1)
+ *     div
+ *       div#2 (remove)  <-- continue removing (removing node is still div#1)
+ *         div
+ * div <-- stop removing since previous sibling is the removing node (div#1,
+ * removed 4 nodes)
+ */
+function removeNodesFromTemplate(template, nodesToRemove) {
+    const { element: { content }, parts } = template;
+    const walker = document.createTreeWalker(content, walkerNodeFilter, null, false);
+    let partIndex = nextActiveIndexInTemplateParts(parts);
+    let part = parts[partIndex];
+    let nodeIndex = -1;
+    let removeCount = 0;
+    const nodesToRemoveInTemplate = [];
+    let currentRemovingNode = null;
+    while (walker.nextNode()) {
+        nodeIndex++;
+        const node = walker.currentNode;
+        // End removal if stepped past the removing node
+        if (node.previousSibling === currentRemovingNode) {
+            currentRemovingNode = null;
+        }
+        // A node to remove was found in the template
+        if (nodesToRemove.has(node)) {
+            nodesToRemoveInTemplate.push(node);
+            // Track node we're removing
+            if (currentRemovingNode === null) {
+                currentRemovingNode = node;
+            }
+        }
+        // When removing, increment count by which to adjust subsequent part indices
+        if (currentRemovingNode !== null) {
+            removeCount++;
+        }
+        while (part !== undefined && part.index === nodeIndex) {
+            // If part is in a removed node deactivate it by setting index to -1 or
+            // adjust the index as needed.
+            part.index = currentRemovingNode !== null ? -1 : part.index - removeCount;
+            // go to the next active part.
+            partIndex = nextActiveIndexInTemplateParts(parts, partIndex);
+            part = parts[partIndex];
+        }
+    }
+    nodesToRemoveInTemplate.forEach((n) => n.parentNode.removeChild(n));
+}
+const countNodes = (node) => {
+    let count = (node.nodeType === 11 /* Node.DOCUMENT_FRAGMENT_NODE */) ? 0 : 1;
+    const walker = document.createTreeWalker(node, walkerNodeFilter, null, false);
+    while (walker.nextNode()) {
+        count++;
+    }
+    return count;
+};
+const nextActiveIndexInTemplateParts = (parts, startIndex = -1) => {
+    for (let i = startIndex + 1; i < parts.length; i++) {
+        const part = parts[i];
+        if (isTemplatePartActive(part)) {
+            return i;
+        }
+    }
+    return -1;
+};
+/**
+ * Inserts the given node into the Template, optionally before the given
+ * refNode. In addition to inserting the node into the Template, the Template
+ * part indices are updated to match the mutated Template DOM.
+ */
+function insertNodeIntoTemplate(template, node, refNode = null) {
+    const { element: { content }, parts } = template;
+    // If there's no refNode, then put node at end of template.
+    // No part indices need to be shifted in this case.
+    if (refNode === null || refNode === undefined) {
+        content.appendChild(node);
+        return;
+    }
+    const walker = document.createTreeWalker(content, walkerNodeFilter, null, false);
+    let partIndex = nextActiveIndexInTemplateParts(parts);
+    let insertCount = 0;
+    let walkerIndex = -1;
+    while (walker.nextNode()) {
+        walkerIndex++;
+        const walkerNode = walker.currentNode;
+        if (walkerNode === refNode) {
+            insertCount = countNodes(node);
+            refNode.parentNode.insertBefore(node, refNode);
+        }
+        while (partIndex !== -1 && parts[partIndex].index === walkerIndex) {
+            // If we've inserted the node, simply adjust all subsequent parts
+            if (insertCount > 0) {
+                while (partIndex !== -1) {
+                    parts[partIndex].index += insertCount;
+                    partIndex = nextActiveIndexInTemplateParts(parts, partIndex);
+                }
+                return;
+            }
+            partIndex = nextActiveIndexInTemplateParts(parts, partIndex);
+        }
+    }
+}
+
+/**
+ * @license
+ * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
+ * This code may only be used under the BSD style license found at
+ * http://polymer.github.io/LICENSE.txt
+ * The complete set of authors may be found at
+ * http://polymer.github.io/AUTHORS.txt
+ * The complete set of contributors may be found at
+ * http://polymer.github.io/CONTRIBUTORS.txt
+ * Code distributed by Google as part of the polymer project is also
+ * subject to an additional IP rights grant found at
+ * http://polymer.github.io/PATENTS.txt
+ */
+const directives = new WeakMap();
+const isDirective = (o) => {
+    return typeof o === 'function' && directives.has(o);
+};
+
+/**
+ * @license
+ * Copyright (c) 2018 The Polymer Project Authors. All rights reserved.
+ * This code may only be used under the BSD style license found at
+ * http://polymer.github.io/LICENSE.txt
+ * The complete set of authors may be found at
+ * http://polymer.github.io/AUTHORS.txt
+ * The complete set of contributors may be found at
+ * http://polymer.github.io/CONTRIBUTORS.txt
+ * Code distributed by Google as part of the polymer project is also
+ * subject to an additional IP rights grant found at
+ * http://polymer.github.io/PATENTS.txt
+ */
+/**
+ * A sentinel value that signals that a value was handled by a directive and
+ * should not be written to the DOM.
+ */
+const noChange = {};
+/**
+ * A sentinel value that signals a NodePart to fully clear its content.
+ */
+const nothing = {};
+
+/**
+ * @license
+ * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
+ * This code may only be used under the BSD style license found at
+ * http://polymer.github.io/LICENSE.txt
+ * The complete set of authors may be found at
+ * http://polymer.github.io/AUTHORS.txt
+ * The complete set of contributors may be found at
+ * http://polymer.github.io/CONTRIBUTORS.txt
+ * Code distributed by Google as part of the polymer project is also
+ * subject to an additional IP rights grant found at
+ * http://polymer.github.io/PATENTS.txt
+ */
+/**
+ * An instance of a `Template` that can be attached to the DOM and updated
+ * with new values.
+ */
+class TemplateInstance {
+    constructor(template, processor, options) {
+        this.__parts = [];
+        this.template = template;
+        this.processor = processor;
+        this.options = options;
+    }
+    update(values) {
+        let i = 0;
+        for (const part of this.__parts) {
+            if (part !== undefined) {
+                part.setValue(values[i]);
+            }
+            i++;
+        }
+        for (const part of this.__parts) {
+            if (part !== undefined) {
+                part.commit();
+            }
+        }
+    }
+    _clone() {
+        // There are a number of steps in the lifecycle of a template instance's
+        // DOM fragment:
+        //  1. Clone - create the instance fragment
+        //  2. Adopt - adopt into the main document
+        //  3. Process - find part markers and create parts
+        //  4. Upgrade - upgrade custom elements
+        //  5. Update - set node, attribute, property, etc., values
+        //  6. Connect - connect to the document. Optional and outside of this
+        //     method.
+        //
+        // We have a few constraints on the ordering of these steps:
+        //  * We need to upgrade before updating, so that property values will pass
+        //    through any property setters.
+        //  * We would like to process before upgrading so that we're sure that the
+        //    cloned fragment is inert and not disturbed by self-modifying DOM.
+        //  * We want custom elements to upgrade even in disconnected fragments.
+        //
+        // Given these constraints, with full custom elements support we would
+        // prefer the order: Clone, Process, Adopt, Upgrade, Update, Connect
+        //
+        // But Safari does not implement CustomElementRegistry#upgrade, so we
+        // can not implement that order and still have upgrade-before-update and
+        // upgrade disconnected fragments. So we instead sacrifice the
+        // process-before-upgrade constraint, since in Custom Elements v1 elements
+        // must not modify their light DOM in the constructor. We still have issues
+        // when co-existing with CEv0 elements like Polymer 1, and with polyfills
+        // that don't strictly adhere to the no-modification rule because shadow
+        // DOM, which may be created in the constructor, is emulated by being placed
+        // in the light DOM.
+        //
+        // The resulting order is on native is: Clone, Adopt, Upgrade, Process,
+        // Update, Connect. document.importNode() performs Clone, Adopt, and Upgrade
+        // in one step.
+        //
+        // The Custom Elements v1 polyfill supports upgrade(), so the order when
+        // polyfilled is the more ideal: Clone, Process, Adopt, Upgrade, Update,
+        // Connect.
+        const fragment = isCEPolyfill ?
+            this.template.element.content.cloneNode(true) :
+            document.importNode(this.template.element.content, true);
+        const stack = [];
+        const parts = this.template.parts;
+        // Edge needs all 4 parameters present; IE11 needs 3rd parameter to be null
+        const walker = document.createTreeWalker(fragment, 133 /* NodeFilter.SHOW_{ELEMENT|COMMENT|TEXT} */, null, false);
+        let partIndex = 0;
+        let nodeIndex = 0;
+        let part;
+        let node = walker.nextNode();
+        // Loop through all the nodes and parts of a template
+        while (partIndex < parts.length) {
+            part = parts[partIndex];
+            if (!isTemplatePartActive(part)) {
+                this.__parts.push(undefined);
+                partIndex++;
+                continue;
+            }
+            // Progress the tree walker until we find our next part's node.
+            // Note that multiple parts may share the same node (attribute parts
+            // on a single element), so this loop may not run at all.
+            while (nodeIndex < part.index) {
+                nodeIndex++;
+                if (node.nodeName === 'TEMPLATE') {
+                    stack.push(node);
+                    walker.currentNode = node.content;
+                }
+                if ((node = walker.nextNode()) === null) {
+                    // We've exhausted the content inside a nested template element.
+                    // Because we still have parts (the outer for-loop), we know:
+                    // - There is a template in the stack
+                    // - The walker will find a nextNode outside the template
+                    walker.currentNode = stack.pop();
+                    node = walker.nextNode();
+                }
+            }
+            // We've arrived at our part's node.
+            if (part.type === 'node') {
+                const part = this.processor.handleTextExpression(this.options);
+                part.insertAfterNode(node.previousSibling);
+                this.__parts.push(part);
+            }
+            else {
+                this.__parts.push(...this.processor.handleAttributeExpressions(node, part.name, part.strings, this.options));
+            }
+            partIndex++;
+        }
+        if (isCEPolyfill) {
+            document.adoptNode(fragment);
+            customElements.upgrade(fragment);
+        }
+        return fragment;
+    }
+}
+
+/**
+ * @license
+ * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
+ * This code may only be used under the BSD style license found at
+ * http://polymer.github.io/LICENSE.txt
+ * The complete set of authors may be found at
+ * http://polymer.github.io/AUTHORS.txt
+ * The complete set of contributors may be found at
+ * http://polymer.github.io/CONTRIBUTORS.txt
+ * Code distributed by Google as part of the polymer project is also
+ * subject to an additional IP rights grant found at
+ * http://polymer.github.io/PATENTS.txt
+ */
+/**
+ * Our TrustedTypePolicy for HTML which is declared using the html template
+ * tag function.
+ *
+ * That HTML is a developer-authored constant, and is parsed with innerHTML
+ * before any untrusted expressions have been mixed in. Therefor it is
+ * considered safe by construction.
+ */
+const policy = window.trustedTypes &&
+    trustedTypes.createPolicy('lit-html', { createHTML: (s) => s });
+const commentMarker = ` ${marker} `;
+/**
+ * The return type of `html`, which holds a Template and the values from
+ * interpolated expressions.
+ */
+class TemplateResult {
+    constructor(strings, values, type, processor) {
+        this.strings = strings;
+        this.values = values;
+        this.type = type;
+        this.processor = processor;
+    }
+    /**
+     * Returns a string of HTML used to create a `<template>` element.
+     */
+    getHTML() {
+        const l = this.strings.length - 1;
+        let html = '';
+        let isCommentBinding = false;
+        for (let i = 0; i < l; i++) {
+            const s = this.strings[i];
+            // For each binding we want to determine the kind of marker to insert
+            // into the template source before it's parsed by the browser's HTML
+            // parser. The marker type is based on whether the expression is in an
+            // attribute, text, or comment position.
+            //   * For node-position bindings we insert a comment with the marker
+            //     sentinel as its text content, like <!--{{lit-guid}}-->.
+            //   * For attribute bindings we insert just the marker sentinel for the
+            //     first binding, so that we support unquoted attribute bindings.
+            //     Subsequent bindings can use a comment marker because multi-binding
+            //     attributes must be quoted.
+            //   * For comment bindings we insert just the marker sentinel so we don't
+            //     close the comment.
+            //
+            // The following code scans the template source, but is *not* an HTML
+            // parser. We don't need to track the tree structure of the HTML, only
+            // whether a binding is inside a comment, and if not, if it appears to be
+            // the first binding in an attribute.
+            const commentOpen = s.lastIndexOf('<!--');
+            // We're in comment position if we have a comment open with no following
+            // comment close. Because <-- can appear in an attribute value there can
+            // be false positives.
+            isCommentBinding = (commentOpen > -1 || isCommentBinding) &&
+                s.indexOf('-->', commentOpen + 1) === -1;
+            // Check to see if we have an attribute-like sequence preceding the
+            // expression. This can match "name=value" like structures in text,
+            // comments, and attribute values, so there can be false-positives.
+            const attributeMatch = lastAttributeNameRegex.exec(s);
+            if (attributeMatch === null) {
+                // We're only in this branch if we don't have a attribute-like
+                // preceding sequence. For comments, this guards against unusual
+                // attribute values like <div foo="<!--${'bar'}">. Cases like
+                // <!-- foo=${'bar'}--> are handled correctly in the attribute branch
+                // below.
+                html += s + (isCommentBinding ? commentMarker : nodeMarker);
+            }
+            else {
+                // For attributes we use just a marker sentinel, and also append a
+                // $lit$ suffix to the name to opt-out of attribute-specific parsing
+                // that IE and Edge do for style and certain SVG attributes.
+                html += s.substr(0, attributeMatch.index) + attributeMatch[1] +
+                    attributeMatch[2] + boundAttributeSuffix + attributeMatch[3] +
+                    marker;
+            }
+        }
+        html += this.strings[l];
+        return html;
+    }
+    getTemplateElement() {
+        const template = document.createElement('template');
+        let value = this.getHTML();
+        if (policy !== undefined) {
+            // this is secure because `this.strings` is a TemplateStringsArray.
+            // TODO: validate this when
+            // https://github.com/tc39/proposal-array-is-template-object is
+            // implemented.
+            value = policy.createHTML(value);
+        }
+        template.innerHTML = value;
+        return template;
+    }
+}
+
+/**
+ * @license
+ * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
+ * This code may only be used under the BSD style license found at
+ * http://polymer.github.io/LICENSE.txt
+ * The complete set of authors may be found at
+ * http://polymer.github.io/AUTHORS.txt
+ * The complete set of contributors may be found at
+ * http://polymer.github.io/CONTRIBUTORS.txt
+ * Code distributed by Google as part of the polymer project is also
+ * subject to an additional IP rights grant found at
+ * http://polymer.github.io/PATENTS.txt
+ */
+const isPrimitive = (value) => {
+    return (value === null ||
+        !(typeof value === 'object' || typeof value === 'function'));
+};
+const isIterable = (value) => {
+    return Array.isArray(value) ||
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        !!(value && value[Symbol.iterator]);
+};
+/**
+ * Writes attribute values to the DOM for a group of AttributeParts bound to a
+ * single attribute. The value is only set once even if there are multiple parts
+ * for an attribute.
+ */
+class AttributeCommitter {
+    constructor(element, name, strings) {
+        this.dirty = true;
+        this.element = element;
+        this.name = name;
+        this.strings = strings;
+        this.parts = [];
+        for (let i = 0; i < strings.length - 1; i++) {
+            this.parts[i] = this._createPart();
+        }
+    }
+    /**
+     * Creates a single part. Override this to create a differnt type of part.
+     */
+    _createPart() {
+        return new AttributePart(this);
+    }
+    _getValue() {
+        const strings = this.strings;
+        const l = strings.length - 1;
+        const parts = this.parts;
+        // If we're assigning an attribute via syntax like:
+        //    attr="${foo}"  or  attr=${foo}
+        // but not
+        //    attr="${foo} ${bar}" or attr="${foo} baz"
+        // then we don't want to coerce the attribute value into one long
+        // string. Instead we want to just return the value itself directly,
+        // so that sanitizeDOMValue can get the actual value rather than
+        // String(value)
+        // The exception is if v is an array, in which case we do want to smash
+        // it together into a string without calling String() on the array.
+        //
+        // This also allows trusted values (when using TrustedTypes) being
+        // assigned to DOM sinks without being stringified in the process.
+        if (l === 1 && strings[0] === '' && strings[1] === '') {
+            const v = parts[0].value;
+            if (typeof v === 'symbol') {
+                return String(v);
+            }
+            if (typeof v === 'string' || !isIterable(v)) {
+                return v;
+            }
+        }
+        let text = '';
+        for (let i = 0; i < l; i++) {
+            text += strings[i];
+            const part = parts[i];
+            if (part !== undefined) {
+                const v = part.value;
+                if (isPrimitive(v) || !isIterable(v)) {
+                    text += typeof v === 'string' ? v : String(v);
+                }
+                else {
+                    for (const t of v) {
+                        text += typeof t === 'string' ? t : String(t);
+                    }
+                }
+            }
+        }
+        text += strings[l];
+        return text;
+    }
+    commit() {
+        if (this.dirty) {
+            this.dirty = false;
+            this.element.setAttribute(this.name, this._getValue());
+        }
+    }
+}
+/**
+ * A Part that controls all or part of an attribute value.
+ */
+class AttributePart {
+    constructor(committer) {
+        this.value = undefined;
+        this.committer = committer;
+    }
+    setValue(value) {
+        if (value !== noChange && (!isPrimitive(value) || value !== this.value)) {
+            this.value = value;
+            // If the value is a not a directive, dirty the committer so that it'll
+            // call setAttribute. If the value is a directive, it'll dirty the
+            // committer if it calls setValue().
+            if (!isDirective(value)) {
+                this.committer.dirty = true;
+            }
+        }
+    }
+    commit() {
+        while (isDirective(this.value)) {
+            const directive = this.value;
+            this.value = noChange;
+            directive(this);
+        }
+        if (this.value === noChange) {
+            return;
+        }
+        this.committer.commit();
+    }
+}
+/**
+ * A Part that controls a location within a Node tree. Like a Range, NodePart
+ * has start and end locations and can set and update the Nodes between those
+ * locations.
+ *
+ * NodeParts support several value types: primitives, Nodes, TemplateResults,
+ * as well as arrays and iterables of those types.
+ */
+class NodePart {
+    constructor(options) {
+        this.value = undefined;
+        this.__pendingValue = undefined;
+        this.options = options;
+    }
+    /**
+     * Appends this part into a container.
+     *
+     * This part must be empty, as its contents are not automatically moved.
+     */
+    appendInto(container) {
+        this.startNode = container.appendChild(createMarker());
+        this.endNode = container.appendChild(createMarker());
+    }
+    /**
+     * Inserts this part after the `ref` node (between `ref` and `ref`'s next
+     * sibling). Both `ref` and its next sibling must be static, unchanging nodes
+     * such as those that appear in a literal section of a template.
+     *
+     * This part must be empty, as its contents are not automatically moved.
+     */
+    insertAfterNode(ref) {
+        this.startNode = ref;
+        this.endNode = ref.nextSibling;
+    }
+    /**
+     * Appends this part into a parent part.
+     *
+     * This part must be empty, as its contents are not automatically moved.
+     */
+    appendIntoPart(part) {
+        part.__insert(this.startNode = createMarker());
+        part.__insert(this.endNode = createMarker());
+    }
+    /**
+     * Inserts this part after the `ref` part.
+     *
+     * This part must be empty, as its contents are not automatically moved.
+     */
+    insertAfterPart(ref) {
+        ref.__insert(this.startNode = createMarker());
+        this.endNode = ref.endNode;
+        ref.endNode = this.startNode;
+    }
+    setValue(value) {
+        this.__pendingValue = value;
+    }
+    commit() {
+        if (this.startNode.parentNode === null) {
+            return;
+        }
+        while (isDirective(this.__pendingValue)) {
+            const directive = this.__pendingValue;
+            this.__pendingValue = noChange;
+            directive(this);
+        }
+        const value = this.__pendingValue;
+        if (value === noChange) {
+            return;
+        }
+        if (isPrimitive(value)) {
+            if (value !== this.value) {
+                this.__commitText(value);
+            }
+        }
+        else if (value instanceof TemplateResult) {
+            this.__commitTemplateResult(value);
+        }
+        else if (value instanceof Node) {
+            this.__commitNode(value);
+        }
+        else if (isIterable(value)) {
+            this.__commitIterable(value);
+        }
+        else if (value === nothing) {
+            this.value = nothing;
+            this.clear();
+        }
+        else {
+            // Fallback, will render the string representation
+            this.__commitText(value);
+        }
+    }
+    __insert(node) {
+        this.endNode.parentNode.insertBefore(node, this.endNode);
+    }
+    __commitNode(value) {
+        if (this.value === value) {
+            return;
+        }
+        this.clear();
+        this.__insert(value);
+        this.value = value;
+    }
+    __commitText(value) {
+        const node = this.startNode.nextSibling;
+        value = value == null ? '' : value;
+        // If `value` isn't already a string, we explicitly convert it here in case
+        // it can't be implicitly converted - i.e. it's a symbol.
+        const valueAsString = typeof value === 'string' ? value : String(value);
+        if (node === this.endNode.previousSibling &&
+            node.nodeType === 3 /* Node.TEXT_NODE */) {
+            // If we only have a single text node between the markers, we can just
+            // set its value, rather than replacing it.
+            // TODO(justinfagnani): Can we just check if this.value is primitive?
+            node.data = valueAsString;
+        }
+        else {
+            this.__commitNode(document.createTextNode(valueAsString));
+        }
+        this.value = value;
+    }
+    __commitTemplateResult(value) {
+        const template = this.options.templateFactory(value);
+        if (this.value instanceof TemplateInstance &&
+            this.value.template === template) {
+            this.value.update(value.values);
+        }
+        else {
+            // Make sure we propagate the template processor from the TemplateResult
+            // so that we use its syntax extension, etc. The template factory comes
+            // from the render function options so that it can control template
+            // caching and preprocessing.
+            const instance = new TemplateInstance(template, value.processor, this.options);
+            const fragment = instance._clone();
+            instance.update(value.values);
+            this.__commitNode(fragment);
+            this.value = instance;
+        }
+    }
+    __commitIterable(value) {
+        // For an Iterable, we create a new InstancePart per item, then set its
+        // value to the item. This is a little bit of overhead for every item in
+        // an Iterable, but it lets us recurse easily and efficiently update Arrays
+        // of TemplateResults that will be commonly returned from expressions like:
+        // array.map((i) => html`${i}`), by reusing existing TemplateInstances.
+        // If _value is an array, then the previous render was of an
+        // iterable and _value will contain the NodeParts from the previous
+        // render. If _value is not an array, clear this part and make a new
+        // array for NodeParts.
+        if (!Array.isArray(this.value)) {
+            this.value = [];
+            this.clear();
+        }
+        // Lets us keep track of how many items we stamped so we can clear leftover
+        // items from a previous render
+        const itemParts = this.value;
+        let partIndex = 0;
+        let itemPart;
+        for (const item of value) {
+            // Try to reuse an existing part
+            itemPart = itemParts[partIndex];
+            // If no existing part, create a new one
+            if (itemPart === undefined) {
+                itemPart = new NodePart(this.options);
+                itemParts.push(itemPart);
+                if (partIndex === 0) {
+                    itemPart.appendIntoPart(this);
+                }
+                else {
+                    itemPart.insertAfterPart(itemParts[partIndex - 1]);
+                }
+            }
+            itemPart.setValue(item);
+            itemPart.commit();
+            partIndex++;
+        }
+        if (partIndex < itemParts.length) {
+            // Truncate the parts array so _value reflects the current state
+            itemParts.length = partIndex;
+            this.clear(itemPart && itemPart.endNode);
+        }
+    }
+    clear(startNode = this.startNode) {
+        removeNodes(this.startNode.parentNode, startNode.nextSibling, this.endNode);
+    }
+}
+/**
+ * Implements a boolean attribute, roughly as defined in the HTML
+ * specification.
+ *
+ * If the value is truthy, then the attribute is present with a value of
+ * ''. If the value is falsey, the attribute is removed.
+ */
+class BooleanAttributePart {
+    constructor(element, name, strings) {
+        this.value = undefined;
+        this.__pendingValue = undefined;
+        if (strings.length !== 2 || strings[0] !== '' || strings[1] !== '') {
+            throw new Error('Boolean attributes can only contain a single expression');
+        }
+        this.element = element;
+        this.name = name;
+        this.strings = strings;
+    }
+    setValue(value) {
+        this.__pendingValue = value;
+    }
+    commit() {
+        while (isDirective(this.__pendingValue)) {
+            const directive = this.__pendingValue;
+            this.__pendingValue = noChange;
+            directive(this);
+        }
+        if (this.__pendingValue === noChange) {
+            return;
+        }
+        const value = !!this.__pendingValue;
+        if (this.value !== value) {
+            if (value) {
+                this.element.setAttribute(this.name, '');
+            }
+            else {
+                this.element.removeAttribute(this.name);
+            }
+            this.value = value;
+        }
+        this.__pendingValue = noChange;
+    }
+}
+/**
+ * Sets attribute values for PropertyParts, so that the value is only set once
+ * even if there are multiple parts for a property.
+ *
+ * If an expression controls the whole property value, then the value is simply
+ * assigned to the property under control. If there are string literals or
+ * multiple expressions, then the strings are expressions are interpolated into
+ * a string first.
+ */
+class PropertyCommitter extends AttributeCommitter {
+    constructor(element, name, strings) {
+        super(element, name, strings);
+        this.single =
+            (strings.length === 2 && strings[0] === '' && strings[1] === '');
+    }
+    _createPart() {
+        return new PropertyPart(this);
+    }
+    _getValue() {
+        if (this.single) {
+            return this.parts[0].value;
+        }
+        return super._getValue();
+    }
+    commit() {
+        if (this.dirty) {
+            this.dirty = false;
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            this.element[this.name] = this._getValue();
+        }
+    }
+}
+class PropertyPart extends AttributePart {
+}
+// Detect event listener options support. If the `capture` property is read
+// from the options object, then options are supported. If not, then the third
+// argument to add/removeEventListener is interpreted as the boolean capture
+// value so we should only pass the `capture` property.
+let eventOptionsSupported = false;
+// Wrap into an IIFE because MS Edge <= v41 does not support having try/catch
+// blocks right into the body of a module
+(() => {
+    try {
+        const options = {
+            get capture() {
+                eventOptionsSupported = true;
+                return false;
+            }
+        };
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        window.addEventListener('test', options, options);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        window.removeEventListener('test', options, options);
+    }
+    catch (_e) {
+        // event options not supported
+    }
+})();
+class EventPart {
+    constructor(element, eventName, eventContext) {
+        this.value = undefined;
+        this.__pendingValue = undefined;
+        this.element = element;
+        this.eventName = eventName;
+        this.eventContext = eventContext;
+        this.__boundHandleEvent = (e) => this.handleEvent(e);
+    }
+    setValue(value) {
+        this.__pendingValue = value;
+    }
+    commit() {
+        while (isDirective(this.__pendingValue)) {
+            const directive = this.__pendingValue;
+            this.__pendingValue = noChange;
+            directive(this);
+        }
+        if (this.__pendingValue === noChange) {
+            return;
+        }
+        const newListener = this.__pendingValue;
+        const oldListener = this.value;
+        const shouldRemoveListener = newListener == null ||
+            oldListener != null &&
+                (newListener.capture !== oldListener.capture ||
+                    newListener.once !== oldListener.once ||
+                    newListener.passive !== oldListener.passive);
+        const shouldAddListener = newListener != null && (oldListener == null || shouldRemoveListener);
+        if (shouldRemoveListener) {
+            this.element.removeEventListener(this.eventName, this.__boundHandleEvent, this.__options);
+        }
+        if (shouldAddListener) {
+            this.__options = getOptions(newListener);
+            this.element.addEventListener(this.eventName, this.__boundHandleEvent, this.__options);
+        }
+        this.value = newListener;
+        this.__pendingValue = noChange;
+    }
+    handleEvent(event) {
+        if (typeof this.value === 'function') {
+            this.value.call(this.eventContext || this.element, event);
+        }
+        else {
+            this.value.handleEvent(event);
+        }
+    }
+}
+// We copy options because of the inconsistent behavior of browsers when reading
+// the third argument of add/removeEventListener. IE11 doesn't support options
+// at all. Chrome 41 only reads `capture` if the argument is an object.
+const getOptions = (o) => o &&
+    (eventOptionsSupported ?
+        { capture: o.capture, passive: o.passive, once: o.once } :
+        o.capture);
+
+/**
+ * @license
+ * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
+ * This code may only be used under the BSD style license found at
+ * http://polymer.github.io/LICENSE.txt
+ * The complete set of authors may be found at
+ * http://polymer.github.io/AUTHORS.txt
+ * The complete set of contributors may be found at
+ * http://polymer.github.io/CONTRIBUTORS.txt
+ * Code distributed by Google as part of the polymer project is also
+ * subject to an additional IP rights grant found at
+ * http://polymer.github.io/PATENTS.txt
+ */
+/**
+ * The default TemplateFactory which caches Templates keyed on
+ * result.type and result.strings.
+ */
+function templateFactory(result) {
+    let templateCache = templateCaches.get(result.type);
+    if (templateCache === undefined) {
+        templateCache = {
+            stringsArray: new WeakMap(),
+            keyString: new Map()
+        };
+        templateCaches.set(result.type, templateCache);
+    }
+    let template = templateCache.stringsArray.get(result.strings);
+    if (template !== undefined) {
+        return template;
+    }
+    // If the TemplateStringsArray is new, generate a key from the strings
+    // This key is shared between all templates with identical content
+    const key = result.strings.join(marker);
+    // Check if we already have a Template for this key
+    template = templateCache.keyString.get(key);
+    if (template === undefined) {
+        // If we have not seen this key before, create a new Template
+        template = new Template(result, result.getTemplateElement());
+        // Cache the Template for this key
+        templateCache.keyString.set(key, template);
+    }
+    // Cache all future queries for this TemplateStringsArray
+    templateCache.stringsArray.set(result.strings, template);
+    return template;
+}
+const templateCaches = new Map();
+
+/**
+ * @license
+ * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
+ * This code may only be used under the BSD style license found at
+ * http://polymer.github.io/LICENSE.txt
+ * The complete set of authors may be found at
+ * http://polymer.github.io/AUTHORS.txt
+ * The complete set of contributors may be found at
+ * http://polymer.github.io/CONTRIBUTORS.txt
+ * Code distributed by Google as part of the polymer project is also
+ * subject to an additional IP rights grant found at
+ * http://polymer.github.io/PATENTS.txt
+ */
+const parts = new WeakMap();
+/**
+ * Renders a template result or other value to a container.
+ *
+ * To update a container with new values, reevaluate the template literal and
+ * call `render` with the new result.
+ *
+ * @param result Any value renderable by NodePart - typically a TemplateResult
+ *     created by evaluating a template tag like `html` or `svg`.
+ * @param container A DOM parent to render to. The entire contents are either
+ *     replaced, or efficiently updated if the same result type was previous
+ *     rendered there.
+ * @param options RenderOptions for the entire render tree rendered to this
+ *     container. Render options must *not* change between renders to the same
+ *     container, as those changes will not effect previously rendered DOM.
+ */
+const render = (result, container, options) => {
+    let part = parts.get(container);
+    if (part === undefined) {
+        removeNodes(container, container.firstChild);
+        parts.set(container, part = new NodePart(Object.assign({ templateFactory }, options)));
+        part.appendInto(container);
+    }
+    part.setValue(result);
+    part.commit();
+};
+
+/**
+ * @license
+ * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
+ * This code may only be used under the BSD style license found at
+ * http://polymer.github.io/LICENSE.txt
+ * The complete set of authors may be found at
+ * http://polymer.github.io/AUTHORS.txt
+ * The complete set of contributors may be found at
+ * http://polymer.github.io/CONTRIBUTORS.txt
+ * Code distributed by Google as part of the polymer project is also
+ * subject to an additional IP rights grant found at
+ * http://polymer.github.io/PATENTS.txt
+ */
+/**
+ * Creates Parts when a template is instantiated.
+ */
+class DefaultTemplateProcessor {
+    /**
+     * Create parts for an attribute-position binding, given the event, attribute
+     * name, and string literals.
+     *
+     * @param element The element containing the binding
+     * @param name  The attribute name
+     * @param strings The string literals. There are always at least two strings,
+     *   event for fully-controlled bindings with a single expression.
+     */
+    handleAttributeExpressions(element, name, strings, options) {
+        const prefix = name[0];
+        if (prefix === '.') {
+            const committer = new PropertyCommitter(element, name.slice(1), strings);
+            return committer.parts;
+        }
+        if (prefix === '@') {
+            return [new EventPart(element, name.slice(1), options.eventContext)];
+        }
+        if (prefix === '?') {
+            return [new BooleanAttributePart(element, name.slice(1), strings)];
+        }
+        const committer = new AttributeCommitter(element, name, strings);
+        return committer.parts;
+    }
+    /**
+     * Create parts for a text-position binding.
+     * @param templateFactory
+     */
+    handleTextExpression(options) {
+        return new NodePart(options);
+    }
+}
+const defaultTemplateProcessor = new DefaultTemplateProcessor();
+
+/**
+ * @license
+ * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
+ * This code may only be used under the BSD style license found at
+ * http://polymer.github.io/LICENSE.txt
+ * The complete set of authors may be found at
+ * http://polymer.github.io/AUTHORS.txt
+ * The complete set of contributors may be found at
+ * http://polymer.github.io/CONTRIBUTORS.txt
+ * Code distributed by Google as part of the polymer project is also
+ * subject to an additional IP rights grant found at
+ * http://polymer.github.io/PATENTS.txt
+ */
+// IMPORTANT: do not change the property name or the assignment expression.
+// This line will be used in regexes to search for lit-html usage.
+// TODO(justinfagnani): inject version number at build time
+if (typeof window !== 'undefined') {
+    (window['litHtmlVersions'] || (window['litHtmlVersions'] = [])).push('1.3.0');
+}
+/**
+ * Interprets a template literal as an HTML template that can efficiently
+ * render to and update a container.
+ */
+const html = (strings, ...values) => new TemplateResult(strings, values, 'html', defaultTemplateProcessor);
+
+/**
+ * @license
+ * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
+ * This code may only be used under the BSD style license found at
+ * http://polymer.github.io/LICENSE.txt
+ * The complete set of authors may be found at
+ * http://polymer.github.io/AUTHORS.txt
+ * The complete set of contributors may be found at
+ * http://polymer.github.io/CONTRIBUTORS.txt
+ * Code distributed by Google as part of the polymer project is also
+ * subject to an additional IP rights grant found at
+ * http://polymer.github.io/PATENTS.txt
+ */
+// Get a key to lookup in `templateCaches`.
+const getTemplateCacheKey = (type, scopeName) => `${type}--${scopeName}`;
+let compatibleShadyCSSVersion = true;
+if (typeof window.ShadyCSS === 'undefined') {
+    compatibleShadyCSSVersion = false;
+}
+else if (typeof window.ShadyCSS.prepareTemplateDom === 'undefined') {
+    console.warn(`Incompatible ShadyCSS version detected. ` +
+        `Please update to at least @webcomponents/webcomponentsjs@2.0.2 and ` +
+        `@webcomponents/shadycss@1.3.1.`);
+    compatibleShadyCSSVersion = false;
+}
+/**
+ * Template factory which scopes template DOM using ShadyCSS.
+ * @param scopeName {string}
+ */
+const shadyTemplateFactory = (scopeName) => (result) => {
+    const cacheKey = getTemplateCacheKey(result.type, scopeName);
+    let templateCache = templateCaches.get(cacheKey);
+    if (templateCache === undefined) {
+        templateCache = {
+            stringsArray: new WeakMap(),
+            keyString: new Map()
+        };
+        templateCaches.set(cacheKey, templateCache);
+    }
+    let template = templateCache.stringsArray.get(result.strings);
+    if (template !== undefined) {
+        return template;
+    }
+    const key = result.strings.join(marker);
+    template = templateCache.keyString.get(key);
+    if (template === undefined) {
+        const element = result.getTemplateElement();
+        if (compatibleShadyCSSVersion) {
+            window.ShadyCSS.prepareTemplateDom(element, scopeName);
+        }
+        template = new Template(result, element);
+        templateCache.keyString.set(key, template);
+    }
+    templateCache.stringsArray.set(result.strings, template);
+    return template;
+};
+const TEMPLATE_TYPES = ['html', 'svg'];
+/**
+ * Removes all style elements from Templates for the given scopeName.
+ */
+const removeStylesFromLitTemplates = (scopeName) => {
+    TEMPLATE_TYPES.forEach((type) => {
+        const templates = templateCaches.get(getTemplateCacheKey(type, scopeName));
+        if (templates !== undefined) {
+            templates.keyString.forEach((template) => {
+                const { element: { content } } = template;
+                // IE 11 doesn't support the iterable param Set constructor
+                const styles = new Set();
+                Array.from(content.querySelectorAll('style')).forEach((s) => {
+                    styles.add(s);
+                });
+                removeNodesFromTemplate(template, styles);
+            });
+        }
+    });
+};
+const shadyRenderSet = new Set();
+/**
+ * For the given scope name, ensures that ShadyCSS style scoping is performed.
+ * This is done just once per scope name so the fragment and template cannot
+ * be modified.
+ * (1) extracts styles from the rendered fragment and hands them to ShadyCSS
+ * to be scoped and appended to the document
+ * (2) removes style elements from all lit-html Templates for this scope name.
+ *
+ * Note, <style> elements can only be placed into templates for the
+ * initial rendering of the scope. If <style> elements are included in templates
+ * dynamically rendered to the scope (after the first scope render), they will
+ * not be scoped and the <style> will be left in the template and rendered
+ * output.
+ */
+const prepareTemplateStyles = (scopeName, renderedDOM, template) => {
+    shadyRenderSet.add(scopeName);
+    // If `renderedDOM` is stamped from a Template, then we need to edit that
+    // Template's underlying template element. Otherwise, we create one here
+    // to give to ShadyCSS, which still requires one while scoping.
+    const templateElement = !!template ? template.element : document.createElement('template');
+    // Move styles out of rendered DOM and store.
+    const styles = renderedDOM.querySelectorAll('style');
+    const { length } = styles;
+    // If there are no styles, skip unnecessary work
+    if (length === 0) {
+        // Ensure prepareTemplateStyles is called to support adding
+        // styles via `prepareAdoptedCssText` since that requires that
+        // `prepareTemplateStyles` is called.
+        //
+        // ShadyCSS will only update styles containing @apply in the template
+        // given to `prepareTemplateStyles`. If no lit Template was given,
+        // ShadyCSS will not be able to update uses of @apply in any relevant
+        // template. However, this is not a problem because we only create the
+        // template for the purpose of supporting `prepareAdoptedCssText`,
+        // which doesn't support @apply at all.
+        window.ShadyCSS.prepareTemplateStyles(templateElement, scopeName);
+        return;
+    }
+    const condensedStyle = document.createElement('style');
+    // Collect styles into a single style. This helps us make sure ShadyCSS
+    // manipulations will not prevent us from being able to fix up template
+    // part indices.
+    // NOTE: collecting styles is inefficient for browsers but ShadyCSS
+    // currently does this anyway. When it does not, this should be changed.
+    for (let i = 0; i < length; i++) {
+        const style = styles[i];
+        style.parentNode.removeChild(style);
+        condensedStyle.textContent += style.textContent;
+    }
+    // Remove styles from nested templates in this scope.
+    removeStylesFromLitTemplates(scopeName);
+    // And then put the condensed style into the "root" template passed in as
+    // `template`.
+    const content = templateElement.content;
+    if (!!template) {
+        insertNodeIntoTemplate(template, condensedStyle, content.firstChild);
+    }
+    else {
+        content.insertBefore(condensedStyle, content.firstChild);
+    }
+    // Note, it's important that ShadyCSS gets the template that `lit-html`
+    // will actually render so that it can update the style inside when
+    // needed (e.g. @apply native Shadow DOM case).
+    window.ShadyCSS.prepareTemplateStyles(templateElement, scopeName);
+    const style = content.querySelector('style');
+    if (window.ShadyCSS.nativeShadow && style !== null) {
+        // When in native Shadow DOM, ensure the style created by ShadyCSS is
+        // included in initially rendered output (`renderedDOM`).
+        renderedDOM.insertBefore(style.cloneNode(true), renderedDOM.firstChild);
+    }
+    else if (!!template) {
+        // When no style is left in the template, parts will be broken as a
+        // result. To fix this, we put back the style node ShadyCSS removed
+        // and then tell lit to remove that node from the template.
+        // There can be no style in the template in 2 cases (1) when Shady DOM
+        // is in use, ShadyCSS removes all styles, (2) when native Shadow DOM
+        // is in use ShadyCSS removes the style if it contains no content.
+        // NOTE, ShadyCSS creates its own style so we can safely add/remove
+        // `condensedStyle` here.
+        content.insertBefore(condensedStyle, content.firstChild);
+        const removes = new Set();
+        removes.add(condensedStyle);
+        removeNodesFromTemplate(template, removes);
+    }
+};
+/**
+ * Extension to the standard `render` method which supports rendering
+ * to ShadowRoots when the ShadyDOM (https://github.com/webcomponents/shadydom)
+ * and ShadyCSS (https://github.com/webcomponents/shadycss) polyfills are used
+ * or when the webcomponentsjs
+ * (https://github.com/webcomponents/webcomponentsjs) polyfill is used.
+ *
+ * Adds a `scopeName` option which is used to scope element DOM and stylesheets
+ * when native ShadowDOM is unavailable. The `scopeName` will be added to
+ * the class attribute of all rendered DOM. In addition, any style elements will
+ * be automatically re-written with this `scopeName` selector and moved out
+ * of the rendered DOM and into the document `<head>`.
+ *
+ * It is common to use this render method in conjunction with a custom element
+ * which renders a shadowRoot. When this is done, typically the element's
+ * `localName` should be used as the `scopeName`.
+ *
+ * In addition to DOM scoping, ShadyCSS also supports a basic shim for css
+ * custom properties (needed only on older browsers like IE11) and a shim for
+ * a deprecated feature called `@apply` that supports applying a set of css
+ * custom properties to a given location.
+ *
+ * Usage considerations:
+ *
+ * * Part values in `<style>` elements are only applied the first time a given
+ * `scopeName` renders. Subsequent changes to parts in style elements will have
+ * no effect. Because of this, parts in style elements should only be used for
+ * values that will never change, for example parts that set scope-wide theme
+ * values or parts which render shared style elements.
+ *
+ * * Note, due to a limitation of the ShadyDOM polyfill, rendering in a
+ * custom element's `constructor` is not supported. Instead rendering should
+ * either done asynchronously, for example at microtask timing (for example
+ * `Promise.resolve()`), or be deferred until the first time the element's
+ * `connectedCallback` runs.
+ *
+ * Usage considerations when using shimmed custom properties or `@apply`:
+ *
+ * * Whenever any dynamic changes are made which affect
+ * css custom properties, `ShadyCSS.styleElement(element)` must be called
+ * to update the element. There are two cases when this is needed:
+ * (1) the element is connected to a new parent, (2) a class is added to the
+ * element that causes it to match different custom properties.
+ * To address the first case when rendering a custom element, `styleElement`
+ * should be called in the element's `connectedCallback`.
+ *
+ * * Shimmed custom properties may only be defined either for an entire
+ * shadowRoot (for example, in a `:host` rule) or via a rule that directly
+ * matches an element with a shadowRoot. In other words, instead of flowing from
+ * parent to child as do native css custom properties, shimmed custom properties
+ * flow only from shadowRoots to nested shadowRoots.
+ *
+ * * When using `@apply` mixing css shorthand property names with
+ * non-shorthand names (for example `border` and `border-width`) is not
+ * supported.
+ */
+const render$1 = (result, container, options) => {
+    if (!options || typeof options !== 'object' || !options.scopeName) {
+        throw new Error('The `scopeName` option is required.');
+    }
+    const scopeName = options.scopeName;
+    const hasRendered = parts.has(container);
+    const needsScoping = compatibleShadyCSSVersion &&
+        container.nodeType === 11 /* Node.DOCUMENT_FRAGMENT_NODE */ &&
+        !!container.host;
+    // Handle first render to a scope specially...
+    const firstScopeRender = needsScoping && !shadyRenderSet.has(scopeName);
+    // On first scope render, render into a fragment; this cannot be a single
+    // fragment that is reused since nested renders can occur synchronously.
+    const renderContainer = firstScopeRender ? document.createDocumentFragment() : container;
+    render(result, renderContainer, Object.assign({ templateFactory: shadyTemplateFactory(scopeName) }, options));
+    // When performing first scope render,
+    // (1) We've rendered into a fragment so that there's a chance to
+    // `prepareTemplateStyles` before sub-elements hit the DOM
+    // (which might cause them to render based on a common pattern of
+    // rendering in a custom element's `connectedCallback`);
+    // (2) Scope the template with ShadyCSS one time only for this scope.
+    // (3) Render the fragment into the container and make sure the
+    // container knows its `part` is the one we just rendered. This ensures
+    // DOM will be re-used on subsequent renders.
+    if (firstScopeRender) {
+        const part = parts.get(renderContainer);
+        parts.delete(renderContainer);
+        // ShadyCSS might have style sheets (e.g. from `prepareAdoptedCssText`)
+        // that should apply to `renderContainer` even if the rendered value is
+        // not a TemplateInstance. However, it will only insert scoped styles
+        // into the document if `prepareTemplateStyles` has already been called
+        // for the given scope name.
+        const template = part.value instanceof TemplateInstance ?
+            part.value.template :
+            undefined;
+        prepareTemplateStyles(scopeName, renderContainer, template);
+        removeNodes(container, container.firstChild);
+        container.appendChild(renderContainer);
+        parts.set(container, part);
+    }
+    // After elements have hit the DOM, update styling if this is the
+    // initial render to this container.
+    // This is needed whenever dynamic changes are made so it would be
+    // safest to do every render; however, this would regress performance
+    // so we leave it up to the user to call `ShadyCSS.styleElement`
+    // for dynamic changes.
+    if (!hasRendered && needsScoping) {
+        window.ShadyCSS.styleElement(container.host);
+    }
+};
+
+/**
+ * @license
+ * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
+ * This code may only be used under the BSD style license found at
+ * http://polymer.github.io/LICENSE.txt
+ * The complete set of authors may be found at
+ * http://polymer.github.io/AUTHORS.txt
+ * The complete set of contributors may be found at
+ * http://polymer.github.io/CONTRIBUTORS.txt
+ * Code distributed by Google as part of the polymer project is also
+ * subject to an additional IP rights grant found at
+ * http://polymer.github.io/PATENTS.txt
+ */
+var _a;
+/**
+ * Use this module if you want to create your own base class extending
+ * [[UpdatingElement]].
+ * @packageDocumentation
+ */
+/*
+ * When using Closure Compiler, JSCompiler_renameProperty(property, object) is
+ * replaced at compile time by the munged name for object[property]. We cannot
+ * alias this function, so we have to use a small shim that has the same
+ * behavior when not compiling.
+ */
+window.JSCompiler_renameProperty =
+    (prop, _obj) => prop;
+const defaultConverter = {
+    toAttribute(value, type) {
+        switch (type) {
+            case Boolean:
+                return value ? '' : null;
+            case Object:
+            case Array:
+                // if the value is `null` or `undefined` pass this through
+                // to allow removing/no change behavior.
+                return value == null ? value : JSON.stringify(value);
+        }
+        return value;
+    },
+    fromAttribute(value, type) {
+        switch (type) {
+            case Boolean:
+                return value !== null;
+            case Number:
+                return value === null ? null : Number(value);
+            case Object:
+            case Array:
+                return JSON.parse(value);
+        }
+        return value;
+    }
+};
+/**
+ * Change function that returns true if `value` is different from `oldValue`.
+ * This method is used as the default for a property's `hasChanged` function.
+ */
+const notEqual = (value, old) => {
+    // This ensures (old==NaN, value==NaN) always returns false
+    return old !== value && (old === old || value === value);
+};
+const defaultPropertyDeclaration = {
+    attribute: true,
+    type: String,
+    converter: defaultConverter,
+    reflect: false,
+    hasChanged: notEqual
+};
+const STATE_HAS_UPDATED = 1;
+const STATE_UPDATE_REQUESTED = 1 << 2;
+const STATE_IS_REFLECTING_TO_ATTRIBUTE = 1 << 3;
+const STATE_IS_REFLECTING_TO_PROPERTY = 1 << 4;
+/**
+ * The Closure JS Compiler doesn't currently have good support for static
+ * property semantics where "this" is dynamic (e.g.
+ * https://github.com/google/closure-compiler/issues/3177 and others) so we use
+ * this hack to bypass any rewriting by the compiler.
+ */
+const finalized = 'finalized';
+/**
+ * Base element class which manages element properties and attributes. When
+ * properties change, the `update` method is asynchronously called. This method
+ * should be supplied by subclassers to render updates as desired.
+ * @noInheritDoc
+ */
+class UpdatingElement extends HTMLElement {
+    constructor() {
+        super();
+        this.initialize();
+    }
+    /**
+     * Returns a list of attributes corresponding to the registered properties.
+     * @nocollapse
+     */
+    static get observedAttributes() {
+        // note: piggy backing on this to ensure we're finalized.
+        this.finalize();
+        const attributes = [];
+        // Use forEach so this works even if for/of loops are compiled to for loops
+        // expecting arrays
+        this._classProperties.forEach((v, p) => {
+            const attr = this._attributeNameForProperty(p, v);
+            if (attr !== undefined) {
+                this._attributeToPropertyMap.set(attr, p);
+                attributes.push(attr);
+            }
+        });
+        return attributes;
+    }
+    /**
+     * Ensures the private `_classProperties` property metadata is created.
+     * In addition to `finalize` this is also called in `createProperty` to
+     * ensure the `@property` decorator can add property metadata.
+     */
+    /** @nocollapse */
+    static _ensureClassProperties() {
+        // ensure private storage for property declarations.
+        if (!this.hasOwnProperty(JSCompiler_renameProperty('_classProperties', this))) {
+            this._classProperties = new Map();
+            // NOTE: Workaround IE11 not supporting Map constructor argument.
+            const superProperties = Object.getPrototypeOf(this)._classProperties;
+            if (superProperties !== undefined) {
+                superProperties.forEach((v, k) => this._classProperties.set(k, v));
+            }
+        }
+    }
+    /**
+     * Creates a property accessor on the element prototype if one does not exist
+     * and stores a PropertyDeclaration for the property with the given options.
+     * The property setter calls the property's `hasChanged` property option
+     * or uses a strict identity check to determine whether or not to request
+     * an update.
+     *
+     * This method may be overridden to customize properties; however,
+     * when doing so, it's important to call `super.createProperty` to ensure
+     * the property is setup correctly. This method calls
+     * `getPropertyDescriptor` internally to get a descriptor to install.
+     * To customize what properties do when they are get or set, override
+     * `getPropertyDescriptor`. To customize the options for a property,
+     * implement `createProperty` like this:
+     *
+     * static createProperty(name, options) {
+     *   options = Object.assign(options, {myOption: true});
+     *   super.createProperty(name, options);
+     * }
+     *
+     * @nocollapse
+     */
+    static createProperty(name, options = defaultPropertyDeclaration) {
+        // Note, since this can be called by the `@property` decorator which
+        // is called before `finalize`, we ensure storage exists for property
+        // metadata.
+        this._ensureClassProperties();
+        this._classProperties.set(name, options);
+        // Do not generate an accessor if the prototype already has one, since
+        // it would be lost otherwise and that would never be the user's intention;
+        // Instead, we expect users to call `requestUpdate` themselves from
+        // user-defined accessors. Note that if the super has an accessor we will
+        // still overwrite it
+        if (options.noAccessor || this.prototype.hasOwnProperty(name)) {
+            return;
+        }
+        const key = typeof name === 'symbol' ? Symbol() : `__${name}`;
+        const descriptor = this.getPropertyDescriptor(name, key, options);
+        if (descriptor !== undefined) {
+            Object.defineProperty(this.prototype, name, descriptor);
+        }
+    }
+    /**
+     * Returns a property descriptor to be defined on the given named property.
+     * If no descriptor is returned, the property will not become an accessor.
+     * For example,
+     *
+     *   class MyElement extends LitElement {
+     *     static getPropertyDescriptor(name, key, options) {
+     *       const defaultDescriptor =
+     *           super.getPropertyDescriptor(name, key, options);
+     *       const setter = defaultDescriptor.set;
+     *       return {
+     *         get: defaultDescriptor.get,
+     *         set(value) {
+     *           setter.call(this, value);
+     *           // custom action.
+     *         },
+     *         configurable: true,
+     *         enumerable: true
+     *       }
+     *     }
+     *   }
+     *
+     * @nocollapse
+     */
+    static getPropertyDescriptor(name, key, options) {
+        return {
+            // tslint:disable-next-line:no-any no symbol in index
+            get() {
+                return this[key];
+            },
+            set(value) {
+                const oldValue = this[name];
+                this[key] = value;
+                this
+                    .requestUpdateInternal(name, oldValue, options);
+            },
+            configurable: true,
+            enumerable: true
+        };
+    }
+    /**
+     * Returns the property options associated with the given property.
+     * These options are defined with a PropertyDeclaration via the `properties`
+     * object or the `@property` decorator and are registered in
+     * `createProperty(...)`.
+     *
+     * Note, this method should be considered "final" and not overridden. To
+     * customize the options for a given property, override `createProperty`.
+     *
+     * @nocollapse
+     * @final
+     */
+    static getPropertyOptions(name) {
+        return this._classProperties && this._classProperties.get(name) ||
+            defaultPropertyDeclaration;
+    }
+    /**
+     * Creates property accessors for registered properties and ensures
+     * any superclasses are also finalized.
+     * @nocollapse
+     */
+    static finalize() {
+        // finalize any superclasses
+        const superCtor = Object.getPrototypeOf(this);
+        if (!superCtor.hasOwnProperty(finalized)) {
+            superCtor.finalize();
+        }
+        this[finalized] = true;
+        this._ensureClassProperties();
+        // initialize Map populated in observedAttributes
+        this._attributeToPropertyMap = new Map();
+        // make any properties
+        // Note, only process "own" properties since this element will inherit
+        // any properties defined on the superClass, and finalization ensures
+        // the entire prototype chain is finalized.
+        if (this.hasOwnProperty(JSCompiler_renameProperty('properties', this))) {
+            const props = this.properties;
+            // support symbols in properties (IE11 does not support this)
+            const propKeys = [
+                ...Object.getOwnPropertyNames(props),
+                ...(typeof Object.getOwnPropertySymbols === 'function') ?
+                    Object.getOwnPropertySymbols(props) :
+                    []
+            ];
+            // This for/of is ok because propKeys is an array
+            for (const p of propKeys) {
+                // note, use of `any` is due to TypeSript lack of support for symbol in
+                // index types
+                // tslint:disable-next-line:no-any no symbol in index
+                this.createProperty(p, props[p]);
+            }
+        }
+    }
+    /**
+     * Returns the property name for the given attribute `name`.
+     * @nocollapse
+     */
+    static _attributeNameForProperty(name, options) {
+        const attribute = options.attribute;
+        return attribute === false ?
+            undefined :
+            (typeof attribute === 'string' ?
+                attribute :
+                (typeof name === 'string' ? name.toLowerCase() : undefined));
+    }
+    /**
+     * Returns true if a property should request an update.
+     * Called when a property value is set and uses the `hasChanged`
+     * option for the property if present or a strict identity check.
+     * @nocollapse
+     */
+    static _valueHasChanged(value, old, hasChanged = notEqual) {
+        return hasChanged(value, old);
+    }
+    /**
+     * Returns the property value for the given attribute value.
+     * Called via the `attributeChangedCallback` and uses the property's
+     * `converter` or `converter.fromAttribute` property option.
+     * @nocollapse
+     */
+    static _propertyValueFromAttribute(value, options) {
+        const type = options.type;
+        const converter = options.converter || defaultConverter;
+        const fromAttribute = (typeof converter === 'function' ? converter : converter.fromAttribute);
+        return fromAttribute ? fromAttribute(value, type) : value;
+    }
+    /**
+     * Returns the attribute value for the given property value. If this
+     * returns undefined, the property will *not* be reflected to an attribute.
+     * If this returns null, the attribute will be removed, otherwise the
+     * attribute will be set to the value.
+     * This uses the property's `reflect` and `type.toAttribute` property options.
+     * @nocollapse
+     */
+    static _propertyValueToAttribute(value, options) {
+        if (options.reflect === undefined) {
+            return;
+        }
+        const type = options.type;
+        const converter = options.converter;
+        const toAttribute = converter && converter.toAttribute ||
+            defaultConverter.toAttribute;
+        return toAttribute(value, type);
+    }
+    /**
+     * Performs element initialization. By default captures any pre-set values for
+     * registered properties.
+     */
+    initialize() {
+        this._updateState = 0;
+        this._updatePromise =
+            new Promise((res) => this._enableUpdatingResolver = res);
+        this._changedProperties = new Map();
+        this._saveInstanceProperties();
+        // ensures first update will be caught by an early access of
+        // `updateComplete`
+        this.requestUpdateInternal();
+    }
+    /**
+     * Fixes any properties set on the instance before upgrade time.
+     * Otherwise these would shadow the accessor and break these properties.
+     * The properties are stored in a Map which is played back after the
+     * constructor runs. Note, on very old versions of Safari (<=9) or Chrome
+     * (<=41), properties created for native platform properties like (`id` or
+     * `name`) may not have default values set in the element constructor. On
+     * these browsers native properties appear on instances and therefore their
+     * default value will overwrite any element default (e.g. if the element sets
+     * this.id = 'id' in the constructor, the 'id' will become '' since this is
+     * the native platform default).
+     */
+    _saveInstanceProperties() {
+        // Use forEach so this works even if for/of loops are compiled to for loops
+        // expecting arrays
+        this.constructor
+            ._classProperties.forEach((_v, p) => {
+            if (this.hasOwnProperty(p)) {
+                const value = this[p];
+                delete this[p];
+                if (!this._instanceProperties) {
+                    this._instanceProperties = new Map();
+                }
+                this._instanceProperties.set(p, value);
+            }
+        });
+    }
+    /**
+     * Applies previously saved instance properties.
+     */
+    _applyInstanceProperties() {
+        // Use forEach so this works even if for/of loops are compiled to for loops
+        // expecting arrays
+        // tslint:disable-next-line:no-any
+        this._instanceProperties.forEach((v, p) => this[p] = v);
+        this._instanceProperties = undefined;
+    }
+    connectedCallback() {
+        // Ensure first connection completes an update. Updates cannot complete
+        // before connection.
+        this.enableUpdating();
+    }
+    enableUpdating() {
+        if (this._enableUpdatingResolver !== undefined) {
+            this._enableUpdatingResolver();
+            this._enableUpdatingResolver = undefined;
+        }
+    }
+    /**
+     * Allows for `super.disconnectedCallback()` in extensions while
+     * reserving the possibility of making non-breaking feature additions
+     * when disconnecting at some point in the future.
+     */
+    disconnectedCallback() {
+    }
+    /**
+     * Synchronizes property values when attributes change.
+     */
+    attributeChangedCallback(name, old, value) {
+        if (old !== value) {
+            this._attributeToProperty(name, value);
+        }
+    }
+    _propertyToAttribute(name, value, options = defaultPropertyDeclaration) {
+        const ctor = this.constructor;
+        const attr = ctor._attributeNameForProperty(name, options);
+        if (attr !== undefined) {
+            const attrValue = ctor._propertyValueToAttribute(value, options);
+            // an undefined value does not change the attribute.
+            if (attrValue === undefined) {
+                return;
+            }
+            // Track if the property is being reflected to avoid
+            // setting the property again via `attributeChangedCallback`. Note:
+            // 1. this takes advantage of the fact that the callback is synchronous.
+            // 2. will behave incorrectly if multiple attributes are in the reaction
+            // stack at time of calling. However, since we process attributes
+            // in `update` this should not be possible (or an extreme corner case
+            // that we'd like to discover).
+            // mark state reflecting
+            this._updateState = this._updateState | STATE_IS_REFLECTING_TO_ATTRIBUTE;
+            if (attrValue == null) {
+                this.removeAttribute(attr);
+            }
+            else {
+                this.setAttribute(attr, attrValue);
+            }
+            // mark state not reflecting
+            this._updateState = this._updateState & ~STATE_IS_REFLECTING_TO_ATTRIBUTE;
+        }
+    }
+    _attributeToProperty(name, value) {
+        // Use tracking info to avoid deserializing attribute value if it was
+        // just set from a property setter.
+        if (this._updateState & STATE_IS_REFLECTING_TO_ATTRIBUTE) {
+            return;
+        }
+        const ctor = this.constructor;
+        // Note, hint this as an `AttributeMap` so closure clearly understands
+        // the type; it has issues with tracking types through statics
+        // tslint:disable-next-line:no-unnecessary-type-assertion
+        const propName = ctor._attributeToPropertyMap.get(name);
+        if (propName !== undefined) {
+            const options = ctor.getPropertyOptions(propName);
+            // mark state reflecting
+            this._updateState = this._updateState | STATE_IS_REFLECTING_TO_PROPERTY;
+            this[propName] =
+                // tslint:disable-next-line:no-any
+                ctor._propertyValueFromAttribute(value, options);
+            // mark state not reflecting
+            this._updateState = this._updateState & ~STATE_IS_REFLECTING_TO_PROPERTY;
+        }
+    }
+    /**
+     * This protected version of `requestUpdate` does not access or return the
+     * `updateComplete` promise. This promise can be overridden and is therefore
+     * not free to access.
+     */
+    requestUpdateInternal(name, oldValue, options) {
+        let shouldRequestUpdate = true;
+        // If we have a property key, perform property update steps.
+        if (name !== undefined) {
+            const ctor = this.constructor;
+            options = options || ctor.getPropertyOptions(name);
+            if (ctor._valueHasChanged(this[name], oldValue, options.hasChanged)) {
+                if (!this._changedProperties.has(name)) {
+                    this._changedProperties.set(name, oldValue);
+                }
+                // Add to reflecting properties set.
+                // Note, it's important that every change has a chance to add the
+                // property to `_reflectingProperties`. This ensures setting
+                // attribute + property reflects correctly.
+                if (options.reflect === true &&
+                    !(this._updateState & STATE_IS_REFLECTING_TO_PROPERTY)) {
+                    if (this._reflectingProperties === undefined) {
+                        this._reflectingProperties = new Map();
+                    }
+                    this._reflectingProperties.set(name, options);
+                }
+            }
+            else {
+                // Abort the request if the property should not be considered changed.
+                shouldRequestUpdate = false;
+            }
+        }
+        if (!this._hasRequestedUpdate && shouldRequestUpdate) {
+            this._updatePromise = this._enqueueUpdate();
+        }
+    }
+    /**
+     * Requests an update which is processed asynchronously. This should
+     * be called when an element should update based on some state not triggered
+     * by setting a property. In this case, pass no arguments. It should also be
+     * called when manually implementing a property setter. In this case, pass the
+     * property `name` and `oldValue` to ensure that any configured property
+     * options are honored. Returns the `updateComplete` Promise which is resolved
+     * when the update completes.
+     *
+     * @param name {PropertyKey} (optional) name of requesting property
+     * @param oldValue {any} (optional) old value of requesting property
+     * @returns {Promise} A Promise that is resolved when the update completes.
+     */
+    requestUpdate(name, oldValue) {
+        this.requestUpdateInternal(name, oldValue);
+        return this.updateComplete;
+    }
+    /**
+     * Sets up the element to asynchronously update.
+     */
+    async _enqueueUpdate() {
+        this._updateState = this._updateState | STATE_UPDATE_REQUESTED;
+        try {
+            // Ensure any previous update has resolved before updating.
+            // This `await` also ensures that property changes are batched.
+            await this._updatePromise;
+        }
+        catch (e) {
+            // Ignore any previous errors. We only care that the previous cycle is
+            // done. Any error should have been handled in the previous update.
+        }
+        const result = this.performUpdate();
+        // If `performUpdate` returns a Promise, we await it. This is done to
+        // enable coordinating updates with a scheduler. Note, the result is
+        // checked to avoid delaying an additional microtask unless we need to.
+        if (result != null) {
+            await result;
+        }
+        return !this._hasRequestedUpdate;
+    }
+    get _hasRequestedUpdate() {
+        return (this._updateState & STATE_UPDATE_REQUESTED);
+    }
+    get hasUpdated() {
+        return (this._updateState & STATE_HAS_UPDATED);
+    }
+    /**
+     * Performs an element update. Note, if an exception is thrown during the
+     * update, `firstUpdated` and `updated` will not be called.
+     *
+     * You can override this method to change the timing of updates. If this
+     * method is overridden, `super.performUpdate()` must be called.
+     *
+     * For instance, to schedule updates to occur just before the next frame:
+     *
+     * ```
+     * protected async performUpdate(): Promise<unknown> {
+     *   await new Promise((resolve) => requestAnimationFrame(() => resolve()));
+     *   super.performUpdate();
+     * }
+     * ```
+     */
+    performUpdate() {
+        // Abort any update if one is not pending when this is called.
+        // This can happen if `performUpdate` is called early to "flush"
+        // the update.
+        if (!this._hasRequestedUpdate) {
+            return;
+        }
+        // Mixin instance properties once, if they exist.
+        if (this._instanceProperties) {
+            this._applyInstanceProperties();
+        }
+        let shouldUpdate = false;
+        const changedProperties = this._changedProperties;
+        try {
+            shouldUpdate = this.shouldUpdate(changedProperties);
+            if (shouldUpdate) {
+                this.update(changedProperties);
+            }
+            else {
+                this._markUpdated();
+            }
+        }
+        catch (e) {
+            // Prevent `firstUpdated` and `updated` from running when there's an
+            // update exception.
+            shouldUpdate = false;
+            // Ensure element can accept additional updates after an exception.
+            this._markUpdated();
+            throw e;
+        }
+        if (shouldUpdate) {
+            if (!(this._updateState & STATE_HAS_UPDATED)) {
+                this._updateState = this._updateState | STATE_HAS_UPDATED;
+                this.firstUpdated(changedProperties);
+            }
+            this.updated(changedProperties);
+        }
+    }
+    _markUpdated() {
+        this._changedProperties = new Map();
+        this._updateState = this._updateState & ~STATE_UPDATE_REQUESTED;
+    }
+    /**
+     * Returns a Promise that resolves when the element has completed updating.
+     * The Promise value is a boolean that is `true` if the element completed the
+     * update without triggering another update. The Promise result is `false` if
+     * a property was set inside `updated()`. If the Promise is rejected, an
+     * exception was thrown during the update.
+     *
+     * To await additional asynchronous work, override the `_getUpdateComplete`
+     * method. For example, it is sometimes useful to await a rendered element
+     * before fulfilling this Promise. To do this, first await
+     * `super._getUpdateComplete()`, then any subsequent state.
+     *
+     * @returns {Promise} The Promise returns a boolean that indicates if the
+     * update resolved without triggering another update.
+     */
+    get updateComplete() {
+        return this._getUpdateComplete();
+    }
+    /**
+     * Override point for the `updateComplete` promise.
+     *
+     * It is not safe to override the `updateComplete` getter directly due to a
+     * limitation in TypeScript which means it is not possible to call a
+     * superclass getter (e.g. `super.updateComplete.then(...)`) when the target
+     * language is ES5 (https://github.com/microsoft/TypeScript/issues/338).
+     * This method should be overridden instead. For example:
+     *
+     *   class MyElement extends LitElement {
+     *     async _getUpdateComplete() {
+     *       await super._getUpdateComplete();
+     *       await this._myChild.updateComplete;
+     *     }
+     *   }
+     */
+    _getUpdateComplete() {
+        return this._updatePromise;
+    }
+    /**
+     * Controls whether or not `update` should be called when the element requests
+     * an update. By default, this method always returns `true`, but this can be
+     * customized to control when to update.
+     *
+     * @param _changedProperties Map of changed properties with old values
+     */
+    shouldUpdate(_changedProperties) {
+        return true;
+    }
+    /**
+     * Updates the element. This method reflects property values to attributes.
+     * It can be overridden to render and keep updated element DOM.
+     * Setting properties inside this method will *not* trigger
+     * another update.
+     *
+     * @param _changedProperties Map of changed properties with old values
+     */
+    update(_changedProperties) {
+        if (this._reflectingProperties !== undefined &&
+            this._reflectingProperties.size > 0) {
+            // Use forEach so this works even if for/of loops are compiled to for
+            // loops expecting arrays
+            this._reflectingProperties.forEach((v, k) => this._propertyToAttribute(k, this[k], v));
+            this._reflectingProperties = undefined;
+        }
+        this._markUpdated();
+    }
+    /**
+     * Invoked whenever the element is updated. Implement to perform
+     * post-updating tasks via DOM APIs, for example, focusing an element.
+     *
+     * Setting properties inside this method will trigger the element to update
+     * again after this update cycle completes.
+     *
+     * @param _changedProperties Map of changed properties with old values
+     */
+    updated(_changedProperties) {
+    }
+    /**
+     * Invoked when the element is first updated. Implement to perform one time
+     * work on the element after update.
+     *
+     * Setting properties inside this method will trigger the element to update
+     * again after this update cycle completes.
+     *
+     * @param _changedProperties Map of changed properties with old values
+     */
+    firstUpdated(_changedProperties) {
+    }
+}
+_a = finalized;
+/**
+ * Marks class as having finished creating properties.
+ */
+UpdatingElement[_a] = true;
+
+/**
+ * @license
+ * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
+ * This code may only be used under the BSD style license found at
+ * http://polymer.github.io/LICENSE.txt
+ * The complete set of authors may be found at
+ * http://polymer.github.io/AUTHORS.txt
+ * The complete set of contributors may be found at
+ * http://polymer.github.io/CONTRIBUTORS.txt
+ * Code distributed by Google as part of the polymer project is also
+ * subject to an additional IP rights grant found at
+ * http://polymer.github.io/PATENTS.txt
+ */
+const legacyCustomElement = (tagName, clazz) => {
+    window.customElements.define(tagName, clazz);
+    // Cast as any because TS doesn't recognize the return type as being a
+    // subtype of the decorated class when clazz is typed as
+    // `Constructor<HTMLElement>` for some reason.
+    // `Constructor<HTMLElement>` is helpful to make sure the decorator is
+    // applied to elements however.
+    // tslint:disable-next-line:no-any
+    return clazz;
+};
+const standardCustomElement = (tagName, descriptor) => {
+    const { kind, elements } = descriptor;
+    return {
+        kind,
+        elements,
+        // This callback is called once the class is otherwise fully defined
+        finisher(clazz) {
+            window.customElements.define(tagName, clazz);
+        }
+    };
+};
+/**
+ * Class decorator factory that defines the decorated class as a custom element.
+ *
+ * ```
+ * @customElement('my-element')
+ * class MyElement {
+ *   render() {
+ *     return html``;
+ *   }
+ * }
+ * ```
+ * @category Decorator
+ * @param tagName The name of the custom element to define.
+ */
+const customElement = (tagName) => (classOrDescriptor) => (typeof classOrDescriptor === 'function') ?
+    legacyCustomElement(tagName, classOrDescriptor) :
+    standardCustomElement(tagName, classOrDescriptor);
+const standardProperty = (options, element) => {
+    // When decorating an accessor, pass it through and add property metadata.
+    // Note, the `hasOwnProperty` check in `createProperty` ensures we don't
+    // stomp over the user's accessor.
+    if (element.kind === 'method' && element.descriptor &&
+        !('value' in element.descriptor)) {
+        return Object.assign(Object.assign({}, element), { finisher(clazz) {
+                clazz.createProperty(element.key, options);
+            } });
+    }
+    else {
+        // createProperty() takes care of defining the property, but we still
+        // must return some kind of descriptor, so return a descriptor for an
+        // unused prototype field. The finisher calls createProperty().
+        return {
+            kind: 'field',
+            key: Symbol(),
+            placement: 'own',
+            descriptor: {},
+            // When @babel/plugin-proposal-decorators implements initializers,
+            // do this instead of the initializer below. See:
+            // https://github.com/babel/babel/issues/9260 extras: [
+            //   {
+            //     kind: 'initializer',
+            //     placement: 'own',
+            //     initializer: descriptor.initializer,
+            //   }
+            // ],
+            initializer() {
+                if (typeof element.initializer === 'function') {
+                    this[element.key] = element.initializer.call(this);
+                }
+            },
+            finisher(clazz) {
+                clazz.createProperty(element.key, options);
+            }
+        };
+    }
+};
+const legacyProperty = (options, proto, name) => {
+    proto.constructor
+        .createProperty(name, options);
+};
+/**
+ * A property decorator which creates a LitElement property which reflects a
+ * corresponding attribute value. A [[`PropertyDeclaration`]] may optionally be
+ * supplied to configure property features.
+ *
+ * This decorator should only be used for public fields. Private or protected
+ * fields should use the [[`internalProperty`]] decorator.
+ *
+ * @example
+ * ```ts
+ * class MyElement {
+ *   @property({ type: Boolean })
+ *   clicked = false;
+ * }
+ * ```
+ * @category Decorator
+ * @ExportDecoratedItems
+ */
+function property(options) {
+    // tslint:disable-next-line:no-any decorator
+    return (protoOrDescriptor, name) => (name !== undefined) ?
+        legacyProperty(options, protoOrDescriptor, name) :
+        standardProperty(options, protoOrDescriptor);
+}
+/**
+ * Declares a private or protected property that still triggers updates to the
+ * element when it changes.
+ *
+ * Properties declared this way must not be used from HTML or HTML templating
+ * systems, they're solely for properties internal to the element. These
+ * properties may be renamed by optimization tools like closure compiler.
+ * @category Decorator
+ */
+function internalProperty(options) {
+    return property({ attribute: false, hasChanged: options === null || options === void 0 ? void 0 : options.hasChanged });
+}
+
 /**
 @license
 Copyright (c) 2019 The Polymer Project Authors. All rights reserved.
@@ -169,7 +2385,75 @@ http://polymer.github.io/AUTHORS.txt The complete set of contributors may be
 found at http://polymer.github.io/CONTRIBUTORS.txt Code distributed by Google as
 part of the polymer project is also subject to an additional IP rights grant
 found at http://polymer.github.io/PATENTS.txt
-*/const Q=window.ShadowRoot&&(void 0===window.ShadyCSS||window.ShadyCSS.nativeShadow)&&"adoptedStyleSheets"in Document.prototype&&"replace"in CSSStyleSheet.prototype,X=Symbol();class ee{constructor(e,t){if(t!==X)throw new Error("CSSResult is not constructable. Use `unsafeCSS` or `css` instead.");this.cssText=e}get styleSheet(){return void 0===this._styleSheet&&(Q?(this._styleSheet=new CSSStyleSheet,this._styleSheet.replaceSync(this.cssText)):this._styleSheet=null),this._styleSheet}toString(){return this.cssText}}const te=(e,...t)=>{const i=t.reduce((t,i,s)=>t+(e=>{if(e instanceof ee)return e.cssText;if("number"==typeof e)return e;throw new Error(`Value passed to 'css' function must be a 'css' function result: ${e}. Use 'unsafeCSS' to pass non-literal values, but\n            take care to ensure page security.`)})(i)+e[s+1],e[0]);return new ee(i,X)};
+*/
+/**
+ * Whether the current browser supports `adoptedStyleSheets`.
+ */
+const supportsAdoptingStyleSheets = (window.ShadowRoot) &&
+    (window.ShadyCSS === undefined || window.ShadyCSS.nativeShadow) &&
+    ('adoptedStyleSheets' in Document.prototype) &&
+    ('replace' in CSSStyleSheet.prototype);
+const constructionToken = Symbol();
+class CSSResult {
+    constructor(cssText, safeToken) {
+        if (safeToken !== constructionToken) {
+            throw new Error('CSSResult is not constructable. Use `unsafeCSS` or `css` instead.');
+        }
+        this.cssText = cssText;
+    }
+    // Note, this is a getter so that it's lazy. In practice, this means
+    // stylesheets are not created until the first element instance is made.
+    get styleSheet() {
+        if (this._styleSheet === undefined) {
+            // Note, if `supportsAdoptingStyleSheets` is true then we assume
+            // CSSStyleSheet is constructable.
+            if (supportsAdoptingStyleSheets) {
+                this._styleSheet = new CSSStyleSheet();
+                this._styleSheet.replaceSync(this.cssText);
+            }
+            else {
+                this._styleSheet = null;
+            }
+        }
+        return this._styleSheet;
+    }
+    toString() {
+        return this.cssText;
+    }
+}
+/**
+ * Wrap a value for interpolation in a [[`css`]] tagged template literal.
+ *
+ * This is unsafe because untrusted CSS text can be used to phone home
+ * or exfiltrate data to an attacker controlled site. Take care to only use
+ * this with trusted input.
+ */
+const unsafeCSS = (value) => {
+    return new CSSResult(String(value), constructionToken);
+};
+const textFromCSSResult = (value) => {
+    if (value instanceof CSSResult) {
+        return value.cssText;
+    }
+    else if (typeof value === 'number') {
+        return value;
+    }
+    else {
+        throw new Error(`Value passed to 'css' function must be a 'css' function result: ${value}. Use 'unsafeCSS' to pass non-literal values, but
+            take care to ensure page security.`);
+    }
+};
+/**
+ * Template tag which which can be used with LitElement's [[LitElement.styles |
+ * `styles`]] property to set element styles. For security reasons, only literal
+ * string values may be used. To incorporate non-literal values [[`unsafeCSS`]]
+ * may be used inside a template string part.
+ */
+const css = (strings, ...values) => {
+    const cssText = values.reduce((acc, v, idx) => acc + textFromCSSResult(v) + strings[idx + 1], strings[0]);
+    return new CSSResult(cssText, constructionToken);
+};
+
 /**
  * @license
  * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
@@ -183,58 +2467,979 @@ found at http://polymer.github.io/PATENTS.txt
  * subject to an additional IP rights grant found at
  * http://polymer.github.io/PATENTS.txt
  */
-(window.litElementVersions||(window.litElementVersions=[])).push("2.4.0");const ie={};class se extends G{static getStyles(){return this.styles}static _getUniqueStyles(){if(this.hasOwnProperty(JSCompiler_renameProperty("_styles",this)))return;const e=this.getStyles();if(Array.isArray(e)){const t=(e,i)=>e.reduceRight((e,i)=>Array.isArray(i)?t(i,e):(e.add(i),e),i),i=t(e,new Set),s=[];i.forEach(e=>s.unshift(e)),this._styles=s}else this._styles=void 0===e?[]:[e];this._styles=this._styles.map(e=>{if(e instanceof CSSStyleSheet&&!Q){const t=Array.prototype.slice.call(e.cssRules).reduce((e,t)=>e+t.cssText,"");return new ee(String(t),X)}return e})}initialize(){super.initialize(),this.constructor._getUniqueStyles(),this.renderRoot=this.createRenderRoot(),window.ShadowRoot&&this.renderRoot instanceof window.ShadowRoot&&this.adoptStyles()}createRenderRoot(){return this.attachShadow({mode:"open"})}adoptStyles(){const e=this.constructor._styles;0!==e.length&&(void 0===window.ShadyCSS||window.ShadyCSS.nativeShadow?Q?this.renderRoot.adoptedStyleSheets=e.map(e=>e instanceof CSSStyleSheet?e:e.styleSheet):this._needsShimAdoptedStyleSheets=!0:window.ShadyCSS.ScopingShim.prepareAdoptedCssText(e.map(e=>e.cssText),this.localName))}connectedCallback(){super.connectedCallback(),this.hasUpdated&&void 0!==window.ShadyCSS&&window.ShadyCSS.styleElement(this)}update(e){const t=this.render();super.update(e),t!==ie&&this.constructor.render(t,this.renderRoot,{scopeName:this.localName,eventContext:this}),this._needsShimAdoptedStyleSheets&&(this._needsShimAdoptedStyleSheets=!1,this.constructor._styles.forEach(e=>{const t=document.createElement("style");t.textContent=e.cssText,this.renderRoot.appendChild(t)}))}render(){return ie}}se.finalized=!0,se.render=(e,t,s)=>{if(!s||"object"!=typeof s||!s.scopeName)throw new Error("The `scopeName` option is required.");const n=s.scopeName,a=O.has(t),r=U&&11===t.nodeType&&!!t.host,o=r&&!F.has(n),l=o?document.createDocumentFragment():t;if(((e,t,s)=>{let n=O.get(t);void 0===n&&(i(t,t.firstChild),O.set(t,n=new $(Object.assign({templateFactory:V},s))),n.appendInto(t)),n.setValue(e),n.commit()})(e,l,Object.assign({templateFactory:j(n)},s)),o){const e=O.get(l);O.delete(l);const s=e.value instanceof y?e.value.template:void 0;Y(n,l,s),i(t,t.firstChild),t.appendChild(l),O.set(t,e)}!a&&r&&window.ShadyCSS.styleElement(t.host)};var ne,ae,re;function oe(e){return"currently_playing_type"in e}!function(e){e.Grid="grid",e.List="list"}(ne||(ne={})),function(e){e.default="default",e.featured="featured",e.discover_weekly="discover-weekly"}(ae||(ae={})),function(e){e[e.Name=0]="Name",e[e.Account=1]="Account",e[e.Spotify_Entity=2]="Spotify_Entity",e[e.Country_Code=3]="Country_Code",e[e.Limit=4]="Limit",e[e.Playlist_Type=5]="Playlist_Type",e[e.Always_Play_Random_Song=6]="Always_Play_Random_Song",e[e.Height=7]="Height",e[e.Display_Style=8]="Display_Style",e[e.Grid_Covers_Per_Row=9]="Grid_Covers_Per_Row",e[e.Grid_Center_Covers=10]="Grid_Center_Covers",e[e.Hide_Warning=11]="Hide_Warning",e[e.Default_Device=12]="Default_Device",e[e.Filter_Devices=13]="Filter_Devices",e[e.Hide_Top_Header=14]="Hide_Top_Header"}(re||(re={}));var le=/d{1,4}|M{1,4}|YY(?:YY)?|S{1,3}|Do|ZZ|Z|([HhMsDm])\1?|[aA]|"[^"]*"|'[^']*'/g,ce="[^\\s]+",de=/\[([^]*?)\]/gm;function he(e,t){for(var i=[],s=0,n=e.length;s<n;s++)i.push(e[s].substr(0,t));return i}var pe=function(e){return function(t,i){var s=i[e].map((function(e){return e.toLowerCase()})).indexOf(t.toLowerCase());return s>-1?s:null}};function ue(e){for(var t=[],i=1;i<arguments.length;i++)t[i-1]=arguments[i];for(var s=0,n=t;s<n.length;s++){var a=n[s];for(var r in a)e[r]=a[r]}return e}var ge=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],ve=["January","February","March","April","May","June","July","August","September","October","November","December"],fe=he(ve,3),me={dayNamesShort:he(ge,3),dayNames:ge,monthNamesShort:fe,monthNames:ve,amPm:["am","pm"],DoFn:function(e){return e+["th","st","nd","rd"][e%10>3?0:(e-e%10!=10?1:0)*e%10]}},ye=ue({},me),_e=function(e,t){for(void 0===t&&(t=2),e=String(e);e.length<t;)e="0"+e;return e},we={D:function(e){return String(e.getDate())},DD:function(e){return _e(e.getDate())},Do:function(e,t){return t.DoFn(e.getDate())},d:function(e){return String(e.getDay())},dd:function(e){return _e(e.getDay())},ddd:function(e,t){return t.dayNamesShort[e.getDay()]},dddd:function(e,t){return t.dayNames[e.getDay()]},M:function(e){return String(e.getMonth()+1)},MM:function(e){return _e(e.getMonth()+1)},MMM:function(e,t){return t.monthNamesShort[e.getMonth()]},MMMM:function(e,t){return t.monthNames[e.getMonth()]},YY:function(e){return _e(String(e.getFullYear()),4).substr(2)},YYYY:function(e){return _e(e.getFullYear(),4)},h:function(e){return String(e.getHours()%12||12)},hh:function(e){return _e(e.getHours()%12||12)},H:function(e){return String(e.getHours())},HH:function(e){return _e(e.getHours())},m:function(e){return String(e.getMinutes())},mm:function(e){return _e(e.getMinutes())},s:function(e){return String(e.getSeconds())},ss:function(e){return _e(e.getSeconds())},S:function(e){return String(Math.round(e.getMilliseconds()/100))},SS:function(e){return _e(Math.round(e.getMilliseconds()/10),2)},SSS:function(e){return _e(e.getMilliseconds(),3)},a:function(e,t){return e.getHours()<12?t.amPm[0]:t.amPm[1]},A:function(e,t){return e.getHours()<12?t.amPm[0].toUpperCase():t.amPm[1].toUpperCase()},ZZ:function(e){var t=e.getTimezoneOffset();return(t>0?"-":"+")+_e(100*Math.floor(Math.abs(t)/60)+Math.abs(t)%60,4)},Z:function(e){var t=e.getTimezoneOffset();return(t>0?"-":"+")+_e(Math.floor(Math.abs(t)/60),2)+":"+_e(Math.abs(t)%60,2)}},Se=function(e){return+e-1},be=[null,"[1-9]\\d?"],Ce=[null,ce],xe=["isPm",ce,function(e,t){var i=e.toLowerCase();return i===t.amPm[0]?0:i===t.amPm[1]?1:null}],Pe=["timezoneOffset","[^\\s]*?[\\+\\-]\\d\\d:?\\d\\d|[^\\s]*?Z?",function(e){var t=(e+"").match(/([+-]|\d\d)/gi);if(t){var i=60*+t[1]+parseInt(t[2],10);return"+"===t[0]?i:-i}return 0}],$e=(pe("monthNamesShort"),pe("monthNames"),{default:"ddd MMM DD YYYY HH:mm:ss",shortDate:"M/D/YY",mediumDate:"MMM D, YYYY",longDate:"MMMM D, YYYY",fullDate:"dddd, MMMM D, YYYY",isoDate:"YYYY-MM-DD",isoDateTime:"YYYY-MM-DDTHH:mm:ssZ",shortTime:"HH:mm",mediumTime:"HH:mm:ss",longTime:"HH:mm:ss.SSS"});var ke=function(e,t,i){if(void 0===t&&(t=$e.default),void 0===i&&(i={}),"number"==typeof e&&(e=new Date(e)),"[object Date]"!==Object.prototype.toString.call(e)||isNaN(e.getTime()))throw new Error("Invalid Date pass to format");var s=[];t=(t=$e[t]||t).replace(de,(function(e,t){return s.push(t),"@@@"}));var n=ue(ue({},ye),i);return(t=t.replace(le,(function(t){return we[t](e,n)}))).replace(/@@@/g,(function(){return s.shift()}))},Me=(function(){try{(new Date).toLocaleDateString("i")}catch(e){return"RangeError"===e.name}}(),function(){try{(new Date).toLocaleString("i")}catch(e){return"RangeError"===e.name}}(),function(){try{(new Date).toLocaleTimeString("i")}catch(e){return"RangeError"===e.name}}(),{version:"Version",description:"A custom card for displaying Spotify-Playlist and starting playback",invalid_configuration:"Invalid configuration",show_warning:"Show Warning",show_missing_spotcast:"Spotcast integration has to be installed for this component to work",show_missing_spotify:"Spotify integration has to be installed for playback information",choose_player:"Choose player"}),De={general:"General",general_description:"General settings for this card",appearance:"Appearance",appearance_description:"Customize the style, icon, etc",advanced:"Advanced",advanced_description:"Customize advanced settings",hide_warning:"Hide warnings",playlist_type:"Playlist Type",limit:"Amount of playlists shown",height:"Height of card",country_code:"Country Code for featured playlists",always_play_random_song:"Always play random song when starting playback",title:"Title of card",display_style:"Display Style",grid_covers_per_row:"Number of covers per row",grid_center_covers:"Center Covers",account:"Account",filter_out_cast_devices:"Filter out chromecast devices",spotify_entity:"Spotify media player entity",default_device:"Default device name",filter_devices:"Hide devices (see documentation under 'Advanced usage')",hide_top_header:"Hide header"},Ne={common:Me,settings:De},Te={version:"Version",description:"Eine Karte um Spotify-Playlist anzuzeigen und abzuspielen",invalid_configuration:"Ungültige Konfiguration",show_warning:"Warnung",show_missing_spotcast:"Die Spotcast-Integration muss installiert sein, damit diese Karte funktioniert",show_missing_spotify:"Die Spotify-Integration muss installiert sein, damit der Spotify-Status angezeigt werden kann",choose_player:"Player auswählen"},Ee={general:"Generell",general_description:"Generelle Einstellungen",appearance:"Aussehen",appearance_description:"Passe den Stil und anderes an",hide_warning:"Verstecke Warnhinweise",playlist_type:"Playlist Typ",limit:"Anzahl an angezeigten Playlisten",height:"Höhe der Karte",country_code:"Länder-Code für die Featured-Playlist",always_play_random_song:"Spiele immer einen zufälligen Song beim Starten der Wiedergabe ab",title:"Titel der Karte",display_style:"Anzeige-Stil",grid_covers_per_row:"Number of covers per row",account:"Account",filter_out_cast_devices:"Filter out chromecast devices",spotify_entity:"Spotify media player entity",default_device:"Default device name",filter_devices:"Verstecke Geräte (siehe Dokumentation unter 'Advanced usage')",hide_top_header:"Verstecke Kopfzeile"},Ve={common:Te,settings:Ee},Ae={version:"Version",description:"A custom card for displaying Spotify-Playlist and starting playback",invalid_configuration:"Invalid configuration",show_warning:"Show Warning",show_missing_spotcast:"Spotcast integration has to be installed for this component to work",show_missing_spotify:"Spotify integration has to be installed for playback information"},Oe={general:"General",general_description:"General settings for this card",appearance:"Appearance",appearance_description:"Customize the style, icon, etc",hide_warning:"Hide warnings",playlist_type:"Playlist Type",limit:"Amount of playlists shown",height:"Height of card",country_code:"Country Code for featured playlists",always_play_random_song:"Always play random song when starting playback",title:"Title of card",display_style:"Display Style",grid_covers_per_row:"Number of covers per row",account:"Account",filter_out_cast_devices:"Filter out chromecast devices",spotify_entity:"Spotify media player entity",default_device:"Default device name"},ze={common:Ae,settings:Oe};const He={en:Object.freeze({__proto__:null,common:Me,settings:De,default:Ne}),de:Object.freeze({__proto__:null,common:Te,settings:Ee,default:Ve}),se:Object.freeze({__proto__:null,common:Ae,settings:Oe,default:ze})};function Le(e,t="",i=""){const s=e.split(".")[0],n=e.split(".")[1],a=(localStorage.getItem("selectedLanguage")||navigator.language.split("-")[0]||"en").replace(/['"]+/g,"").replace("-","_");let r;try{r=He[a][s][n]}catch(e){r=He.en[s][n]}return void 0===r&&(r=He.en[s][n]),""!==t&&""!==i&&(r=r.replace(t,i)),r}const Ue={general:{icon:"tune",name:Le("settings.general"),secondary:Le("settings.general_description"),show:!0},appearance:{icon:"palette",name:Le("settings.appearance"),secondary:Le("settings.appearance_description"),show:!1},advanced:{icon:"pencil",name:Le("settings.advanced"),secondary:Le("settings.advanced_description"),show:!1}};let je=class extends se{constructor(){super(...arguments),this.accounts=[],this.chromecast_devices=[]}async connectedCallback(){super.connectedCallback();const e=await this.hass.callWS({type:"spotcast/accounts"});this.accounts=e;const t=await this.hass.callWS({type:"spotcast/castdevices"});this.chromecast_devices=null==t?void 0:t.map(e=>e.friendly_name)}setConfig(e){this.config=e}getMediaPlayerEntities(){return Object.values(this.hass.states).filter(e=>e.entity_id.match("media_player[.]")).map(e=>e.entity_id)}_toggleOption(e){this._toggleThing(e,Ue)}_toggleThing(e,t){const i=!t[e.target.option].show;for(const[e]of Object.entries(t))t[e].show=!1;t[e.target.option].show=i,this._toggle=!this._toggle}valueChanged(e){if(!this.config||!this.hass||null===e.target.offsetParent)return;const{target:t}=e;if(!t.value||this["_"+t.configValue]!==t.value){if(t.configValue)if(!1===t.checked||""===t.value){const e=Object.assign({},this.config);delete e[t.configValue],this.config=e}else{let e=t.value;"height"==t.configValue?e=Number(e):"filter_devices"==t.configValue&&(e=e.split(",").map(e=>e.trim()).filter(e=>""!=e)),this.config=Object.assign(Object.assign({},this.config),{[t.configValue]:void 0!==t.checked?t.checked:e})}!function(e,t,i,s){s=s||{},i=null==i?{}:i;var n=new Event(t,{bubbles:void 0===s.bubbles||s.bubbles,cancelable:Boolean(s.cancelable),composed:void 0===s.composed||s.composed});n.detail=i,e.dispatchEvent(n)}(this,"config-changed",{config:this.config})}}getValue(e){var t,i,s,n,a,r,o,l,c,d,h,p,u,g,v,f,m,y,_,w,S,b,C,x,P,$,k,M,D,N,T;switch(e){case re.Name:return null!==(i=null===(t=this.config)||void 0===t?void 0:t.name)&&void 0!==i?i:"";case re.Account:return null!==(n=null===(s=this.config)||void 0===s?void 0:s.account)&&void 0!==n?n:"default";case re.Spotify_Entity:const e=this.getMediaPlayerEntities().filter(e=>e.includes("spotify"));return null!==(r=null===(a=this.config)||void 0===a?void 0:a.spotify_entity)&&void 0!==r?r:e.length>0?e[0]:"";case re.Country_Code:return null!==(l=null===(o=this.config)||void 0===o?void 0:o.country_code)&&void 0!==l?l:"";case re.Limit:return null!==(d=null===(c=this.config)||void 0===c?void 0:c.limit)&&void 0!==d?d:10;case re.Playlist_Type:return null!==(p=null===(h=this.config)||void 0===h?void 0:h.playlist_type)&&void 0!==p?p:"default";case re.Always_Play_Random_Song:return null!==(g=null===(u=this.config)||void 0===u?void 0:u.always_play_random_song)&&void 0!==g&&g;case re.Height:return null!==(f=null===(v=this.config)||void 0===v?void 0:v.height)&&void 0!==f?f:"";case re.Display_Style:return null!==(y=null===(m=this.config)||void 0===m?void 0:m.display_style)&&void 0!==y?y:"list";case re.Grid_Covers_Per_Row:return null!==(w=null===(_=this.config)||void 0===_?void 0:_.grid_covers_per_row)&&void 0!==w?w:5;case re.Grid_Center_Covers:return null!==(b=null===(S=this.config)||void 0===S?void 0:S.grid_center_covers)&&void 0!==b&&b;case re.Hide_Warning:return null!==(x=null===(C=this.config)||void 0===C?void 0:C.hide_warning)&&void 0!==x&&x;case re.Default_Device:return null!==($=null===(P=this.config)||void 0===P?void 0:P.default_device)&&void 0!==$?$:"";case re.Filter_Devices:return null!==(D=null===(M=null===(k=this.config)||void 0===k?void 0:k.filter_devices)||void 0===M?void 0:M.toString())&&void 0!==D?D:"";case re.Hide_Top_Header:return null!==(T=null===(N=this.config)||void 0===N?void 0:N.hide_top_header)&&void 0!==T&&T}}renderGeneral(){const e=this.getMediaPlayerEntities();return H`
+// IMPORTANT: do not change the property name or the assignment expression.
+// This line will be used in regexes to search for LitElement usage.
+// TODO(justinfagnani): inject version number at build time
+(window['litElementVersions'] || (window['litElementVersions'] = []))
+    .push('2.4.0');
+/**
+ * Sentinal value used to avoid calling lit-html's render function when
+ * subclasses do not implement `render`
+ */
+const renderNotImplemented = {};
+/**
+ * Base element class that manages element properties and attributes, and
+ * renders a lit-html template.
+ *
+ * To define a component, subclass `LitElement` and implement a
+ * `render` method to provide the component's template. Define properties
+ * using the [[`properties`]] property or the [[`property`]] decorator.
+ */
+class LitElement extends UpdatingElement {
+    /**
+     * Return the array of styles to apply to the element.
+     * Override this method to integrate into a style management system.
+     *
+     * @nocollapse
+     */
+    static getStyles() {
+        return this.styles;
+    }
+    /** @nocollapse */
+    static _getUniqueStyles() {
+        // Only gather styles once per class
+        if (this.hasOwnProperty(JSCompiler_renameProperty('_styles', this))) {
+            return;
+        }
+        // Take care not to call `this.getStyles()` multiple times since this
+        // generates new CSSResults each time.
+        // TODO(sorvell): Since we do not cache CSSResults by input, any
+        // shared styles will generate new stylesheet objects, which is wasteful.
+        // This should be addressed when a browser ships constructable
+        // stylesheets.
+        const userStyles = this.getStyles();
+        if (Array.isArray(userStyles)) {
+            // De-duplicate styles preserving the _last_ instance in the set.
+            // This is a performance optimization to avoid duplicated styles that can
+            // occur especially when composing via subclassing.
+            // The last item is kept to try to preserve the cascade order with the
+            // assumption that it's most important that last added styles override
+            // previous styles.
+            const addStyles = (styles, set) => styles.reduceRight((set, s) => 
+            // Note: On IE set.add() does not return the set
+            Array.isArray(s) ? addStyles(s, set) : (set.add(s), set), set);
+            // Array.from does not work on Set in IE, otherwise return
+            // Array.from(addStyles(userStyles, new Set<CSSResult>())).reverse()
+            const set = addStyles(userStyles, new Set());
+            const styles = [];
+            set.forEach((v) => styles.unshift(v));
+            this._styles = styles;
+        }
+        else {
+            this._styles = userStyles === undefined ? [] : [userStyles];
+        }
+        // Ensure that there are no invalid CSSStyleSheet instances here. They are
+        // invalid in two conditions.
+        // (1) the sheet is non-constructible (`sheet` of a HTMLStyleElement), but
+        //     this is impossible to check except via .replaceSync or use
+        // (2) the ShadyCSS polyfill is enabled (:. supportsAdoptingStyleSheets is
+        //     false)
+        this._styles = this._styles.map((s) => {
+            if (s instanceof CSSStyleSheet && !supportsAdoptingStyleSheets) {
+                // Flatten the cssText from the passed constructible stylesheet (or
+                // undetectable non-constructible stylesheet). The user might have
+                // expected to update their stylesheets over time, but the alternative
+                // is a crash.
+                const cssText = Array.prototype.slice.call(s.cssRules)
+                    .reduce((css, rule) => css + rule.cssText, '');
+                return unsafeCSS(cssText);
+            }
+            return s;
+        });
+    }
+    /**
+     * Performs element initialization. By default this calls
+     * [[`createRenderRoot`]] to create the element [[`renderRoot`]] node and
+     * captures any pre-set values for registered properties.
+     */
+    initialize() {
+        super.initialize();
+        this.constructor._getUniqueStyles();
+        this.renderRoot = this.createRenderRoot();
+        // Note, if renderRoot is not a shadowRoot, styles would/could apply to the
+        // element's getRootNode(). While this could be done, we're choosing not to
+        // support this now since it would require different logic around de-duping.
+        if (window.ShadowRoot && this.renderRoot instanceof window.ShadowRoot) {
+            this.adoptStyles();
+        }
+    }
+    /**
+     * Returns the node into which the element should render and by default
+     * creates and returns an open shadowRoot. Implement to customize where the
+     * element's DOM is rendered. For example, to render into the element's
+     * childNodes, return `this`.
+     * @returns {Element|DocumentFragment} Returns a node into which to render.
+     */
+    createRenderRoot() {
+        return this.attachShadow({ mode: 'open' });
+    }
+    /**
+     * Applies styling to the element shadowRoot using the [[`styles`]]
+     * property. Styling will apply using `shadowRoot.adoptedStyleSheets` where
+     * available and will fallback otherwise. When Shadow DOM is polyfilled,
+     * ShadyCSS scopes styles and adds them to the document. When Shadow DOM
+     * is available but `adoptedStyleSheets` is not, styles are appended to the
+     * end of the `shadowRoot` to [mimic spec
+     * behavior](https://wicg.github.io/construct-stylesheets/#using-constructed-stylesheets).
+     */
+    adoptStyles() {
+        const styles = this.constructor._styles;
+        if (styles.length === 0) {
+            return;
+        }
+        // There are three separate cases here based on Shadow DOM support.
+        // (1) shadowRoot polyfilled: use ShadyCSS
+        // (2) shadowRoot.adoptedStyleSheets available: use it
+        // (3) shadowRoot.adoptedStyleSheets polyfilled: append styles after
+        // rendering
+        if (window.ShadyCSS !== undefined && !window.ShadyCSS.nativeShadow) {
+            window.ShadyCSS.ScopingShim.prepareAdoptedCssText(styles.map((s) => s.cssText), this.localName);
+        }
+        else if (supportsAdoptingStyleSheets) {
+            this.renderRoot.adoptedStyleSheets =
+                styles.map((s) => s instanceof CSSStyleSheet ? s : s.styleSheet);
+        }
+        else {
+            // This must be done after rendering so the actual style insertion is done
+            // in `update`.
+            this._needsShimAdoptedStyleSheets = true;
+        }
+    }
+    connectedCallback() {
+        super.connectedCallback();
+        // Note, first update/render handles styleElement so we only call this if
+        // connected after first update.
+        if (this.hasUpdated && window.ShadyCSS !== undefined) {
+            window.ShadyCSS.styleElement(this);
+        }
+    }
+    /**
+     * Updates the element. This method reflects property values to attributes
+     * and calls `render` to render DOM via lit-html. Setting properties inside
+     * this method will *not* trigger another update.
+     * @param _changedProperties Map of changed properties with old values
+     */
+    update(changedProperties) {
+        // Setting properties in `render` should not trigger an update. Since
+        // updates are allowed after super.update, it's important to call `render`
+        // before that.
+        const templateResult = this.render();
+        super.update(changedProperties);
+        // If render is not implemented by the component, don't call lit-html render
+        if (templateResult !== renderNotImplemented) {
+            this.constructor
+                .render(templateResult, this.renderRoot, { scopeName: this.localName, eventContext: this });
+        }
+        // When native Shadow DOM is used but adoptedStyles are not supported,
+        // insert styling after rendering to ensure adoptedStyles have highest
+        // priority.
+        if (this._needsShimAdoptedStyleSheets) {
+            this._needsShimAdoptedStyleSheets = false;
+            this.constructor._styles.forEach((s) => {
+                const style = document.createElement('style');
+                style.textContent = s.cssText;
+                this.renderRoot.appendChild(style);
+            });
+        }
+    }
+    /**
+     * Invoked on each update to perform rendering tasks. This method may return
+     * any value renderable by lit-html's `NodePart` - typically a
+     * `TemplateResult`. Setting properties inside this method will *not* trigger
+     * the element to update.
+     */
+    render() {
+        return renderNotImplemented;
+    }
+}
+/**
+ * Ensure this class is marked as `finalized` as an optimization ensuring
+ * it will not needlessly try to `finalize`.
+ *
+ * Note this property name is a string to prevent breaking Closure JS Compiler
+ * optimizations. See updating-element.ts for more information.
+ */
+LitElement['finalized'] = true;
+/**
+ * Reference to the underlying library method used to render the element's
+ * DOM. By default, points to the `render` method from lit-html's shady-render
+ * module.
+ *
+ * **Most users will never need to touch this property.**
+ *
+ * This  property should not be confused with the `render` instance method,
+ * which should be overridden to define a template for the element.
+ *
+ * Advanced users creating a new base class based on LitElement can override
+ * this property to point to a custom render method with a signature that
+ * matches [shady-render's `render`
+ * method](https://lit-html.polymer-project.org/api/modules/shady_render.html#render).
+ *
+ * @nocollapse
+ */
+LitElement.render = render$1;
+
+const CARD_VERSION = '2.2.4';
+
+var DisplayStyle;
+(function (DisplayStyle) {
+    DisplayStyle["Grid"] = "grid";
+    DisplayStyle["List"] = "list";
+})(DisplayStyle || (DisplayStyle = {}));
+var PlaylistType;
+(function (PlaylistType) {
+    PlaylistType["default"] = "default";
+    PlaylistType["featured"] = "featured";
+    PlaylistType["discover_weekly"] = "discover-weekly";
+})(PlaylistType || (PlaylistType = {}));
+var ConfigEntry;
+(function (ConfigEntry) {
+    ConfigEntry[ConfigEntry["Name"] = 0] = "Name";
+    ConfigEntry[ConfigEntry["Account"] = 1] = "Account";
+    ConfigEntry[ConfigEntry["Spotify_Entity"] = 2] = "Spotify_Entity";
+    ConfigEntry[ConfigEntry["Country_Code"] = 3] = "Country_Code";
+    ConfigEntry[ConfigEntry["Limit"] = 4] = "Limit";
+    ConfigEntry[ConfigEntry["Playlist_Type"] = 5] = "Playlist_Type";
+    ConfigEntry[ConfigEntry["Always_Play_Random_Song"] = 6] = "Always_Play_Random_Song";
+    ConfigEntry[ConfigEntry["Height"] = 7] = "Height";
+    ConfigEntry[ConfigEntry["Display_Style"] = 8] = "Display_Style";
+    ConfigEntry[ConfigEntry["Grid_Covers_Per_Row"] = 9] = "Grid_Covers_Per_Row";
+    ConfigEntry[ConfigEntry["Grid_Center_Covers"] = 10] = "Grid_Center_Covers";
+    ConfigEntry[ConfigEntry["Hide_Warning"] = 11] = "Hide_Warning";
+    ConfigEntry[ConfigEntry["Default_Device"] = 12] = "Default_Device";
+    ConfigEntry[ConfigEntry["Filter_Devices"] = 13] = "Filter_Devices";
+    ConfigEntry[ConfigEntry["Hide_Top_Header"] = 14] = "Hide_Top_Header";
+})(ConfigEntry || (ConfigEntry = {}));
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+function isConnectDevice(object) {
+    return 'name' in object;
+}
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+function isCurrentPlayer(object) {
+    return 'currently_playing_type' in object;
+}
+
+var token = /d{1,4}|M{1,4}|YY(?:YY)?|S{1,3}|Do|ZZ|Z|([HhMsDm])\1?|[aA]|"[^"]*"|'[^']*'/g;
+var twoDigitsOptional = "[1-9]\\d?";
+var twoDigits = "\\d\\d";
+var threeDigits = "\\d{3}";
+var fourDigits = "\\d{4}";
+var word = "[^\\s]+";
+var literal = /\[([^]*?)\]/gm;
+function shorten(arr, sLen) {
+    var newArr = [];
+    for (var i = 0, len = arr.length; i < len; i++) {
+        newArr.push(arr[i].substr(0, sLen));
+    }
+    return newArr;
+}
+var monthUpdate = function (arrName) { return function (v, i18n) {
+    var lowerCaseArr = i18n[arrName].map(function (v) { return v.toLowerCase(); });
+    var index = lowerCaseArr.indexOf(v.toLowerCase());
+    if (index > -1) {
+        return index;
+    }
+    return null;
+}; };
+function assign(origObj) {
+    var args = [];
+    for (var _i = 1; _i < arguments.length; _i++) {
+        args[_i - 1] = arguments[_i];
+    }
+    for (var _a = 0, args_1 = args; _a < args_1.length; _a++) {
+        var obj = args_1[_a];
+        for (var key in obj) {
+            // @ts-ignore ex
+            origObj[key] = obj[key];
+        }
+    }
+    return origObj;
+}
+var dayNames = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday"
+];
+var monthNames = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December"
+];
+var monthNamesShort = shorten(monthNames, 3);
+var dayNamesShort = shorten(dayNames, 3);
+var defaultI18n = {
+    dayNamesShort: dayNamesShort,
+    dayNames: dayNames,
+    monthNamesShort: monthNamesShort,
+    monthNames: monthNames,
+    amPm: ["am", "pm"],
+    DoFn: function (dayOfMonth) {
+        return (dayOfMonth +
+            ["th", "st", "nd", "rd"][dayOfMonth % 10 > 3
+                ? 0
+                : ((dayOfMonth - (dayOfMonth % 10) !== 10 ? 1 : 0) * dayOfMonth) % 10]);
+    }
+};
+var globalI18n = assign({}, defaultI18n);
+var setGlobalDateI18n = function (i18n) {
+    return (globalI18n = assign(globalI18n, i18n));
+};
+var regexEscape = function (str) {
+    return str.replace(/[|\\{()[^$+*?.-]/g, "\\$&");
+};
+var pad = function (val, len) {
+    if (len === void 0) { len = 2; }
+    val = String(val);
+    while (val.length < len) {
+        val = "0" + val;
+    }
+    return val;
+};
+var formatFlags = {
+    D: function (dateObj) { return String(dateObj.getDate()); },
+    DD: function (dateObj) { return pad(dateObj.getDate()); },
+    Do: function (dateObj, i18n) {
+        return i18n.DoFn(dateObj.getDate());
+    },
+    d: function (dateObj) { return String(dateObj.getDay()); },
+    dd: function (dateObj) { return pad(dateObj.getDay()); },
+    ddd: function (dateObj, i18n) {
+        return i18n.dayNamesShort[dateObj.getDay()];
+    },
+    dddd: function (dateObj, i18n) {
+        return i18n.dayNames[dateObj.getDay()];
+    },
+    M: function (dateObj) { return String(dateObj.getMonth() + 1); },
+    MM: function (dateObj) { return pad(dateObj.getMonth() + 1); },
+    MMM: function (dateObj, i18n) {
+        return i18n.monthNamesShort[dateObj.getMonth()];
+    },
+    MMMM: function (dateObj, i18n) {
+        return i18n.monthNames[dateObj.getMonth()];
+    },
+    YY: function (dateObj) {
+        return pad(String(dateObj.getFullYear()), 4).substr(2);
+    },
+    YYYY: function (dateObj) { return pad(dateObj.getFullYear(), 4); },
+    h: function (dateObj) { return String(dateObj.getHours() % 12 || 12); },
+    hh: function (dateObj) { return pad(dateObj.getHours() % 12 || 12); },
+    H: function (dateObj) { return String(dateObj.getHours()); },
+    HH: function (dateObj) { return pad(dateObj.getHours()); },
+    m: function (dateObj) { return String(dateObj.getMinutes()); },
+    mm: function (dateObj) { return pad(dateObj.getMinutes()); },
+    s: function (dateObj) { return String(dateObj.getSeconds()); },
+    ss: function (dateObj) { return pad(dateObj.getSeconds()); },
+    S: function (dateObj) {
+        return String(Math.round(dateObj.getMilliseconds() / 100));
+    },
+    SS: function (dateObj) {
+        return pad(Math.round(dateObj.getMilliseconds() / 10), 2);
+    },
+    SSS: function (dateObj) { return pad(dateObj.getMilliseconds(), 3); },
+    a: function (dateObj, i18n) {
+        return dateObj.getHours() < 12 ? i18n.amPm[0] : i18n.amPm[1];
+    },
+    A: function (dateObj, i18n) {
+        return dateObj.getHours() < 12
+            ? i18n.amPm[0].toUpperCase()
+            : i18n.amPm[1].toUpperCase();
+    },
+    ZZ: function (dateObj) {
+        var offset = dateObj.getTimezoneOffset();
+        return ((offset > 0 ? "-" : "+") +
+            pad(Math.floor(Math.abs(offset) / 60) * 100 + (Math.abs(offset) % 60), 4));
+    },
+    Z: function (dateObj) {
+        var offset = dateObj.getTimezoneOffset();
+        return ((offset > 0 ? "-" : "+") +
+            pad(Math.floor(Math.abs(offset) / 60), 2) +
+            ":" +
+            pad(Math.abs(offset) % 60, 2));
+    }
+};
+var monthParse = function (v) { return +v - 1; };
+var emptyDigits = [null, twoDigitsOptional];
+var emptyWord = [null, word];
+var amPm = [
+    "isPm",
+    word,
+    function (v, i18n) {
+        var val = v.toLowerCase();
+        if (val === i18n.amPm[0]) {
+            return 0;
+        }
+        else if (val === i18n.amPm[1]) {
+            return 1;
+        }
+        return null;
+    }
+];
+var timezoneOffset = [
+    "timezoneOffset",
+    "[^\\s]*?[\\+\\-]\\d\\d:?\\d\\d|[^\\s]*?Z?",
+    function (v) {
+        var parts = (v + "").match(/([+-]|\d\d)/gi);
+        if (parts) {
+            var minutes = +parts[1] * 60 + parseInt(parts[2], 10);
+            return parts[0] === "+" ? minutes : -minutes;
+        }
+        return 0;
+    }
+];
+var parseFlags = {
+    D: ["day", twoDigitsOptional],
+    DD: ["day", twoDigits],
+    Do: ["day", twoDigitsOptional + word, function (v) { return parseInt(v, 10); }],
+    M: ["month", twoDigitsOptional, monthParse],
+    MM: ["month", twoDigits, monthParse],
+    YY: [
+        "year",
+        twoDigits,
+        function (v) {
+            var now = new Date();
+            var cent = +("" + now.getFullYear()).substr(0, 2);
+            return +("" + (+v > 68 ? cent - 1 : cent) + v);
+        }
+    ],
+    h: ["hour", twoDigitsOptional, undefined, "isPm"],
+    hh: ["hour", twoDigits, undefined, "isPm"],
+    H: ["hour", twoDigitsOptional],
+    HH: ["hour", twoDigits],
+    m: ["minute", twoDigitsOptional],
+    mm: ["minute", twoDigits],
+    s: ["second", twoDigitsOptional],
+    ss: ["second", twoDigits],
+    YYYY: ["year", fourDigits],
+    S: ["millisecond", "\\d", function (v) { return +v * 100; }],
+    SS: ["millisecond", twoDigits, function (v) { return +v * 10; }],
+    SSS: ["millisecond", threeDigits],
+    d: emptyDigits,
+    dd: emptyDigits,
+    ddd: emptyWord,
+    dddd: emptyWord,
+    MMM: ["month", word, monthUpdate("monthNamesShort")],
+    MMMM: ["month", word, monthUpdate("monthNames")],
+    a: amPm,
+    A: amPm,
+    ZZ: timezoneOffset,
+    Z: timezoneOffset
+};
+// Some common format strings
+var globalMasks = {
+    default: "ddd MMM DD YYYY HH:mm:ss",
+    shortDate: "M/D/YY",
+    mediumDate: "MMM D, YYYY",
+    longDate: "MMMM D, YYYY",
+    fullDate: "dddd, MMMM D, YYYY",
+    isoDate: "YYYY-MM-DD",
+    isoDateTime: "YYYY-MM-DDTHH:mm:ssZ",
+    shortTime: "HH:mm",
+    mediumTime: "HH:mm:ss",
+    longTime: "HH:mm:ss.SSS"
+};
+var setGlobalDateMasks = function (masks) { return assign(globalMasks, masks); };
+/***
+ * Format a date
+ * @method format
+ * @param {Date|number} dateObj
+ * @param {string} mask Format of the date, i.e. 'mm-dd-yy' or 'shortDate'
+ * @returns {string} Formatted date string
+ */
+var format = function (dateObj, mask, i18n) {
+    if (mask === void 0) { mask = globalMasks["default"]; }
+    if (i18n === void 0) { i18n = {}; }
+    if (typeof dateObj === "number") {
+        dateObj = new Date(dateObj);
+    }
+    if (Object.prototype.toString.call(dateObj) !== "[object Date]" ||
+        isNaN(dateObj.getTime())) {
+        throw new Error("Invalid Date pass to format");
+    }
+    mask = globalMasks[mask] || mask;
+    var literals = [];
+    // Make literals inactive by replacing them with @@@
+    mask = mask.replace(literal, function ($0, $1) {
+        literals.push($1);
+        return "@@@";
+    });
+    var combinedI18nSettings = assign(assign({}, globalI18n), i18n);
+    // Apply formatting rules
+    mask = mask.replace(token, function ($0) {
+        return formatFlags[$0](dateObj, combinedI18nSettings);
+    });
+    // Inline literal values back into the formatted value
+    return mask.replace(/@@@/g, function () { return literals.shift(); });
+};
+/**
+ * Parse a date string into a Javascript Date object /
+ * @method parse
+ * @param {string} dateStr Date string
+ * @param {string} format Date parse format
+ * @param {i18n} I18nSettingsOptional Full or subset of I18N settings
+ * @returns {Date|null} Returns Date object. Returns null what date string is invalid or doesn't match format
+ */
+function parse(dateStr, format, i18n) {
+    if (i18n === void 0) { i18n = {}; }
+    if (typeof format !== "string") {
+        throw new Error("Invalid format in fecha parse");
+    }
+    // Check to see if the format is actually a mask
+    format = globalMasks[format] || format;
+    // Avoid regular expression denial of service, fail early for really long strings
+    // https://www.owasp.org/index.php/Regular_expression_Denial_of_Service_-_ReDoS
+    if (dateStr.length > 1000) {
+        return null;
+    }
+    // Default to the beginning of the year.
+    var today = new Date();
+    var dateInfo = {
+        year: today.getFullYear(),
+        month: 0,
+        day: 1,
+        hour: 0,
+        minute: 0,
+        second: 0,
+        millisecond: 0,
+        isPm: null,
+        timezoneOffset: null
+    };
+    var parseInfo = [];
+    var literals = [];
+    // Replace all the literals with @@@. Hopefully a string that won't exist in the format
+    var newFormat = format.replace(literal, function ($0, $1) {
+        literals.push(regexEscape($1));
+        return "@@@";
+    });
+    var specifiedFields = {};
+    var requiredFields = {};
+    // Change every token that we find into the correct regex
+    newFormat = regexEscape(newFormat).replace(token, function ($0) {
+        var info = parseFlags[$0];
+        var field = info[0], regex = info[1], requiredField = info[3];
+        // Check if the person has specified the same field twice. This will lead to confusing results.
+        if (specifiedFields[field]) {
+            throw new Error("Invalid format. " + field + " specified twice in format");
+        }
+        specifiedFields[field] = true;
+        // Check if there are any required fields. For instance, 12 hour time requires AM/PM specified
+        if (requiredField) {
+            requiredFields[requiredField] = true;
+        }
+        parseInfo.push(info);
+        return "(" + regex + ")";
+    });
+    // Check all the required fields are present
+    Object.keys(requiredFields).forEach(function (field) {
+        if (!specifiedFields[field]) {
+            throw new Error("Invalid format. " + field + " is required in specified format");
+        }
+    });
+    // Add back all the literals after
+    newFormat = newFormat.replace(/@@@/g, function () { return literals.shift(); });
+    // Check if the date string matches the format. If it doesn't return null
+    var matches = dateStr.match(new RegExp(newFormat, "i"));
+    if (!matches) {
+        return null;
+    }
+    var combinedI18nSettings = assign(assign({}, globalI18n), i18n);
+    // For each match, call the parser function for that date part
+    for (var i = 1; i < matches.length; i++) {
+        var _a = parseInfo[i - 1], field = _a[0], parser = _a[2];
+        var value = parser
+            ? parser(matches[i], combinedI18nSettings)
+            : +matches[i];
+        // If the parser can't make sense of the value, return null
+        if (value == null) {
+            return null;
+        }
+        dateInfo[field] = value;
+    }
+    if (dateInfo.isPm === 1 && dateInfo.hour != null && +dateInfo.hour !== 12) {
+        dateInfo.hour = +dateInfo.hour + 12;
+    }
+    else if (dateInfo.isPm === 0 && +dateInfo.hour === 12) {
+        dateInfo.hour = 0;
+    }
+    var dateWithoutTZ = new Date(dateInfo.year, dateInfo.month, dateInfo.day, dateInfo.hour, dateInfo.minute, dateInfo.second, dateInfo.millisecond);
+    var validateFields = [
+        ["month", "getMonth"],
+        ["day", "getDate"],
+        ["hour", "getHours"],
+        ["minute", "getMinutes"],
+        ["second", "getSeconds"]
+    ];
+    for (var i = 0, len = validateFields.length; i < len; i++) {
+        // Check to make sure the date field is within the allowed range. Javascript dates allows values
+        // outside the allowed range. If the values don't match the value was invalid
+        if (specifiedFields[validateFields[i][0]] &&
+            dateInfo[validateFields[i][0]] !== dateWithoutTZ[validateFields[i][1]]()) {
+            return null;
+        }
+    }
+    if (dateInfo.timezoneOffset == null) {
+        return dateWithoutTZ;
+    }
+    return new Date(Date.UTC(dateInfo.year, dateInfo.month, dateInfo.day, dateInfo.hour, dateInfo.minute - dateInfo.timezoneOffset, dateInfo.second, dateInfo.millisecond));
+}
+var fecha = {
+    format: format,
+    parse: parse,
+    defaultI18n: defaultI18n,
+    setGlobalDateI18n: setGlobalDateI18n,
+    setGlobalDateMasks: setGlobalDateMasks
+};
+
+var a=function(){try{(new Date).toLocaleDateString("i");}catch(e){return "RangeError"===e.name}return !1}()?function(e,t){return e.toLocaleDateString(t,{year:"numeric",month:"long",day:"numeric"})}:function(t){return fecha.format(t,"mediumDate")},r=function(){try{(new Date).toLocaleString("i");}catch(e){return "RangeError"===e.name}return !1}()?function(e,t){return e.toLocaleString(t,{year:"numeric",month:"long",day:"numeric",hour:"numeric",minute:"2-digit"})}:function(t){return fecha.format(t,"haDateTime")},n=function(){try{(new Date).toLocaleTimeString("i");}catch(e){return "RangeError"===e.name}return !1}()?function(e,t){return e.toLocaleTimeString(t,{hour:"numeric",minute:"2-digit"})}:function(t){return fecha.format(t,"shortTime")};var C=function(e,t,a,r){r=r||{},a=null==a?{}:a;var n=new Event(t,{bubbles:void 0===r.bubbles||r.bubbles,cancelable:Boolean(r.cancelable),composed:void 0===r.composed||r.composed});return n.detail=a,e.dispatchEvent(n),n};
+
+var common = {
+	version: "Version",
+	description: "A custom card for displaying Spotify-Playlist and starting playback",
+	invalid_configuration: "Invalid configuration",
+	show_warning: "Show Warning",
+	show_missing_spotcast: "Spotcast integration has to be installed for this component to work",
+	show_missing_spotify: "Spotify integration has to be installed for playback information",
+	choose_player: "Choose player"
+};
+var settings = {
+	general: "General",
+	general_description: "General settings for this card",
+	appearance: "Appearance",
+	appearance_description: "Customize the style, icon, etc",
+	advanced: "Advanced",
+	advanced_description: "Customize advanced settings",
+	hide_warning: "Hide warnings",
+	playlist_type: "Playlist Type",
+	limit: "Amount of playlists shown",
+	height: "Height of card",
+	country_code: "Country Code for featured playlists",
+	always_play_random_song: "Always play random song when starting playback",
+	title: "Title of card",
+	display_style: "Display Style",
+	grid_covers_per_row: "Number of covers per row",
+	grid_center_covers: "Center Covers",
+	account: "Account",
+	filter_out_cast_devices: "Filter out chromecast devices",
+	spotify_entity: "Spotify media player entity",
+	default_device: "Default device name",
+	filter_devices: "Hide devices (see documentation under 'Advanced usage')",
+	hide_top_header: "Hide header"
+};
+var en = {
+	common: common,
+	settings: settings
+};
+
+var en$1 = /*#__PURE__*/Object.freeze({
+    __proto__: null,
+    common: common,
+    settings: settings,
+    'default': en
+});
+
+var common$1 = {
+	version: "Version",
+	description: "Eine Karte um Spotify-Playlist anzuzeigen und abzuspielen",
+	invalid_configuration: "Ungültige Konfiguration",
+	show_warning: "Warnung",
+	show_missing_spotcast: "Die Spotcast-Integration muss installiert sein, damit diese Karte funktioniert",
+	show_missing_spotify: "Die Spotify-Integration muss installiert sein, damit der Spotify-Status angezeigt werden kann",
+	choose_player: "Player auswählen"
+};
+var settings$1 = {
+	general: "Generell",
+	general_description: "Generelle Einstellungen",
+	appearance: "Aussehen",
+	appearance_description: "Passe den Stil und anderes an",
+	hide_warning: "Verstecke Warnhinweise",
+	playlist_type: "Playlist Typ",
+	limit: "Anzahl an angezeigten Playlisten",
+	height: "Höhe der Karte",
+	country_code: "Länder-Code für die Featured-Playlist",
+	always_play_random_song: "Spiele immer einen zufälligen Song beim Starten der Wiedergabe ab",
+	title: "Titel der Karte",
+	display_style: "Anzeige-Stil",
+	grid_covers_per_row: "Number of covers per row",
+	account: "Account",
+	filter_out_cast_devices: "Filter out chromecast devices",
+	spotify_entity: "Spotify media player entity",
+	default_device: "Default device name",
+	filter_devices: "Verstecke Geräte (siehe Dokumentation unter 'Advanced usage')",
+	hide_top_header: "Verstecke Kopfzeile"
+};
+var de = {
+	common: common$1,
+	settings: settings$1
+};
+
+var de$1 = /*#__PURE__*/Object.freeze({
+    __proto__: null,
+    common: common$1,
+    settings: settings$1,
+    'default': de
+});
+
+var common$2 = {
+	version: "Version",
+	description: "A custom card for displaying Spotify-Playlist and starting playback",
+	invalid_configuration: "Invalid configuration",
+	show_warning: "Show Warning",
+	show_missing_spotcast: "Spotcast integration has to be installed for this component to work",
+	show_missing_spotify: "Spotify integration has to be installed for playback information"
+};
+var settings$2 = {
+	general: "General",
+	general_description: "General settings for this card",
+	appearance: "Appearance",
+	appearance_description: "Customize the style, icon, etc",
+	hide_warning: "Hide warnings",
+	playlist_type: "Playlist Type",
+	limit: "Amount of playlists shown",
+	height: "Height of card",
+	country_code: "Country Code for featured playlists",
+	always_play_random_song: "Always play random song when starting playback",
+	title: "Title of card",
+	display_style: "Display Style",
+	grid_covers_per_row: "Number of covers per row",
+	account: "Account",
+	filter_out_cast_devices: "Filter out chromecast devices",
+	spotify_entity: "Spotify media player entity",
+	default_device: "Default device name"
+};
+var se = {
+	common: common$2,
+	settings: settings$2
+};
+
+var se$1 = /*#__PURE__*/Object.freeze({
+    __proto__: null,
+    common: common$2,
+    settings: settings$2,
+    'default': se
+});
+
+const languages = {
+    en: en$1,
+    de: de$1,
+    se: se$1,
+};
+function localize(string, search = '', replace = '') {
+    const section = string.split('.')[0];
+    const key = string.split('.')[1];
+    const lang = (localStorage.getItem('selectedLanguage') || navigator.language.split('-')[0] || 'en')
+        .replace(/['"]+/g, '')
+        .replace('-', '_');
+    let translated;
+    try {
+        translated = languages[lang][section][key];
+    }
+    catch (e) {
+        translated = languages['en'][section][key];
+    }
+    if (translated === undefined)
+        translated = languages['en'][section][key];
+    if (search !== '' && replace !== '') {
+        translated = translated.replace(search, replace);
+    }
+    return translated;
+}
+
+//define tabs of editor
+const options = {
+    general: {
+        icon: 'tune',
+        name: localize('settings.general'),
+        secondary: localize('settings.general_description'),
+        show: true,
+    },
+    appearance: {
+        icon: 'palette',
+        name: localize('settings.appearance'),
+        secondary: localize('settings.appearance_description'),
+        show: false,
+    },
+    advanced: {
+        icon: 'pencil',
+        name: localize('settings.advanced'),
+        secondary: localize('settings.advanced_description'),
+        show: false,
+    },
+};
+let SpotifyCardEditor = class SpotifyCardEditor extends LitElement {
+    constructor() {
+        super(...arguments);
+        this.accounts = [];
+        this.chromecast_devices = [];
+    }
+    async connectedCallback() {
+        super.connectedCallback();
+        const res = await this.hass.callWS({
+            type: 'spotcast/accounts',
+        });
+        this.accounts = res;
+        const casts = await this.hass.callWS({
+            type: 'spotcast/castdevices',
+        });
+        this.chromecast_devices = casts === null || casts === void 0 ? void 0 : casts.map((c) => c.friendly_name);
+    }
+    setConfig(_config) {
+        this.config = _config;
+    }
+    getMediaPlayerEntities() {
+        return Object.values(this.hass.states)
+            .filter((ent) => ent.entity_id.match('media_player[.]'))
+            .map((e) => e.entity_id);
+    }
+    _toggleOption(ev) {
+        this._toggleThing(ev, options);
+    }
+    _toggleThing(ev, optionList) {
+        const show = !optionList[ev.target.option].show;
+        for (const [key] of Object.entries(optionList)) {
+            optionList[key].show = false;
+        }
+        optionList[ev.target.option].show = show;
+        this._toggle = !this._toggle;
+    }
+    valueChanged(ev) {
+        // ev.target.offsetParent checks if this visible or freetext input is used
+        if (!this.config || !this.hass || ev.target.offsetParent === null) {
+            return;
+        }
+        const { target } = ev;
+        if (target.value && this[`_${target.configValue}`] === target.value) {
+            return;
+        }
+        if (target.configValue) {
+            // Delete item if false or empty
+            if (target.checked === false || target.value === '') {
+                const clone = Object.assign({}, this.config);
+                delete clone[target.configValue];
+                this.config = clone;
+            }
+            else {
+                let target_value = target.value;
+                if (target.configValue == 'height') {
+                    target_value = Number(target_value);
+                }
+                else if (target.configValue == 'filter_devices') {
+                    target_value = target_value
+                        .split(',')
+                        .map((value) => {
+                        return value.trim();
+                    })
+                        .filter((value) => {
+                        return value != '';
+                    });
+                }
+                this.config = Object.assign(Object.assign({}, this.config), { [target.configValue]: target.checked !== undefined ? target.checked : target_value });
+            }
+        }
+        C(this, 'config-changed', { config: this.config });
+    }
+    getValue(value) {
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x, _y, _z, _0, _1, _2, _3, _4, _5, _6;
+        switch (value) {
+            case ConfigEntry.Name:
+                return (_b = (_a = this.config) === null || _a === void 0 ? void 0 : _a.name) !== null && _b !== void 0 ? _b : '';
+            case ConfigEntry.Account:
+                return (_d = (_c = this.config) === null || _c === void 0 ? void 0 : _c.account) !== null && _d !== void 0 ? _d : 'default';
+            case ConfigEntry.Spotify_Entity:
+                // eslint-disable-next-line no-case-declarations
+                const auto_detected = this.getMediaPlayerEntities().filter((e) => e.includes('spotify'));
+                return (_f = (_e = this.config) === null || _e === void 0 ? void 0 : _e.spotify_entity) !== null && _f !== void 0 ? _f : (auto_detected.length > 0 ? auto_detected[0] : '');
+            case ConfigEntry.Country_Code:
+                return (_h = (_g = this.config) === null || _g === void 0 ? void 0 : _g.country_code) !== null && _h !== void 0 ? _h : '';
+            case ConfigEntry.Limit:
+                return (_k = (_j = this.config) === null || _j === void 0 ? void 0 : _j.limit) !== null && _k !== void 0 ? _k : 10;
+            case ConfigEntry.Playlist_Type:
+                return (_m = (_l = this.config) === null || _l === void 0 ? void 0 : _l.playlist_type) !== null && _m !== void 0 ? _m : 'default';
+            case ConfigEntry.Always_Play_Random_Song:
+                return (_p = (_o = this.config) === null || _o === void 0 ? void 0 : _o.always_play_random_song) !== null && _p !== void 0 ? _p : false;
+            case ConfigEntry.Height:
+                return (_r = (_q = this.config) === null || _q === void 0 ? void 0 : _q.height) !== null && _r !== void 0 ? _r : '';
+            case ConfigEntry.Display_Style:
+                return (_t = (_s = this.config) === null || _s === void 0 ? void 0 : _s.display_style) !== null && _t !== void 0 ? _t : 'list';
+            case ConfigEntry.Grid_Covers_Per_Row:
+                return (_v = (_u = this.config) === null || _u === void 0 ? void 0 : _u.grid_covers_per_row) !== null && _v !== void 0 ? _v : 5;
+            case ConfigEntry.Grid_Center_Covers:
+                return (_x = (_w = this.config) === null || _w === void 0 ? void 0 : _w.grid_center_covers) !== null && _x !== void 0 ? _x : false;
+            case ConfigEntry.Hide_Warning:
+                return (_z = (_y = this.config) === null || _y === void 0 ? void 0 : _y.hide_warning) !== null && _z !== void 0 ? _z : false;
+            case ConfigEntry.Default_Device:
+                return (_1 = (_0 = this.config) === null || _0 === void 0 ? void 0 : _0.default_device) !== null && _1 !== void 0 ? _1 : '';
+            case ConfigEntry.Filter_Devices:
+                return (_4 = (_3 = (_2 = this.config) === null || _2 === void 0 ? void 0 : _2.filter_devices) === null || _3 === void 0 ? void 0 : _3.toString()) !== null && _4 !== void 0 ? _4 : '';
+            case ConfigEntry.Hide_Top_Header:
+                return (_6 = (_5 = this.config) === null || _5 === void 0 ? void 0 : _5.hide_top_header) !== null && _6 !== void 0 ? _6 : false;
+        }
+    }
+    renderGeneral() {
+        const media_player_entities = this.getMediaPlayerEntities();
+        return html `
       <div class="values">
         <div>
           <paper-dropdown-menu
-            label=${Le("settings.account")}
+            label=${localize('settings.account')}
             @value-changed=${this.valueChanged}
-            .configValue=${"account"}
+            .configValue=${'account'}
             class="dropdown"
           >
             <paper-listbox
               slot="dropdown-content"
-              .selected=${this.accounts.indexOf(this.getValue(re.Account))}
+              .selected=${this.accounts.indexOf(this.getValue(ConfigEntry.Account))}
             >
-              ${this.accounts.map(e=>H` <paper-item>${e}</paper-item> `)}
+              ${this.accounts.map((item) => html ` <paper-item>${item}</paper-item> `)}
             </paper-listbox>
           </paper-dropdown-menu>
         </div>
         <div>
           <paper-dropdown-menu
-            label=${Le("settings.spotify_entity")}
+            label=${localize('settings.spotify_entity')}
             @value-changed=${this.valueChanged}
-            .configValue=${"spotify_entity"}
+            .configValue=${'spotify_entity'}
             class="dropdown"
           >
             <paper-listbox
               slot="dropdown-content"
-              .selected=${e.indexOf(this.getValue(re.Spotify_Entity))}
+              .selected=${media_player_entities.indexOf(this.getValue(ConfigEntry.Spotify_Entity))}
             >
-              ${e.map(e=>H` <paper-item>${e}</paper-item> `)}
+              ${media_player_entities.map((item) => html ` <paper-item>${item}</paper-item> `)}
             </paper-listbox>
           </paper-dropdown-menu>
         </div>
         <div>
           <paper-dropdown-menu
-            label=${Le("settings.playlist_type")}
+            label=${localize('settings.playlist_type')}
             @value-changed=${this.valueChanged}
-            .configValue=${"playlist_type"}
+            .configValue=${'playlist_type'}
             class="dropdown"
           >
             <paper-listbox
               slot="dropdown-content"
-              .selected=${Object.values(ae).indexOf(this.getValue(re.Playlist_Type))}
+              .selected=${Object.values(PlaylistType).indexOf(this.getValue(ConfigEntry.Playlist_Type))}
             >
-              ${Object.values(ae).map(e=>H` <paper-item>${e}</paper-item> `)}
+              ${Object.values(PlaylistType).map((item) => html ` <paper-item>${item}</paper-item> `)}
             </paper-listbox>
           </paper-dropdown-menu>
         </div>
         <div>
-          <div>${Le("settings.limit")}</div>
+          <div>${localize('settings.limit')}</div>
           <paper-slider
-            .value=${this.getValue(re.Limit)}
-            .configValue=${"limit"}
+            .value=${this.getValue(ConfigEntry.Limit)}
+            .configValue=${'limit'}
             @value-changed=${this.valueChanged}
             max="50"
             editable
@@ -243,86 +3448,89 @@ found at http://polymer.github.io/PATENTS.txt
         </div>
         <div>
           <paper-input
-            label=${Le("settings.height")}
-            .value=${this.getValue(re.Height)}
-            .configValue=${"height"}
+            label=${localize('settings.height')}
+            .value=${this.getValue(ConfigEntry.Height)}
+            .configValue=${'height'}
             @value-changed=${this.valueChanged}
           ></paper-input>
         </div>
         <div>
           <paper-input
-            label=${Le("settings.country_code")}
-            .value=${this.getValue(re.Country_Code)}
-            .configValue=${"country_code"}
+            label=${localize('settings.country_code')}
+            .value=${this.getValue(ConfigEntry.Country_Code)}
+            .configValue=${'country_code'}
             @value-changed=${this.valueChanged}
           ></paper-input>
         </div>
         <div>
           <ha-switch
-            .checked=${this.getValue(re.Always_Play_Random_Song)}
-            .configValue=${"always_play_random_song"}
+            .checked=${this.getValue(ConfigEntry.Always_Play_Random_Song)}
+            .configValue=${'always_play_random_song'}
             @change=${this.valueChanged}
-            .id=${"always_play_random_song"}
+            .id=${'always_play_random_song'}
           ></ha-switch>
-          <label for=${"always_play_random_song"}>${Le("settings.always_play_random_song")}</label>
+          <label for=${'always_play_random_song'}>${localize('settings.always_play_random_song')}</label>
         </div>
         <div>
           <paper-input
-            label=${Le("settings.default_device")}
-            .value=${this.getValue(re.Default_Device)}
-            .configValue=${"default_device"}
+            label=${localize('settings.default_device')}
+            .value=${this.getValue(ConfigEntry.Default_Device)}
+            .configValue=${'default_device'}
             @value-changed=${this.valueChanged}
           ></paper-input>
         </div>
       </div>
-    `}renderAppearance(){return H`
+    `;
+    }
+    renderAppearance() {
+        return html `
       <div class="values">
         <div>
           <ha-switch
-            .checked=${this.getValue(re.Hide_Warning)}
-            .configValue=${"hide_warning"}
+            .checked=${this.getValue(ConfigEntry.Hide_Warning)}
+            .configValue=${'hide_warning'}
             @change=${this.valueChanged}
-            .id=${"hide_warning"}
+            .id=${'hide_warning'}
           ></ha-switch>
-          <label for=${"hide_warning"}>${Le("settings.hide_warning")}</label>
+          <label for=${'hide_warning'}>${localize('settings.hide_warning')}</label>
         </div>
         <div>
           <paper-input
-            label=${Le("settings.title")}
-            .value=${this.getValue(re.Name)}
-            .configValue=${"name"}
+            label=${localize('settings.title')}
+            .value=${this.getValue(ConfigEntry.Name)}
+            .configValue=${'name'}
             @value-changed=${this.valueChanged}
           ></paper-input>
         </div>
         <div>
           <ha-switch
-            .checked=${this.getValue(re.Hide_Top_Header)}
-            .configValue=${"hide_top_header"}
+            .checked=${this.getValue(ConfigEntry.Hide_Top_Header)}
+            .configValue=${'hide_top_header'}
             @change=${this.valueChanged}
-            .id=${"hide_top_header"}
+            .id=${'hide_top_header'}
           ></ha-switch>
-          <label for=${"hide_top_header"}>${Le("settings.hide_top_header")}</label>
+          <label for=${'hide_top_header'}>${localize('settings.hide_top_header')}</label>
         </div>
         <div>
           <paper-dropdown-menu
-            label=${Le("settings.display_style")}
+            label=${localize('settings.display_style')}
             @value-changed=${this.valueChanged}
-            .configValue=${"display_style"}
+            .configValue=${'display_style'}
             class="dropdown"
           >
             <paper-listbox
               slot="dropdown-content"
-              .selected=${Object.values(ne).indexOf(this.getValue(re.Display_Style))}
+              .selected=${Object.values(DisplayStyle).indexOf(this.getValue(ConfigEntry.Display_Style))}
             >
-              ${Object.values(ne).map(e=>H` <paper-item>${e}</paper-item> `)}
+              ${Object.values(DisplayStyle).map((item) => html ` <paper-item>${item}</paper-item> `)}
             </paper-listbox>
           </paper-dropdown-menu>
         </div>
         <div>
-          <div>${Le("settings.grid_covers_per_row")}</div>
+          <div>${localize('settings.grid_covers_per_row')}</div>
           <paper-slider
-            .value=${this.getValue(re.Grid_Covers_Per_Row)}
-            .configValue=${"grid_covers_per_row"}
+            .value=${this.getValue(ConfigEntry.Grid_Covers_Per_Row)}
+            .configValue=${'grid_covers_per_row'}
             @value-changed=${this.valueChanged}
             max="10"
             min="1"
@@ -332,53 +3540,65 @@ found at http://polymer.github.io/PATENTS.txt
         </div>
         <div>
           <ha-switch
-            .checked=${this.getValue(re.Grid_Center_Covers)}
-            .configValue=${"grid_center_covers"}
+            .checked=${this.getValue(ConfigEntry.Grid_Center_Covers)}
+            .configValue=${'grid_center_covers'}
             @change=${this.valueChanged}
-            .id=${"grid_center_covers"}
+            .id=${'grid_center_covers'}
           ></ha-switch>
-          <label for=${"grid_center_covers"}>${Le("settings.grid_center_covers")}</label>
+          <label for=${'grid_center_covers'}>${localize('settings.grid_center_covers')}</label>
         </div>
       </div>
-    `}renderAdvanced(){return H`
+    `;
+    }
+    renderAdvanced() {
+        return html `
       <div class="values">
         <div>
           <paper-input
-            label=${Le("settings.filter_devices")}
-            .value=${this.getValue(re.Filter_Devices)}
-            .configValue=${"filter_devices"}
+            label=${localize('settings.filter_devices')}
+            .value=${this.getValue(ConfigEntry.Filter_Devices)}
+            .configValue=${'filter_devices'}
             @value-changed=${this.valueChanged}
           ></paper-input>
         </div>
       </div>
-    `}render(){return this.hass?H`
+    `;
+    }
+    render() {
+        if (!this.hass) {
+            return html ``;
+        }
+        return html `
       <div class="card-config">
-        <div class="option" @click=${this._toggleOption} .option=${"general"}>
+        <div class="option" @click=${this._toggleOption} .option=${'general'}>
           <div class="row">
-            <ha-icon .icon=${"mdi:"+Ue.general.icon}></ha-icon>
-            <div class="title">${Ue.general.name}</div>
+            <ha-icon .icon=${`mdi:${options.general.icon}`}></ha-icon>
+            <div class="title">${options.general.name}</div>
           </div>
-          <div class="secondary">${Ue.general.secondary}</div>
+          <div class="secondary">${options.general.secondary}</div>
         </div>
-        ${Ue.general.show?this.renderGeneral():""}
-        <div class="option" @click=${this._toggleOption} .option=${"appearance"}>
+        ${options.general.show ? this.renderGeneral() : ''}
+        <div class="option" @click=${this._toggleOption} .option=${'appearance'}>
           <div class="row">
-            <ha-icon .icon=${"mdi:"+Ue.appearance.icon}></ha-icon>
-            <div class="title">${Ue.appearance.name}</div>
+            <ha-icon .icon=${`mdi:${options.appearance.icon}`}></ha-icon>
+            <div class="title">${options.appearance.name}</div>
           </div>
-          <div class="secondary">${Ue.appearance.secondary}</div>
+          <div class="secondary">${options.appearance.secondary}</div>
         </div>
-        ${Ue.appearance.show?this.renderAppearance():""}
-        <div class="option" @click=${this._toggleOption} .option=${"advanced"}>
+        ${options.appearance.show ? this.renderAppearance() : ''}
+        <div class="option" @click=${this._toggleOption} .option=${'advanced'}>
           <div class="row">
-            <ha-icon .icon=${"mdi:"+Ue.advanced.icon}></ha-icon>
-            <div class="title">${Ue.advanced.name}</div>
+            <ha-icon .icon=${`mdi:${options.advanced.icon}`}></ha-icon>
+            <div class="title">${options.advanced.name}</div>
           </div>
-          <div class="secondary">${Ue.advanced.secondary}</div>
+          <div class="secondary">${options.advanced.secondary}</div>
         </div>
-        ${Ue.advanced.show?this.renderAdvanced():""}
+        ${options.advanced.show ? this.renderAdvanced() : ''}
       </div>
-    `:H``}static get styles(){return te`
+    `;
+    }
+    static get styles() {
+        return css `
       .option {
         padding: 4px 0px;
         cursor: pointer;
@@ -438,7 +3658,668 @@ found at http://polymer.github.io/PATENTS.txt
       paper-slider {
         width: auto;
       }
-    `}};e([J({type:Object})],je.prototype,"hass",void 0),e([K()],je.prototype,"config",void 0),e([K()],je.prototype,"_toggle",void 0),e([K()],je.prototype,"chromecast_devices",void 0),je=e([B("spotify-card-editor")],je);class Re{constructor(e){this.state_ttl=4e3,this.last_state_update_time=0,this.loading=!1,this.parent=e}is_loading(){return setTimeout(this.set_loading_off,100),this.loading}set_loading_off(){this.loading=!1}is_loaded(){return void 0!==this.parent.playlists.length}getPlaybackOptions(e){return{uri:e,force_playback:"playing"==this.parent.getSpotifyEntityState(),random_song:this.parent.config.always_play_random_song||!1,account:this.parent.config.account}}playUri(e){const t=this.getCurrentPlayer();if(!t){const t=this.parent.config.default_device;if(t){const i=this.parent.devices.filter(e=>e.name==t);if(i.length>0)return this.playUriOnConnectDevice(i[0].id,e);{const i=this.parent.chromecast_devices.filter(e=>e.friendly_name==t);if(i.length>0)return this.playUriOnCastDevice(i[0].friendly_name,e);throw new Error("Could not find default_device: "+t)}}throw new Error("No active device nor default device in settings")}this.playUriOnConnectDevice(t.id,e)}transferPlaybackToCastDevice(e){this.parent.hass.callService("spotcast","start",{device_name:e,force_playback:!0,account:this.parent.config.account})}transferPlaybackToConnectDevice(e){this.parent.hass.callService("spotcast","start",{spotify_device_id:e,force_playback:!0,account:this.parent.config.account})}playUriOnCastDevice(e,t){const i=Object.assign(Object.assign({},this.getPlaybackOptions(t)),{device_name:e});this.parent.hass.callService("spotcast","start",i)}playUriOnConnectDevice(e,t){const i=Object.assign(Object.assign({},this.getPlaybackOptions(t)),{spotify_device_id:e});this.parent.hass.callService("spotcast","start",i)}async updateState(){if(!((new Date).getTime()-this.last_state_update_time<this.state_ttl))try{this.loading=!0,await this.fetchDevices(),await this.fetchPlayer(),await this.fetchChromecasts(),this.last_state_update_time=(new Date).getTime()}catch(e){throw Error("updateState error: "+e)}finally{this.loading=!1}}getCurrentPlayer(){var e;return null===(e=this.parent.player)||void 0===e?void 0:e.device}async fetchPlayer(){const e={type:"spotcast/player",account:this.parent.config.account};try{this.parent.player=await this.parent.hass.callWS(e)}catch(e){throw Error("Failed to fetch player: "+e)}}async fetchDevices(){const e={type:"spotcast/devices",account:this.parent.config.account};try{const t=await this.parent.hass.callWS(e);this.parent.devices=t.devices}catch(e){throw Error("Failed to fetch devices: "+e)}}async fetchChromecasts(){try{this.parent.chromecast_devices=await this.parent.hass.callWS({type:"spotcast/castdevices"})}catch(e){throw this.parent.chromecast_devices=[],Error("Failed to fetch devices: "+e)}}async fetchPlaylists(){this.loading=!0;const e={type:"spotcast/playlists",playlist_type:this.parent.config.playlist_type||"",account:this.parent.config.account,limit:this.parent.config.limit};this.parent.config.country_code&&(e.country_code=this.parent.config.country_code);try{const t=await this.parent.hass.callWS(e);this.parent.playlists=t.items}catch(e){throw Error("Failed to fetch playlists: "+e)}finally{this.loading=!1}}}const Fe=e=>{let t=[];function i(i,s){e=s?i:Object.assign(Object.assign({},e),i);let n=t;for(let t=0;t<n.length;t++)n[t](e)}return{get state(){return e},action(t){function s(e){i(e,!1)}return function(){let i=[e];for(let e=0;e<arguments.length;e++)i.push(arguments[e]);let n=t.apply(this,i);if(null!=n)return n instanceof Promise?n.then(s):s(n)}},setState:i,subscribe:e=>(t.push(e),()=>{!function(e){let i=[];for(let s=0;s<t.length;s++)t[s]===e?e=null:i.push(t[s]);t=i}(e)})}},Ye=(e,t,i,s)=>{if(e[t])return e[t];let n,a=0,r=Fe();const o=()=>i(e).then(e=>r.setState(e,!0)),l=()=>o().catch(t=>{if(e.connected)throw t});return e[t]={get state(){return r.state},refresh:o,subscribe(t){a++,1===a&&(s&&(n=s(e,r)),e.addEventListener("ready",l),l());const i=r.subscribe(t);return void 0!==r.state&&setTimeout(()=>t(r.state),0),()=>{i(),a--,a||(n&&n.then(e=>{e()}),e.removeEventListener("ready",o))}}},e[t]},Ie=e=>e.sendMessagePromise({type:"get_states"});function We(e,t){if(void 0===e)return null;const{domain:i,service:s}=t.data;return{[i]:Object.assign({},e[i],{[s]:{description:"",fields:{}}})}}function qe(e,t){if(void 0===e)return null;const{domain:i,service:s}=t.data,n=e[i];if(!n||!(s in n))return null;const a={};return Object.keys(n).forEach(e=>{e!==s&&(a[e]=n[e])}),{[i]:a}}const Ge=e=>e.sendMessagePromise({type:"get_services"}),Be=(e,t)=>Promise.all([e.subscribeEvents(t.action(We),"service_registered"),e.subscribeEvents(t.action(qe),"service_removed")]).then(e=>()=>e.forEach(e=>e()));async function Ze(e){const t=await Ie(e),i={};for(let e=0;e<t.length;e++){const s=t[e];i[s.entity_id]=s}return i}const Je=(e,t)=>e.subscribeEvents(e=>function(e,t){const i=e.state;if(void 0===i)return;const{entity_id:s,new_state:n}=t.data;if(n)e.setState({[n.entity_id]:n});else{const t=Object.assign({},i);delete t[s],e.setState(t,!0)}}(t,e),"state_changed"),Ke=(e,t)=>(e=>Ye(e,"_ent",Ze,Je))(e).subscribe(t);var Qe;function Xe(e,t){if(!t||!oe(t)&&!oe(e)&&e.length!=t.length)return!0;for(const i in e)if(e[i].id!=t[i].id)return!0;return!1}function et(e,t){return!t||(e.state!=t.state||e.attributes.shuffle!=t.attributes.shuffle)}console.info(`%c  SPOTIFY-CARD \n%c  ${Le("common.version")} 2.2.4    `,"color: orange; font-weight: bold; background: black","color: white; font-weight: bold; background: dimgray"),window.customCards=window.customCards||[],window.customCards.push({type:"spotify-card",name:"Spotify Card",description:Le("common.description"),preview:!0});let tt=Qe=class extends se{constructor(){super(),this.playlists=[],this.devices=[],this.chromecast_devices=[],this._spotify_installed=!1,this._fetch_time_out=0,this.spotcast_connector=new Re(this)}static async getConfigElement(){return document.createElement("spotify-card-editor")}static getStubConfig(){return{}}setConfig(e){let t="";if(e.playlist_type&&!Object.values(ae).includes(e.playlist_type.toLowerCase())&&(t="playlist_type"),e.display_style&&!Object.values(ne).includes(e.display_style.toLowerCase())&&(t="display_style"),e.show_error||""!=t)throw new Error(Le("common.invalid_configuration")+": "+t);this.config=e}connectedCallback(){super.connectedCallback(),this.doSubscribeEntities(),this.updateSpotcast()}doSubscribeEntities(){var e;(null===(e=this.hass)||void 0===e?void 0:e.connection)&&!this._unsubscribe_entitites&&this.isConnected&&(this._unsubscribe_entitites=Ke(this.hass.connection,e=>this.entitiesUpdated(e)))}entitiesUpdated(e){let t=!1;for(const i in e)i.startsWith("media_player")&&((i.startsWith("media_player.spotify")||i==this.config.spotify_entity)&&(this._spotify_installed=!0,this._spotify_state=e[i]),t=!0);t&&!document.hidden&&this.updateSpotcast()}updateSpotcast(){this._fetch_time_out&&clearTimeout(this._fetch_time_out),this._fetch_time_out=setTimeout(async()=>{this.hass&&this.isSpotcastInstalled()&&!this.spotcast_connector.is_loading()&&(await this.spotcast_connector.updateState(),await this.spotcast_connector.fetchPlaylists())},500)}disconnectedCallback(){super.disconnectedCallback(),this._unsubscribe_entitites&&(this._unsubscribe_entitites(),this._unsubscribe_entitites=void 0)}updated(e){super.updated(e),this.updateComplete.then(()=>{for(const e of this.renderRoot.querySelectorAll("[data-spotify-image-url]")){const t=new Image;t.onload=function(t){var i;null===(i=e.firstElementChild)||void 0===i||i.replaceWith(t.srcElement)},e.dataset.spotifyImageUrl&&(t.src=e.dataset.spotifyImageUrl)}})}getDisplayStyle(){var e;return"grid"==(null===(e=this.config.display_style)||void 0===e?void 0:e.toLowerCase())?ne.Grid:ne.List}getPlayingState(){var e,t;return null!==(t="playing"==(null===(e=this._spotify_state)||void 0===e?void 0:e.state))&&void 0!==t&&t}getShuffleState(){var e,t;return null!==(t=null===(e=this.player)||void 0===e?void 0:e.shuffle_state)&&void 0!==t&&t}getSpotifyEntityState(){return this._spotify_state?this._spotify_state.state:""}isSpotcastInstalled(){var e,t;return!(!(null===(e=this.hass)||void 0===e?void 0:e.connection)||void 0===(t=this.hass.connection,Ye(t,"_srv",Ge,Be)).state.spotcast)}checkIfAllowedToShow(e){var t,i;const s=null!==(i=null===(t=this.config.filter_devices)||void 0===t?void 0:t.map(e=>new RegExp(e+"$")))&&void 0!==i?i:[];for(const t of s)if(t.test("name"in e?e.name:e.friendly_name))return!1;return!0}getDefaultDevice(){let[e,t]=this.getFilteredDevices();if(e=e.filter(e=>e.name==this.config.default_device),t=t.filter(e=>e.friendly_name==this.config.default_device),e.length>0||t.length>0)return this.config.default_device}getFilteredDevices(){return[this.devices.filter(this.checkIfAllowedToShow,this),this.chromecast_devices.filter(this.checkIfAllowedToShow,this)]}getPlaylists(){return this.playlists}isThisPlaylistPlaying(e){var t;return(null===(t=this._spotify_state)||void 0===t?void 0:t.attributes.media_playlist)===e.name}startUri(e,t){const i="loading",s=e.srcElement;"div"==(null==s?void 0:s.localName)?s.children[1].classList.add(i):"svg"==(null==s?void 0:s.localName)?s.parentElement.classList.add(i):"path"==(null==s?void 0:s.localName)?s.parentElement.parentElement.classList.add(i):"img"==(null==s?void 0:s.localName)?s.nextElementSibling.classList.add(i):"p"==(null==s?void 0:s.localName)?s.parentElement.children[1].classList.add(i):console.log(s),this.spotcast_connector.playUri(t)}onShuffleSelect(){var e,t;"playing"==(null===(e=this._spotify_state)||void 0===e?void 0:e.state)&&this.hass.callService("media_player","shuffle_set",{entity_id:this._spotify_state.entity_id,shuffle:!(null===(t=this.player)||void 0===t?void 0:t.shuffle_state)})}handlePlayPauseEvent(e,t){e.stopPropagation(),this._spotify_state&&this.hass.callService("media_player",t,{entity_id:this._spotify_state.entity_id})}spotifyDeviceSelected(e){if(this.spotcast_connector.getCurrentPlayer())return this.spotcast_connector.transferPlaybackToConnectDevice(e.id);const t=this.playlists[0];console.log("spotifyDeviceSelected playing first playlist"),this.spotcast_connector.playUriOnConnectDevice(e.id,t.uri)}chromecastDeviceSelected(e){if(this.spotcast_connector.getCurrentPlayer())return this.spotcast_connector.transferPlaybackToCastDevice(e.friendly_name);const t=this.playlists[0];console.log("chromecastDeviceSelected playing first playlist"),this.spotcast_connector.playUriOnCastDevice(e.friendly_name,t.uri)}getCurrentPlayer(){return this.spotcast_connector.getCurrentPlayer()}render(){var e,t,i;let s=H``;this.isSpotcastInstalled()||(s=this.showWarning(Le("common.show_missing_spotcast")));let n=H`<div>Loading...</div>`;if(this.spotcast_connector.is_loaded())switch(this.getDisplayStyle()){case ne.Grid:n=this.generateGridView();break;default:n=this.generateListView()}const a=H`<div id="header">
+    `;
+    }
+};
+__decorate([
+    property({ type: Object })
+], SpotifyCardEditor.prototype, "hass", void 0);
+__decorate([
+    internalProperty()
+], SpotifyCardEditor.prototype, "config", void 0);
+__decorate([
+    internalProperty()
+], SpotifyCardEditor.prototype, "_toggle", void 0);
+__decorate([
+    internalProperty()
+], SpotifyCardEditor.prototype, "chromecast_devices", void 0);
+SpotifyCardEditor = __decorate([
+    customElement('spotify-card-editor')
+], SpotifyCardEditor);
+
+class SpotcastConnector {
+    constructor(parent) {
+        // data is valid for 4 secs otherwise the service is spammed bcos of the entitiy changes
+        this.state_ttl = 4000;
+        this.last_state_update_time = 0;
+        this.loading = false;
+        this.parent = parent;
+    }
+    is_loading() {
+        setTimeout(this.set_loading_off, 100);
+        return this.loading;
+    }
+    set_loading_off() {
+        this.loading = false;
+    }
+    is_loaded() {
+        if (this.parent.playlists.length !== undefined) {
+            return true;
+        }
+        return false;
+    }
+    getPlaybackOptions(uri) {
+        const options = {
+            uri: uri,
+            force_playback: this.parent.getSpotifyEntityState() == 'playing',
+            random_song: this.parent.config.always_play_random_song || false,
+            account: this.parent.config.account,
+        };
+        return options;
+    }
+    playUri(uri) {
+        const current_player = this.getCurrentPlayer();
+        if (!current_player) {
+            const default_device = this.parent.config.default_device;
+            if (default_device) {
+                const connect_device = this.parent.devices.filter((device) => device.name == default_device);
+                if (connect_device.length > 0) {
+                    return this.playUriOnConnectDevice(connect_device[0].id, uri);
+                }
+                else {
+                    const cast_device = this.parent.chromecast_devices.filter((cast) => cast.friendly_name == default_device);
+                    if (cast_device.length > 0) {
+                        return this.playUriOnCastDevice(cast_device[0].friendly_name, uri);
+                    }
+                    throw new Error('Could not find default_device: ' + default_device);
+                }
+            }
+            throw new Error('No active device nor default device in settings');
+        }
+        this.playUriOnConnectDevice(current_player.id, uri);
+    }
+    transferPlaybackToCastDevice(device_name) {
+        this.parent.hass.callService('spotcast', 'start', {
+            device_name: device_name,
+            force_playback: true,
+            account: this.parent.config.account,
+        });
+    }
+    transferPlaybackToConnectDevice(device_id) {
+        this.parent.hass.callService('spotcast', 'start', {
+            spotify_device_id: device_id,
+            force_playback: true,
+            account: this.parent.config.account,
+        });
+    }
+    playUriOnCastDevice(device_name, uri) {
+        const options = Object.assign(Object.assign({}, this.getPlaybackOptions(uri)), { device_name: device_name });
+        this.parent.hass.callService('spotcast', 'start', options);
+    }
+    playUriOnConnectDevice(device_id, uri) {
+        const options = Object.assign(Object.assign({}, this.getPlaybackOptions(uri)), { spotify_device_id: device_id });
+        this.parent.hass.callService('spotcast', 'start', options);
+    }
+    async updateState() {
+        const now = new Date().getTime();
+        if (now - this.last_state_update_time < this.state_ttl) {
+            // console.log('cache is still valid:', this.last_state_update_time);
+            return;
+        }
+        // console.log('cache is NOT valid:', this.last_state_update_time);
+        try {
+            this.loading = true;
+            await this.fetchDevices();
+            await this.fetchPlayer();
+            await this.fetchChromecasts();
+            this.last_state_update_time = new Date().getTime();
+        }
+        catch (e) {
+            throw Error('updateState error: ' + e);
+        }
+        finally {
+            this.loading = false;
+        }
+    }
+    getCurrentPlayer() {
+        var _a;
+        return (_a = this.parent.player) === null || _a === void 0 ? void 0 : _a.device;
+    }
+    async fetchPlayer() {
+        // console.log('fetchPlayer');
+        const message = {
+            type: 'spotcast/player',
+            account: this.parent.config.account,
+        };
+        try {
+            this.parent.player = await this.parent.hass.callWS(message);
+        }
+        catch (e) {
+            throw Error('Failed to fetch player: ' + e);
+        }
+        // console.log('fetchPlayer:', JSON.stringify(this.player, null, 2));
+    }
+    async fetchDevices() {
+        // console.log('fetchDevices');
+        const message = {
+            type: 'spotcast/devices',
+            account: this.parent.config.account,
+        };
+        try {
+            const res = await this.parent.hass.callWS(message);
+            this.parent.devices = res.devices;
+        }
+        catch (e) {
+            throw Error('Failed to fetch devices: ' + e);
+        }
+        // console.log('fetchDevices:', JSON.stringify(this.devices, null, 2));
+    }
+    /**
+     * Use HA state for now
+     */
+    async fetchChromecasts() {
+        try {
+            this.parent.chromecast_devices = await this.parent.hass.callWS({ type: 'spotcast/castdevices' });
+        }
+        catch (e) {
+            this.parent.chromecast_devices = [];
+            throw Error('Failed to fetch devices: ' + e);
+        }
+        // console.log('fetchChromecasts2:', this.chromecast_devices);
+    }
+    async fetchPlaylists() {
+        this.loading = true;
+        const message = {
+            type: 'spotcast/playlists',
+            playlist_type: this.parent.config.playlist_type || '',
+            account: this.parent.config.account,
+            limit: this.parent.config.limit,
+        };
+        if (this.parent.config.country_code) {
+            message.country_code = this.parent.config.country_code;
+        }
+        // message.locale = 'implement me later'
+        try {
+            const res = await this.parent.hass.callWS(message);
+            this.parent.playlists = res.items;
+        }
+        catch (e) {
+            throw Error('Failed to fetch playlists: ' + e);
+        }
+        finally {
+            this.loading = false;
+        }
+        //console.log('PLAYLISTS:', JSON.stringify(this.parent.playlists, null, 2));
+    }
+}
+
+function states() {
+    return {
+        type: "get_states"
+    };
+}
+function services() {
+    return {
+        type: "get_services"
+    };
+}
+
+const createStore = (state) => {
+    let listeners = [];
+    function unsubscribe(listener) {
+        let out = [];
+        for (let i = 0; i < listeners.length; i++) {
+            if (listeners[i] === listener) {
+                listener = null;
+            }
+            else {
+                out.push(listeners[i]);
+            }
+        }
+        listeners = out;
+    }
+    function setState(update, overwrite) {
+        state = overwrite ? update : Object.assign(Object.assign({}, state), update);
+        let currentListeners = listeners;
+        for (let i = 0; i < currentListeners.length; i++) {
+            currentListeners[i](state);
+        }
+    }
+    /**
+     * An observable state container, returned from {@link createStore}
+     * @name store
+     */
+    return {
+        get state() {
+            return state;
+        },
+        /**
+         * Create a bound copy of the given action function.
+         * The bound returned function invokes action() and persists the result back to the store.
+         * If the return value of `action` is a Promise, the resolved value will be used as state.
+         * @param {Function} action	An action of the form `action(state, ...args) -> stateUpdate`
+         * @returns {Function} boundAction()
+         */
+        action(action) {
+            function apply(result) {
+                setState(result, false);
+            }
+            // Note: perf tests verifying this implementation: https://esbench.com/bench/5a295e6299634800a0349500
+            return function () {
+                let args = [state];
+                for (let i = 0; i < arguments.length; i++)
+                    args.push(arguments[i]);
+                // @ts-ignore
+                let ret = action.apply(this, args);
+                if (ret != null) {
+                    return ret instanceof Promise ? ret.then(apply) : apply(ret);
+                }
+            };
+        },
+        /**
+         * Apply a partial state object to the current state, invoking registered listeners.
+         * @param {Object} update				An object with properties to be merged into state
+         * @param {Boolean} [overwrite=false]	If `true`, update will replace state instead of being merged into it
+         */
+        setState,
+        /**
+         * Register a listener function to be called whenever state is changed. Returns an `unsubscribe()` function.
+         * @param {Function} listener	A function to call when state changes. Gets passed the new state.
+         * @returns {Function} unsubscribe()
+         */
+        subscribe(listener) {
+            listeners.push(listener);
+            return () => {
+                unsubscribe(listener);
+            };
+        }
+        // /**
+        //  * Remove a previously-registered listener function.
+        //  * @param {Function} listener	The callback previously passed to `subscribe()` that should be removed.
+        //  * @function
+        //  */
+        // unsubscribe,
+    };
+};
+
+const getCollection = (conn, key, fetchCollection, subscribeUpdates) => {
+    if (conn[key]) {
+        return conn[key];
+    }
+    let active = 0;
+    let unsubProm;
+    let store = createStore();
+    const refresh = () => fetchCollection(conn).then((state) => store.setState(state, true));
+    const refreshSwallow = () => refresh().catch((err) => {
+        // Swallow errors if socket is connecting, closing or closed.
+        // We will automatically call refresh again when we re-establish the connection.
+        if (conn.connected) {
+            throw err;
+        }
+    });
+    conn[key] = {
+        get state() {
+            return store.state;
+        },
+        refresh,
+        subscribe(subscriber) {
+            active++;
+            // If this was the first subscriber, attach collection
+            if (active === 1) {
+                if (subscribeUpdates) {
+                    unsubProm = subscribeUpdates(conn, store);
+                }
+                // Fetch when connection re-established.
+                conn.addEventListener("ready", refreshSwallow);
+                refreshSwallow();
+            }
+            const unsub = store.subscribe(subscriber);
+            if (store.state !== undefined) {
+                // Don't call it right away so that caller has time
+                // to initialize all the things.
+                setTimeout(() => subscriber(store.state), 0);
+            }
+            return () => {
+                unsub();
+                active--;
+                if (!active) {
+                    // Unsubscribe from changes
+                    if (unsubProm)
+                        unsubProm.then((unsub) => {
+                            unsub();
+                        });
+                    conn.removeEventListener("ready", refresh);
+                }
+            };
+        },
+    };
+    return conn[key];
+};
+
+const getStates = (connection) => connection.sendMessagePromise(states());
+const getServices = (connection) => connection.sendMessagePromise(services());
+
+function processServiceRegistered(state, event) {
+    if (state === undefined)
+        return null;
+    const { domain, service } = event.data;
+    const domainInfo = Object.assign({}, state[domain], {
+        [service]: { description: "", fields: {} },
+    });
+    return { [domain]: domainInfo };
+}
+function processServiceRemoved(state, event) {
+    if (state === undefined)
+        return null;
+    const { domain, service } = event.data;
+    const curDomainInfo = state[domain];
+    if (!curDomainInfo || !(service in curDomainInfo))
+        return null;
+    const domainInfo = {};
+    Object.keys(curDomainInfo).forEach((sKey) => {
+        if (sKey !== service)
+            domainInfo[sKey] = curDomainInfo[sKey];
+    });
+    return { [domain]: domainInfo };
+}
+const fetchServices = (conn) => getServices(conn);
+const subscribeUpdates = (conn, store) => Promise.all([
+    conn.subscribeEvents(store.action(processServiceRegistered), "service_registered"),
+    conn.subscribeEvents(store.action(processServiceRemoved), "service_removed"),
+]).then((unsubs) => () => unsubs.forEach((fn) => fn()));
+const servicesColl = (conn) => getCollection(conn, "_srv", fetchServices, subscribeUpdates);
+
+function processEvent(store, event) {
+    const state = store.state;
+    if (state === undefined)
+        return;
+    const { entity_id, new_state } = event.data;
+    if (new_state) {
+        store.setState({ [new_state.entity_id]: new_state });
+    }
+    else {
+        const newEntities = Object.assign({}, state);
+        delete newEntities[entity_id];
+        store.setState(newEntities, true);
+    }
+}
+async function fetchEntities(conn) {
+    const states = await getStates(conn);
+    const entities = {};
+    for (let i = 0; i < states.length; i++) {
+        const state = states[i];
+        entities[state.entity_id] = state;
+    }
+    return entities;
+}
+const subscribeUpdates$1 = (conn, store) => conn.subscribeEvents(ev => processEvent(store, ev), "state_changed");
+const entitiesColl = (conn) => getCollection(conn, "_ent", fetchEntities, subscribeUpdates$1);
+const subscribeEntities = (conn, onChange) => entitiesColl(conn).subscribe(onChange);
+
+var SpotifyCard_1;
+// Display card version in console
+/* eslint no-console: 0 */
+console.info(`%c  SPOTIFY-CARD \n%c  ${localize('common.version')} ${CARD_VERSION}    `, 'color: orange; font-weight: bold; background: black', 'color: white; font-weight: bold; background: dimgray');
+// Configures the preview in the Lovelace card picker
+window.customCards = window.customCards || [];
+window.customCards.push({
+    type: 'spotify-card',
+    name: 'Spotify Card',
+    description: localize('common.description'),
+    preview: true,
+});
+function hasChangedCustom(newVal, oldVal) {
+    if (!oldVal || (!isCurrentPlayer(oldVal) && !isCurrentPlayer(newVal) && newVal.length != oldVal.length)) {
+        return true;
+    }
+    for (const index in newVal) {
+        if (newVal[index].id != oldVal[index].id) {
+            return true;
+        }
+    }
+    return false;
+}
+function hasChangedMediaPlayer(newVal, oldVal) {
+    if (!oldVal) {
+        return true;
+    }
+    if (newVal.state != oldVal.state || newVal.attributes.shuffle != oldVal.attributes.shuffle) {
+        return true;
+    }
+    return false;
+}
+let SpotifyCard = SpotifyCard_1 = class SpotifyCard extends LitElement {
+    constructor() {
+        super();
+        this.playlists = [];
+        this.devices = [];
+        this.chromecast_devices = [];
+        this._spotify_installed = false;
+        this._fetch_time_out = 0;
+        this.spotcast_connector = new SpotcastConnector(this);
+    }
+    // Calls the editor
+    static async getConfigElement() {
+        return document.createElement('spotify-card-editor');
+    }
+    // Returns default config for Lovelace picker
+    static getStubConfig() {
+        return {};
+    }
+    setConfig(_config) {
+        //Check for errors in config
+        let var_error = '';
+        if (_config.playlist_type &&
+            !Object.values(PlaylistType).includes(_config.playlist_type.toLowerCase())) {
+            var_error = 'playlist_type';
+        }
+        if (_config.display_style &&
+            !Object.values(DisplayStyle).includes(_config.display_style.toLowerCase())) {
+            var_error = 'display_style';
+        }
+        // Show error if neccessary
+        if (_config.show_error || var_error != '') {
+            throw new Error(localize('common.invalid_configuration') + ': ' + var_error);
+        }
+        this.config = _config;
+    }
+    connectedCallback() {
+        super.connectedCallback();
+        this.doSubscribeEntities();
+        this.updateSpotcast();
+    }
+    doSubscribeEntities() {
+        var _a;
+        if (((_a = this.hass) === null || _a === void 0 ? void 0 : _a.connection) && !this._unsubscribe_entitites && this.isConnected) {
+            this._unsubscribe_entitites = subscribeEntities(this.hass.connection, (entities) => this.entitiesUpdated(entities));
+        }
+    }
+    //Callback when hass-entity has changed
+    entitiesUpdated(entities) {
+        let updateDevices = false;
+        for (const item in entities) {
+            // Are there any changes to media players
+            if (item.startsWith('media_player')) {
+                // Get spotify state
+                if (item.startsWith('media_player.spotify') || item == this.config.spotify_entity) {
+                    this._spotify_installed = true;
+                    this._spotify_state = entities[item];
+                }
+                updateDevices = true;
+            }
+        }
+        if (updateDevices && !document.hidden) {
+            this.updateSpotcast();
+        }
+    }
+    updateSpotcast() {
+        // Debounce updates to 500ms
+        if (this._fetch_time_out) {
+            clearTimeout(this._fetch_time_out);
+        }
+        this._fetch_time_out = setTimeout(async () => {
+            if (this.hass) {
+                //request update of spotcast data
+                if (this.isSpotcastInstalled() && !this.spotcast_connector.is_loading()) {
+                    await this.spotcast_connector.updateState();
+                    await this.spotcast_connector.fetchPlaylists();
+                }
+            }
+        }, 500);
+    }
+    disconnectedCallback() {
+        super.disconnectedCallback();
+        if (this._unsubscribe_entitites) {
+            this._unsubscribe_entitites();
+            this._unsubscribe_entitites = undefined;
+        }
+    }
+    updated(changedProps) {
+        super.updated(changedProps);
+        this.updateComplete.then(() => {
+            for (const cover of this.renderRoot.querySelectorAll('[data-spotify-image-url]')) {
+                const downloadingImage = new Image();
+                downloadingImage.onload = function (event) {
+                    var _a;
+                    (_a = cover.firstElementChild) === null || _a === void 0 ? void 0 : _a.replaceWith(event.srcElement);
+                };
+                cover.dataset.spotifyImageUrl ? (downloadingImage.src = cover.dataset.spotifyImageUrl) : '';
+            }
+        });
+    }
+    getDisplayStyle() {
+        var _a;
+        // Display spotify playlists
+        if (((_a = this.config.display_style) === null || _a === void 0 ? void 0 : _a.toLowerCase()) == 'grid') {
+            return DisplayStyle.Grid;
+        }
+        else {
+            return DisplayStyle.List;
+        }
+    }
+    getPlayingState() {
+        var _a, _b;
+        return (_b = ((_a = this._spotify_state) === null || _a === void 0 ? void 0 : _a.state) == 'playing') !== null && _b !== void 0 ? _b : false;
+    }
+    getShuffleState() {
+        var _a, _b;
+        return (_b = (_a = this.player) === null || _a === void 0 ? void 0 : _a.shuffle_state) !== null && _b !== void 0 ? _b : false;
+    }
+    getSpotifyEntityState() {
+        return this._spotify_state ? this._spotify_state.state : '';
+    }
+    isSpotcastInstalled() {
+        var _a;
+        if (((_a = this.hass) === null || _a === void 0 ? void 0 : _a.connection) && servicesColl(this.hass.connection).state.spotcast !== undefined) {
+            return true;
+        }
+        return false;
+    }
+    checkIfAllowedToShow(device) {
+        var _a, _b;
+        const filters = (_b = (_a = this.config.filter_devices) === null || _a === void 0 ? void 0 : _a.map((filter_str) => {
+            return new RegExp(filter_str + '$');
+        })) !== null && _b !== void 0 ? _b : [];
+        for (const filter of filters) {
+            if (filter.test(isConnectDevice(device) ? device.name : device.friendly_name)) {
+                return false;
+            }
+        }
+        return true;
+    }
+    getDefaultDevice() {
+        let [spotify_connect_devices, chromecast_devices] = this.getFilteredDevices();
+        spotify_connect_devices = spotify_connect_devices.filter((device) => {
+            return device.name == this.config.default_device;
+        });
+        chromecast_devices = chromecast_devices.filter((device) => {
+            return device.friendly_name == this.config.default_device;
+        });
+        if (spotify_connect_devices.length > 0 || chromecast_devices.length > 0) {
+            return this.config.default_device;
+        }
+        return;
+    }
+    getFilteredDevices() {
+        const spotify_connect_devices = this.devices.filter(this.checkIfAllowedToShow, this);
+        const chromecast_devices = this.chromecast_devices.filter(this.checkIfAllowedToShow, this);
+        return [spotify_connect_devices, chromecast_devices];
+    }
+    getPlaylists() {
+        return this.playlists;
+    }
+    isThisPlaylistPlaying(item) {
+        var _a;
+        return ((_a = this._spotify_state) === null || _a === void 0 ? void 0 : _a.attributes.media_playlist) === item.name;
+    }
+    startUri(elem, uri) {
+        const loading = 'loading';
+        const srcElement = elem.srcElement;
+        if ((srcElement === null || srcElement === void 0 ? void 0 : srcElement.localName) == 'div')
+            srcElement.children[1].classList.add(loading);
+        else if ((srcElement === null || srcElement === void 0 ? void 0 : srcElement.localName) == 'svg')
+            srcElement.parentElement.classList.add(loading);
+        else if ((srcElement === null || srcElement === void 0 ? void 0 : srcElement.localName) == 'path')
+            srcElement.parentElement.parentElement.classList.add(loading);
+        else if ((srcElement === null || srcElement === void 0 ? void 0 : srcElement.localName) == 'img')
+            srcElement.nextElementSibling.classList.add(loading);
+        else if ((srcElement === null || srcElement === void 0 ? void 0 : srcElement.localName) == 'p')
+            srcElement.parentElement.children[1].classList.add(loading);
+        else
+            console.log(srcElement);
+        this.spotcast_connector.playUri(uri);
+    }
+    onShuffleSelect() {
+        var _a, _b;
+        if (((_a = this._spotify_state) === null || _a === void 0 ? void 0 : _a.state) == 'playing') {
+            this.hass.callService('media_player', 'shuffle_set', {
+                entity_id: this._spotify_state.entity_id,
+                shuffle: !((_b = this.player) === null || _b === void 0 ? void 0 : _b.shuffle_state),
+            });
+        }
+    }
+    handlePlayPauseEvent(ev, command) {
+        ev.stopPropagation();
+        if (this._spotify_state) {
+            this.hass.callService('media_player', command, { entity_id: this._spotify_state.entity_id });
+        }
+    }
+    spotifyDeviceSelected(device) {
+        const current_player = this.spotcast_connector.getCurrentPlayer();
+        if (current_player) {
+            return this.spotcast_connector.transferPlaybackToConnectDevice(device.id);
+        }
+        const playlist = this.playlists[0];
+        console.log('spotifyDeviceSelected playing first playlist');
+        this.spotcast_connector.playUriOnConnectDevice(device.id, playlist.uri);
+    }
+    chromecastDeviceSelected(device) {
+        const current_player = this.spotcast_connector.getCurrentPlayer();
+        if (current_player) {
+            return this.spotcast_connector.transferPlaybackToCastDevice(device.friendly_name);
+        }
+        const playlist = this.playlists[0];
+        console.log('chromecastDeviceSelected playing first playlist');
+        this.spotcast_connector.playUriOnCastDevice(device.friendly_name, playlist.uri);
+    }
+    getCurrentPlayer() {
+        return this.spotcast_connector.getCurrentPlayer();
+    }
+    render() {
+        var _a, _b, _c;
+        let warning = html ``;
+        if (!this.isSpotcastInstalled()) {
+            warning = this.showWarning(localize('common.show_missing_spotcast'));
+        }
+        // if (!this._spotify_installed) {
+        //   warning = this.showWarning(localize('common.show_missing_spotify'));
+        // }
+        // Display loading screen if no content available yet
+        let content = html `<div>Loading...</div>`;
+        // Request playlist data if not loaded
+        if (this.spotcast_connector.is_loaded()) {
+            switch (this.getDisplayStyle()) {
+                case DisplayStyle.Grid: {
+                    content = this.generateGridView();
+                    break;
+                }
+                default: {
+                    content = this.generateListView();
+                    break;
+                }
+            }
+        }
+        const header = html `<div id="header">
       <div id="icon" onclick="window.open('https://www.spotify.com/')">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 559 168">
           <path
@@ -446,12 +4327,13 @@ found at http://polymer.github.io/PATENTS.txt
           />
         </svg>
       </div>
-      ${this.config.name?H`<div id="header_name">${this.config.name}</div>`:null}
+      ${this.config.name ? html `<div id="header_name">${this.config.name}</div>` : null}
       <div></div>
-    </div>`;return H`
-      <ha-card tabindex="0" style="${this.config.height?`height: ${this.config.height}px`:""}"
-        >${this.config.hide_warning?"":s} ${this.config.hide_top_header?null:a}
-        <div id="content">${n}</div>
+    </div>`;
+        return html `
+      <ha-card tabindex="0" style="${this.config.height ? `height: ${this.config.height}px` : ''}"
+        >${this.config.hide_warning ? '' : warning} ${!this.config.hide_top_header ? header : null}
+        <div id="content">${content}</div>
         <div id="footer">
           <div class="dropdown-wrapper">
             <div class="controls">
@@ -469,15 +4351,16 @@ found at http://polymer.github.io/PATENTS.txt
                       stroke="null"
                     />
                   </svg>
-                  ${null!==(i=null!==(t=null===(e=this.getCurrentPlayer())||void 0===e?void 0:e.name)&&void 0!==t?t:this.getDefaultDevice())&&void 0!==i?i:Le("common.choose_player")}
+                  ${(_c = (_b = (_a = this.getCurrentPlayer()) === null || _a === void 0 ? void 0 : _a.name) !== null && _b !== void 0 ? _b : this.getDefaultDevice()) !== null && _c !== void 0 ? _c : localize('common.choose_player')}
                 </div>
               </div>
             </div>
             <div class="dropdown-content">${this.generateDeviceList()}</div>
           </div>
           <div class="footer__right">
-            ${this.getPlayingState()?H`<div
-                  class="shuffle-icon ${this.getShuffleState()?"playing":""}"
+            ${this.getPlayingState()
+            ? html `<div
+                  class="shuffle-icon ${this.getShuffleState() ? 'playing' : ''}"
                   @click=${this.onShuffleSelect}
                 >
                   <svg viewBox="0 0 24 24">
@@ -486,55 +4369,110 @@ found at http://polymer.github.io/PATENTS.txt
                       d="M10.59 9.17L5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41l-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z"
                     />
                   </svg>
-                </div>`:null}
-            ${this.config.hide_top_header?H`<div class="small-icon" onclick="window.open('https://www.spotify.com/')">
+                </div>`
+            : null}
+            ${this.config.hide_top_header
+            ? html `<div class="small-icon" onclick="window.open('https://www.spotify.com/')">
                   <svg viewBox="0 0 168 168">
                     <path
                       d="M 83.996 0.277 C 37.747 0.277 0.253 37.77 0.253 84.019 C 0.253 130.27 37.747 167.76 83.996 167.76 C 130.25 167.76 167.74 130.27 167.74 84.019 C 167.74 37.773 130.25 0.281 83.995 0.281 L 83.996 0.277 L 83.996 0.277 Z M 122.4 121.057 C 120.9 123.517 117.68 124.297 115.22 122.787 C 95.558 110.777 70.806 108.057 41.656 114.717 C 38.847 115.357 36.047 113.597 35.407 110.787 C 34.764 107.977 36.517 105.177 39.333 104.537 C 71.233 97.249 98.596 100.387 120.67 113.877 C 123.13 115.387 123.91 118.597 122.4 121.057 L 122.4 121.057 Z M 132.65 98.255 C 130.76 101.327 126.74 102.297 123.67 100.407 C 101.16 86.571 66.847 82.564 40.222 90.646 C 36.769 91.689 33.122 89.743 32.074 86.296 C 31.034 82.843 32.981 79.203 36.428 78.153 C 66.841 68.925 104.65 73.395 130.5 89.28 C 133.57 91.17 134.54 95.19 132.65 98.256 L 132.65 98.255 Z M 133.53 74.511 C 106.54 58.48 62.01 57.006 36.241 64.827 C 32.103 66.082 27.727 63.746 26.473 59.608 C 25.219 55.468 27.553 51.095 31.694 49.837 C 61.275 40.857 110.45 42.592 141.524 61.039 C 145.254 63.248 146.474 68.055 144.264 71.772 C 142.064 75.494 137.244 76.721 133.534 74.511 L 133.53 74.511 Z"
                     />
                   </svg>
-                </div>`:null}
+                </div>`
+            : null}
           </div>
         </div>
       </ha-card>
-    `}generateDeviceList(){const[e,t]=this.getFilteredDevices();return 0==e.length&&0==t.length?H`<p>No devices found</p>`:H`
-      ${e.length>0?H`<p>Spotify Connect devices</p>`:null}
-      ${e.map(e=>H`<a @click=${()=>this.spotifyDeviceSelected(e)}>${e.name}</a>`)}
-      ${t.length>0?H`<p>Chromecast devices</p>`:null}
-      ${t.map(e=>H`<a @click=${()=>this.chromecastDeviceSelected(e)}>${e.friendly_name}</a>`)}
-    `}generateButtonForCurrent(){var e;return"playing"==(null===(e=this._spotify_state)||void 0===e?void 0:e.state)?H`<div class="icon playing" @click=${this.onPauseSelect}>
+    `;
+    }
+    // Generate device list
+    generateDeviceList() {
+        const [spotify_connect_devices, chromecast_devices] = this.getFilteredDevices();
+        if (spotify_connect_devices.length == 0 && chromecast_devices.length == 0) {
+            return html `<p>No devices found</p>`;
+        }
+        return html `
+      ${spotify_connect_devices.length > 0 ? html `<p>Spotify Connect devices</p>` : null}
+      ${spotify_connect_devices.map((device) => {
+            return html `<a @click=${() => this.spotifyDeviceSelected(device)}>${device.name}</a>`;
+        })}
+      ${chromecast_devices.length > 0 ? html `<p>Chromecast devices</p>` : null}
+      ${chromecast_devices.map((device) => {
+            return html `<a @click=${() => this.chromecastDeviceSelected(device)}>${device.friendly_name}</a>`;
+        })}
+    `;
+    }
+    generateButtonForCurrent() {
+        var _a;
+        if (((_a = this._spotify_state) === null || _a === void 0 ? void 0 : _a.state) == 'playing') {
+            return html `<div class="icon playing" @click=${this.onPauseSelect}>
         <svg width="24" height="24" viewBox="0 0 500 1000">
           <path d="M0 832h192V192H0V832zM320 192v640h192V192H320z" />
         </svg>
-      </div>`:H`<div class="icon playing" @click=${this.onResumeSelect}>
+      </div>`;
+        }
+        else {
+            return html `<div class="icon playing" @click=${this.onResumeSelect}>
         <svg width="24" height="24">
           <path d="M0 0h24v24H0z" fill="none" />
           <path d="M8 5v14l11-7z" />
         </svg>
-      </div>`}generateListView(){const e=[],t=this.getPlaylists();for(let i=0;i<t.length;i++){const s=t[i];e.push(H`<div class="list-item" @click=${e=>this.startUri(e,s.uri)}>
-        <div class="cover" data-spotify-image-url="${s.images.length>0?s.images[0].url:""}">
+      </div>`;
+        }
+    }
+    // Generate items for display style 'List'
+    generateListView() {
+        const result = [];
+        const playlists = this.getPlaylists();
+        for (let i = 0; i < playlists.length; i++) {
+            const item = playlists[i];
+            result.push(html `<div class="list-item" @click=${(elem) => this.startUri(elem, item.uri)}>
+        <div class="cover" data-spotify-image-url="${item.images.length > 0 ? item.images[0].url : ''}">
           <svg viewBox="0 0 168 168">
             <path
               d="M 83.996 0.277 C 37.747 0.277 0.253 37.77 0.253 84.019 C 0.253 130.27 37.747 167.76 83.996 167.76 C 130.25 167.76 167.74 130.27 167.74 84.019 C 167.74 37.773 130.25 0.281 83.995 0.281 L 83.996 0.277 L 83.996 0.277 Z M 122.4 121.057 C 120.9 123.517 117.68 124.297 115.22 122.787 C 95.558 110.777 70.806 108.057 41.656 114.717 C 38.847 115.357 36.047 113.597 35.407 110.787 C 34.764 107.977 36.517 105.177 39.333 104.537 C 71.233 97.249 98.596 100.387 120.67 113.877 C 123.13 115.387 123.91 118.597 122.4 121.057 L 122.4 121.057 Z M 132.65 98.255 C 130.76 101.327 126.74 102.297 123.67 100.407 C 101.16 86.571 66.847 82.564 40.222 90.646 C 36.769 91.689 33.122 89.743 32.074 86.296 C 31.034 82.843 32.981 79.203 36.428 78.153 C 66.841 68.925 104.65 73.395 130.5 89.28 C 133.57 91.17 134.54 95.19 132.65 98.256 L 132.65 98.255 Z M 133.53 74.511 C 106.54 58.48 62.01 57.006 36.241 64.827 C 32.103 66.082 27.727 63.746 26.473 59.608 C 25.219 55.468 27.553 51.095 31.694 49.837 C 61.275 40.857 110.45 42.592 141.524 61.039 C 145.254 63.248 146.474 68.055 144.264 71.772 C 142.064 75.494 137.244 76.721 133.534 74.511 L 133.53 74.511 Z"
             />
           </svg>
         </div>
-        ${this.isThisPlaylistPlaying(s)?this.generateButtonForCurrent():H`<div class="icon">
+        ${this.isThisPlaylistPlaying(item)
+                ? this.generateButtonForCurrent()
+                : html `<div class="icon">
               <svg width="24" height="24">
                 <path d="M0 0h24v24H0z" fill="none" />
                 <path d="M8 5v14l11-7z" />
               </svg>
             </div>`}
-        <p>${s.name}</p>
-      </div>`)}return H`<div>${e}</div>`}generateGridIconForCurrent(){var e;return"playing"==(null===(e=this._spotify_state)||void 0===e?void 0:e.state)?H` <svg width="24" height="24" viewBox="0 0 500 1000" @click=${this.onPauseSelect}>
+        <p>${item.name}</p>
+      </div>`);
+        }
+        return html `<div>${result}</div>`;
+    }
+    generateGridIconForCurrent() {
+        var _a;
+        if (((_a = this._spotify_state) === null || _a === void 0 ? void 0 : _a.state) == 'playing') {
+            return html ` <svg width="24" height="24" viewBox="0 0 500 1000" @click=${this.onPauseSelect}>
         <path d="M0 832h192V192H0V832zM320 192v640h192V192H320z" />
-      </svg>`:H` <svg width="24" height="24" @click=${this.onResumeSelect}>
+      </svg>`;
+        }
+        else {
+            return html ` <svg width="24" height="24" @click=${this.onResumeSelect}>
         <path d="M0 0h24v24H0z" fill="none" />
         <path d="M8 5v14l11-7z" />
-      </svg>`}generateGridView(){var e;const t=[],i=this.getPlaylists();for(let s=0;s<i.length;s++){const n=i[s];null===(e=this._spotify_state)||void 0===e||e.attributes.media_playlist,n.name,t.push(H`<div class="grid-item" @click=${e=>this.startUri(e,n.uri)}>
+      </svg>`;
+        }
+    }
+    // Generate items for display style 'Grid'
+    generateGridView() {
+        var _a;
+        const result = [];
+        const playlists = this.getPlaylists();
+        for (let i = 0; i < playlists.length; i++) {
+            const item = playlists[i];
+            ((_a = this._spotify_state) === null || _a === void 0 ? void 0 : _a.attributes.media_playlist) === item.name;
+            result.push(html `<div class="grid-item" @click=${(elem) => this.startUri(elem, item.uri)}>
         <div
-          class="grid-item-album-image ${this.isThisPlaylistPlaying(n)?"playing":""}"
-          data-spotify-image-url="${n.images.length>0?n.images[0].url:""}"
+          class="grid-item-album-image ${this.isThisPlaylistPlaying(item) ? 'playing' : ''}"
+          data-spotify-image-url="${item.images.length > 0 ? item.images[0].url : ''}"
         >
           <svg viewBox="0 0 168 168">
             <path
@@ -543,16 +4481,38 @@ found at http://polymer.github.io/PATENTS.txt
           </svg>
         </div>
         <div class="grid-item-overlay-icon">
-          ${this.isThisPlaylistPlaying(n)?this.generateGridIconForCurrent():H`
-                <svg width="24" height="24" @click=${e=>this.startUri(e,n.uri)}>
+          ${this.isThisPlaylistPlaying(item)
+                ? this.generateGridIconForCurrent()
+                : html `
+                <svg width="24" height="24" @click=${(elem) => this.startUri(elem, item.uri)}>
                   <path d="M0 0h24v24H0z" fill="none" />
                   <path d="M8 5v14l11-7z" />
                 </svg>
               `}
         </div>
-      </div>`)}const s=this.config.grid_covers_per_row?this.config.grid_covers_per_row:3;return H`<div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(${90/s}%, 1fr));">
-      ${t}
-    </div>`}onPauseSelect(e){this.handlePlayPauseEvent(e,"media_pause")}onResumeSelect(e){this.handlePlayPauseEvent(e,"media_play")}showWarning(e){return H`<hui-warning>${e}</hui-warning>`}static get styles(){return[Qe.generalStyles,Qe.listStyles,Qe.gridStyles]}};tt.generalStyles=te`
+      </div>`);
+        }
+        const configured_grid_width = this.config.grid_covers_per_row ? this.config.grid_covers_per_row : 3;
+        const grid_width = (100 - 10) / configured_grid_width;
+        return html `<div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(${grid_width}%, 1fr));">
+      ${result}
+    </div>`;
+    }
+    onPauseSelect(ev) {
+        this.handlePlayPauseEvent(ev, 'media_pause');
+    }
+    onResumeSelect(ev) {
+        this.handlePlayPauseEvent(ev, 'media_play');
+    }
+    // Show warning on top of the card
+    showWarning(warning) {
+        return html `<hui-warning>${warning}</hui-warning>`;
+    }
+    static get styles() {
+        return [SpotifyCard_1.generalStyles, SpotifyCard_1.listStyles, SpotifyCard_1.gridStyles];
+    }
+};
+SpotifyCard.generalStyles = css `
     *:focus {
       outline: none;
     }
@@ -561,6 +4521,8 @@ found at http://polymer.github.io/PATENTS.txt
       --header-height: 4em;
       --footer-height: 2.5em;
       padding: 0.5em;
+      display: flex;
+      flex-direction: column;
     }
 
     hui-warning {
@@ -581,7 +4543,6 @@ found at http://polymer.github.io/PATENTS.txt
     }
 
     #content {
-      height: calc(100% - var(--header-height) - var(--footer-height));
       border: solid 2px var(--divider-color);
       border-radius: 0.2em;
       overflow: auto;
@@ -613,6 +4574,7 @@ found at http://polymer.github.io/PATENTS.txt
       justify-content: space-between;
       height: var(--footer-height);
       padding: 0.5rem;
+      padding-bottom: 0;
     }
 
     .footer__right {
@@ -732,7 +4694,9 @@ found at http://polymer.github.io/PATENTS.txt
       animation-iteration-count: 5;
       animation-timing-function: ease-in;
     }
-  `,tt.listStyles=te`
+  `;
+//Style definition for the List view
+SpotifyCard.listStyles = css `
     ha-card {
       --list-item-height: 3em;
       --placeholder-padding: 4px;
@@ -786,7 +4750,9 @@ found at http://polymer.github.io/PATENTS.txt
     .list-item > p {
       margin: 0 0.5em 0 0.5em;
     }
-  `,tt.gridStyles=te`
+  `;
+//Style definition for the Grid view
+SpotifyCard.gridStyles = css `
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(30%, 1fr));
@@ -830,5 +4796,27 @@ found at http://polymer.github.io/PATENTS.txt
       transform: scale(2);
       opacity: 1;
     }
-  `,e([J({type:Object})],tt.prototype,"config",void 0),e([J({hasChanged:Xe})],tt.prototype,"playlists",void 0),e([J({hasChanged:Xe})],tt.prototype,"devices",void 0),e([J({hasChanged:Xe})],tt.prototype,"chromecast_devices",void 0),e([J({hasChanged:Xe})],tt.prototype,"player",void 0),e([K({hasChanged:et})],tt.prototype,"_spotify_state",void 0),tt=Qe=e([B("spotify-card")],tt);export{tt as SpotifyCard,Xe as hasChangedCustom,et as hasChangedMediaPlayer};
-//# sourceMappingURL=spotify-card.js.map
+  `;
+__decorate([
+    property({ type: Object })
+], SpotifyCard.prototype, "config", void 0);
+__decorate([
+    property({ hasChanged: hasChangedCustom })
+], SpotifyCard.prototype, "playlists", void 0);
+__decorate([
+    property({ hasChanged: hasChangedCustom })
+], SpotifyCard.prototype, "devices", void 0);
+__decorate([
+    property({ hasChanged: hasChangedCustom })
+], SpotifyCard.prototype, "chromecast_devices", void 0);
+__decorate([
+    property({ hasChanged: hasChangedCustom })
+], SpotifyCard.prototype, "player", void 0);
+__decorate([
+    internalProperty({ hasChanged: hasChangedMediaPlayer })
+], SpotifyCard.prototype, "_spotify_state", void 0);
+SpotifyCard = SpotifyCard_1 = __decorate([
+    customElement('spotify-card')
+], SpotifyCard);
+
+export { SpotifyCard, hasChangedCustom, hasChangedMediaPlayer };
