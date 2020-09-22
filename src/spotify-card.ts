@@ -282,13 +282,13 @@ export class SpotifyCard extends LitElement {
 
   private startUri(elem: MouseEvent, uri: string): void {
     const loading = 'loading';
-    const srcElement = elem.srcElement as any;
-    if (srcElement?.localName == 'div') srcElement.children[1].classList.add(loading);
-    else if (srcElement?.localName == 'svg') srcElement.parentElement.classList.add(loading);
-    else if (srcElement?.localName == 'path') srcElement.parentElement.parentElement.classList.add(loading);
-    else if (srcElement?.localName == 'img') srcElement.nextElementSibling.classList.add(loading);
-    else if (srcElement?.localName == 'p') srcElement.parentElement.children[1].classList.add(loading);
-    else console.log(srcElement);
+    const target = elem.target as HTMLElement;
+    if (target?.localName == 'div') target.children[1].classList.add(loading);
+    else if (target?.localName == 'svg') target.parentElement?.classList.add(loading);
+    else if (target?.localName == 'path') target.parentElement?.parentElement?.classList.add(loading);
+    else if (target?.localName == 'img') target.nextElementSibling?.classList.add(loading);
+    else if (target?.localName == 'p') target.parentElement?.children[1].classList.add(loading);
+    else console.log(target);
     this.spotcast_connector.playUri(uri);
   }
 
