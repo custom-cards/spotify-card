@@ -321,11 +321,22 @@ export class SpotifyCard extends LitElement {
   private handlePlayPauseEvent(ev: Event, command: string): void {
     ev.stopPropagation();
     if (this._spotify_state) {
-      this.hass.callService('media_player', command, { entity_id: this._spotify_state.entity_id });
+      this.hass.callService('media_player', command, {
+        entity_id: this._spotify_state.entity_id,
+      });
     }
   }
 
-  private spotifyDeviceSelected(device: ConnectDevice): void {
+  private confirmDeviceSelection(elem: MouseEvent) {
+    const target = elem.target as HTMLElement;
+    target?.parentElement?.classList.add('dropdown-content-hide');
+    setTimeout(() => {
+      target?.parentElement?.classList.remove('dropdown-content-hide');
+    }, 1000);
+  }
+
+  private spotifyDeviceSelected(elem: MouseEvent, device: ConnectDevice): void {
+    this.confirmDeviceSelection(elem);
     const current_player = this.spotcast_connector.getCurrentPlayer();
     if (current_player) {
       return this.spotcast_connector.transferPlaybackToConnectDevice(device.id);
@@ -335,7 +346,8 @@ export class SpotifyCard extends LitElement {
     this.spotcast_connector.playUriOnConnectDevice(device.id, playlist.uri);
   }
 
-  private chromecastDeviceSelected(device: ChromecastDevice): void {
+  private chromecastDeviceSelected(elem: MouseEvent, device: ChromecastDevice): void {
+    this.confirmDeviceSelection(elem);
     const current_player = this.spotcast_connector.getCurrentPlayer();
     if (current_player) {
       return this.spotcast_connector.transferPlaybackToCastDevice(device.friendly_name);
@@ -463,11 +475,11 @@ export class SpotifyCard extends LitElement {
     return html`
       ${spotify_connect_devices.length > 0 ? html`<p>Spotify Connect devices</p>` : null}
       ${spotify_connect_devices.map((device) => {
-        return html`<a @click=${() => this.spotifyDeviceSelected(device)}>${device.name}</a>`;
+        return html`<a @click=${(elem) => this.spotifyDeviceSelected(elem, device)}>${device.name}</a>`;
       })}
       ${chromecast_devices.length > 0 ? html`<p>Chromecast devices</p>` : null}
       ${chromecast_devices.map((device) => {
-        return html`<a @click=${() => this.chromecastDeviceSelected(device)}>${device.friendly_name}</a>`;
+        return html`<a @click=${(elem) => this.chromecastDeviceSelected(elem, device)}>${device.friendly_name}</a>`;
       })}
     `;
   }
@@ -698,8 +710,8 @@ export class SpotifyCard extends LitElement {
     .dropdown-content a:hover {
       box-shadow: inset 0 0 100px 100px var(--secondary-background-color);
     }
-    .controls:hover + .dropdown-content,
-    .dropdown-content:hover {
+    .controls:hover + .dropdown-content:not(.dropdown-content-hide),
+    .dropdown-content:hover:not(.dropdown-content-hide) {
       display: block;
     }
 
