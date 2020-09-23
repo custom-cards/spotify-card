@@ -283,12 +283,29 @@ export class SpotifyCard extends LitElement {
   private startUri(elem: MouseEvent, uri: string): void {
     const loading = 'loading';
     const target = elem.target as HTMLElement;
-    if (target?.localName == 'div') target.children[1].classList.add(loading);
-    else if (target?.localName == 'svg') target.parentElement?.classList.add(loading);
-    else if (target?.localName == 'path') target.parentElement?.parentElement?.classList.add(loading);
-    else if (target?.localName == 'img') target.nextElementSibling?.classList.add(loading);
-    else if (target?.localName == 'p') target.parentElement?.children[1].classList.add(loading);
-    else console.log(target);
+    let item;
+    switch (target.localName) {
+      case 'img': {
+        item = target.parentElement?.parentElement;
+        break;
+      }
+      case 'div': {
+        item = target;
+        break;
+      }
+      case 'p': {
+        item = target.parentElement;
+        break;
+      }
+      default: {
+        console.log(target);
+        break;
+      }
+    }
+    item.classList.add(loading);
+    setTimeout(() => {
+      item.classList.remove(loading);
+    }, 10000);
     this.spotcast_connector.playUri(uri);
   }
 
@@ -690,23 +707,42 @@ export class SpotifyCard extends LitElement {
       fill: var(--primary-text-color);
     }
 
-    @keyframes loading {
+    @keyframes loading-grid {
       0% {
-        opacity: 100%;
+        box-shadow: rgba(var(--rgb-accent-color), 1) 0 0 0.2em 0.2em;
       }
       50% {
-        opacity: 0%;
+        box-shadow: rgba(var(--rgb-accent-color), 0) 0 0 0.2em 0.2em;
       }
       100% {
-        opacity: 100%;
+        box-shadow: rgba(var(--rgb-accent-color), 1) 0 0 0.2em 0.2em;
+      }
+    }
+
+    @keyframes loading-list {
+      0% {
+        background-color: rgba(var(--rgb-accent-color), 1);
+      }
+      50% {
+        background-color: rgba(var(--rgb-accent-color), 0);
+      }
+      100% {
+        background-color: rgba(var(--rgb-accent-color), 1);
       }
     }
 
     .loading {
-      animation-name: loading;
-      animation-duration: 1s;
+      animation-duration: 1.5s;
       animation-iteration-count: 5;
-      animation-timing-function: ease-in;
+      animation-timing-function: ease-in-out;
+    }
+
+    .grid-item.loading {
+      animation-name: loading-grid;
+    }
+
+    .list-item.loading {
+      animation-name: loading-list;
     }
   `;
 
@@ -724,6 +760,7 @@ export class SpotifyCard extends LitElement {
       display: flex;
       cursor: pointer;
       margin-right: -0.2em;
+      background-clip: content-box;
     }
 
     .list-item:hover {
@@ -736,7 +773,6 @@ export class SpotifyCard extends LitElement {
 
     .list-item.playing {
       background-color: var(--primary-color);
-      background-clip: content-box;
     }
 
     .cover {
@@ -774,6 +810,10 @@ export class SpotifyCard extends LitElement {
       position: relative;
       cursor: pointer;
       box-shadow: var(--primary-text-color) 0 0 0.2em;
+    }
+
+    .grid-item:hover {
+      box-shadow: rgba(var(--rgb-accent-color), 1) 0 0 0.2em 0.2em;
     }
 
     .grid-item-album-image {
