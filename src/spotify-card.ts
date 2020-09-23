@@ -612,12 +612,15 @@ export class SpotifyCard extends LitElement {
 
     .playback-controls {
       display: flex;
-      padding-right: 10px;
     }
 
     .playback-controls > div {
       height: 2.5em;
-      padding-right: 5px;
+      padding-left: 5px;
+    }
+
+    .playback-controls > div:first-child {
+      padding-left: 0;
     }
 
     .playback-controls svg {
@@ -633,6 +636,7 @@ export class SpotifyCard extends LitElement {
       display: inline-flex;
       align-items: center;
       cursor: pointer;
+      padding-left: 10px;
     }
 
     .small-icon svg {
