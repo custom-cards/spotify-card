@@ -24,6 +24,7 @@ import {
   Playlist,
   CurrentPlayer,
   isCurrentPlayer,
+  ValueChangedEvent,
 } from './types';
 
 import { PLAYLIST_TYPES } from './editor';
@@ -306,6 +307,19 @@ export class SpotifyCard extends LitElement {
     }
   }
 
+  private getVolume(): number {
+    return this._spotify_state?.attributes?.volume_level * 100;
+  }
+
+  private handleVolumeChanged(ev: ValueChangedEvent): void {
+    if (this._spotify_state) {
+      this.hass.callService('media_player', 'volume_set', {
+        entity_id: this._spotify_state.entity_id,
+        volume_level: ev.target.value / 100,
+      });
+    }
+  }
+
   private spotifyDeviceSelected(device: ConnectDevice): void {
     const current_player = this.spotcast_connector.getCurrentPlayer();
     if (current_player) {
@@ -374,7 +388,7 @@ export class SpotifyCard extends LitElement {
         <div id="footer">
           <div class="dropdown-wrapper">
             <div class="controls">
-              <div class="dropdown">
+              <div class="mediaplayer">
                 <div class="mediaplayer_select">
                   <svg
                     class="mediaplayer_speaker_icon"
@@ -392,7 +406,7 @@ export class SpotifyCard extends LitElement {
                 </div>
               </div>
             </div>
-            <div class="dropdown-content">${this.generateDeviceList()}</div>
+            <div class="dropdown-content dropdown">${this.generateDeviceList()}</div>
           </div>
           <div class="footer__right">
             <div class="playback-controls">
@@ -428,6 +442,23 @@ export class SpotifyCard extends LitElement {
                     d="M10.59 9.17L5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41l-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z"
                   />
                 </svg>
+              </div>
+              <div class="volume">
+                <svg viewBox="0 0 24 24">
+                  <path d="M0 0h24v24H0z" fill="none" />
+                  <path
+                    d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"
+                  />
+                </svg>
+              </div>
+              <div id="volume-slider" class="dropdown">
+                <paper-slider
+                  max="100"
+                  min="0"
+                  pin
+                  .value=${this.getVolume()}
+                  @value-changed=${this.handleVolumeChanged}
+                ></paper-slider>
               </div>
             </div>
             ${this.config.hide_top_header
@@ -616,7 +647,6 @@ export class SpotifyCard extends LitElement {
 
     .playback-controls > div {
       height: 2.5em;
-      padding-left: 5px;
     }
 
     .playback-controls > div:first-child {
@@ -630,6 +660,28 @@ export class SpotifyCard extends LitElement {
 
     .shuffle > svg {
       fill: var(--primary-color);
+    }
+
+    #volume-slider {
+      bottom: 3em;
+      right: 0.5em;
+    }
+
+    #volume-slider > * {
+      height: 2.5em;
+    }
+
+    .dropdown {
+      display: none;
+      position: absolute;
+      box-shadow: var(--primary-text-color) 0 0 16px 0px;
+      z-index: 1;
+      background-color: var(--card-background-color);
+    }
+
+    .volume:hover + #volume-slider,
+    #volume-slider:hover {
+      display: block;
     }
 
     .small-icon {
@@ -647,7 +699,7 @@ export class SpotifyCard extends LitElement {
       display: flex;
     }
 
-    .dropdown {
+    .mediaplayer {
       position: relative;
       display: inline-block;
     }
@@ -677,16 +729,11 @@ export class SpotifyCard extends LitElement {
     }
 
     .dropdown-content {
-      display: none;
-      position: absolute;
       left: 1em;
       bottom: 0.5em;
       max-height: calc(100% - 1em);
       overflow-y: auto;
-      background-color: var(--card-background-color);
       min-width: 250px;
-      box-shadow: var(--primary-text-color) 0 0 16px 0px;
-      z-index: 1;
     }
 
     .dropdown-content p {
