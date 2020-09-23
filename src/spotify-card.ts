@@ -293,15 +293,13 @@ export class SpotifyCard extends LitElement {
   }
 
   private onShuffleSelect(): void {
-    if (this._spotify_state?.state == 'playing') {
-      this.hass.callService('media_player', 'shuffle_set', {
-        entity_id: this._spotify_state.entity_id,
-        shuffle: !this.player?.shuffle_state,
-      });
-    }
+    this.hass.callService('media_player', 'shuffle_set', {
+      entity_id: this._spotify_state?.entity_id,
+      shuffle: !this.player?.shuffle_state,
+    });
   }
 
-  private handlePlayPauseEvent(ev: Event, command: string): void {
+  private handleMediaEvent(ev: Event, command: string): void {
     ev.stopPropagation();
     if (this._spotify_state) {
       this.hass.callService('media_player', command, { entity_id: this._spotify_state.entity_id });
@@ -399,28 +397,38 @@ export class SpotifyCard extends LitElement {
           <div class="footer__right">
             <div class="playback-controls">
               ${this._spotify_state?.state == 'playing'
-                ? html`<div class="playpause-icon" @click=${this.onPauseSelect}>
+                ? html`<div @click=${this.onPauseSelect}>
                     <svg viewBox="0 0 24 24">
-                      <path d="m1,24l8,0l0,-24l-8,0l0,24zm14,-24l0,24l8,0l0,-24l-8,0z" />
+                      <path d="M0 0h24v24H0z" fill="none" />
+                      <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
                     </svg>
                   </div>`
-                : html`<div class="playpause-icon" @click=${this.onResumeSelect}>
+                : html`<div @click=${this.onResumeSelect}>
                     <svg viewBox="0 0 24 24">
-                      <path d="m3,0l0,24l18,-12l-18,-12z" />
+                      <path d="M0 0h24v24H0z" fill="none" />
+                      <path d="M8 5v14l11-7z" />
                     </svg>
                   </div>`}
-              ${this.getPlayingState()
-                ? html`<div
-                    class="shuffle-icon ${this.getShuffleState() ? 'playing' : ''}"
-                    @click=${this.onShuffleSelect}
-                  >
-                    <svg viewBox="0 0 24 24">
-                      <path
-                        d="m9.885,7.75165l-7.77,-7.75164l-2.115,2.11409l7.755,7.75164l2.13,-2.11409zm5.865,-7.75164l3.06,3.05867l-18.81,18.81684l2.115,2.11409l18.825,-18.80185l3.06,3.05867l0,-8.24642l-8.25,0l0,0.00001zm0.495,14.10888l-2.115,2.11409l4.695,4.69296l-3.075,3.07367l8.25,0l0,-8.24642l-3.06,3.05867l-4.695,-4.69296z"
-                      />
-                    </svg>
-                  </div>`
-                : null}
+              <div @click=${this.onPrevSelect}>
+                <svg viewBox="0 0 24 24">
+                  <path d="M0 0h24v24H0z" fill="none" />
+                  <path d="M6 6h2v12H6zm3.5 6l8.5 6V6z" />
+                </svg>
+              </div>
+              <div @click=${this.onNextSelect}>
+                <svg viewBox="0 0 24 24">
+                  <path d="M0 0h24v24H0z" fill="none" />
+                  <path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z" />
+                </svg>
+              </div>
+              <div class="${this.getShuffleState() ? 'shuffle' : ''}" @click=${this.onShuffleSelect}>
+                <svg viewBox="0 0 24 24">
+                  <path d="M0 0h24v24H0z" fill="none" />
+                  <path
+                    d="M10.59 9.17L5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41l-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z"
+                  />
+                </svg>
+              </div>
             </div>
             ${this.config.hide_top_header
               ? html`<div class="small-icon" onclick="window.open('https://www.spotify.com/')">
@@ -508,11 +516,19 @@ export class SpotifyCard extends LitElement {
   }
 
   private onPauseSelect(ev: Event): void {
-    this.handlePlayPauseEvent(ev, 'media_pause');
+    this.handleMediaEvent(ev, 'media_pause');
   }
 
   private onResumeSelect(ev: Event): void {
-    this.handlePlayPauseEvent(ev, 'media_play');
+    this.handleMediaEvent(ev, 'media_play');
+  }
+
+  private onNextSelect(ev: Event): void {
+    this.handleMediaEvent(ev, 'media_next_track');
+  }
+
+  private onPrevSelect(ev: Event): void {
+    this.handleMediaEvent(ev, 'media_previous_track');
   }
 
   // Show warning on top of the card
@@ -600,13 +616,17 @@ export class SpotifyCard extends LitElement {
     }
 
     .playback-controls > div {
-      height: 1.5em;
-      padding-right: 15px;
+      height: 2.5em;
+      padding-right: 5px;
     }
 
-    .shuffle-icon svg,
-    .playpause-icon svg {
+    .playback-controls svg {
       height: 100%;
+      cursor: pointer;
+    }
+
+    .shuffle > svg {
+      fill: var(--primary-color);
     }
 
     .small-icon {
