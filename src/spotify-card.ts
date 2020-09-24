@@ -57,9 +57,6 @@ export function hasChangedCustom(
   if (!oldVal || (!isCurrentPlayer(oldVal) && !isCurrentPlayer(newVal) && newVal.length != oldVal.length)) {
     return true;
   }
-  if (isCurrentPlayer(oldVal) && isCurrentPlayer(newVal) && oldVal != newVal) {
-    return true;
-  }
   for (const index in newVal) {
     if (newVal[index].id != oldVal[index].id) {
       return true;
