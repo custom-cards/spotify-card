@@ -85,10 +85,10 @@ export class SpotifyCard extends LitElement {
   @property({ hasChanged: hasChangedCustom })
   public playlists: Array<Playlist> = [];
 
-  @property({ hasChanged: hasChangedCustom })
+  //@property({ hasChanged: hasChangedCustom })
   public devices: Array<ConnectDevice> = [];
 
-  @property({ hasChanged: hasChangedCustom })
+  //@property({ hasChanged: hasChangedCustom })
   public chromecast_devices: Array<ChromecastDevice> = [];
 
   @property({ hasChanged: hasChangedCustom })
@@ -385,6 +385,7 @@ export class SpotifyCard extends LitElement {
   }
 
   protected render(): TemplateResult | void {
+    console.log("render with:", this._spotify_state);
     let warning = html``;
     if (!this.isSpotcastInstalled()) {
       warning = this.showWarning(localize('common.show_missing_spotcast'));
