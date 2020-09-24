@@ -48,7 +48,7 @@ export class SpotcastConnector implements ISpotcastConnector {
   }
 
   public is_loaded(): boolean {
-    if (this.parent.playlists.length !== undefined) {
+    if (this.parent.playlists.length !== 0) {
       return true;
     }
     return false;
