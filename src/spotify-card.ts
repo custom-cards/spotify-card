@@ -57,6 +57,9 @@ export function hasChangedCustom(
   if (!oldVal || (!isCurrentPlayer(oldVal) && !isCurrentPlayer(newVal) && newVal.length != oldVal.length)) {
     return true;
   }
+  if (isCurrentPlayer(oldVal) && isCurrentPlayer(newVal) && oldVal != newVal) {
+    return true;
+  }
   for (const index in newVal) {
     if (newVal[index].id != oldVal[index].id) {
       return true;
@@ -310,11 +313,21 @@ export class SpotifyCard extends LitElement {
     this.spotcast_connector.playUri(uri);
   }
 
-  private onShuffleSelect(): void {
+  private onShuffleSelect(elem: MouseEvent): void {
     this.hass.callService('media_player', 'shuffle_set', {
       entity_id: this._spotify_state?.entity_id,
       shuffle: !this.player?.shuffle_state,
     });
+    const target = elem.target as HTMLElement;
+    let parent = target.parentElement;
+    if (parent?.localName == 'svg') {
+      parent = parent.parentElement;
+    }
+    if (parent?.classList.contains('shuffle')) {
+      parent.classList.remove('shuffle');
+    } else {
+      parent?.classList.add('shuffle');
+    }
   }
 
   private handleMediaEvent(ev: Event, command: string): void {
@@ -469,7 +482,7 @@ export class SpotifyCard extends LitElement {
                   <path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z" />
                 </svg>
               </div>
-              <div class="${this.getShuffleState() ? 'shuffle' : ''}" @click=${this.onShuffleSelect}>
+              <div class="${this.getShuffleState() ? 'shuffle' : ''}" @click=${(elem) => this.onShuffleSelect(elem)}>
                 <svg viewBox="0 0 24 24">
                   <path d="M0 0h24v24H0z" fill="none" />
                   <path
