@@ -284,12 +284,29 @@ export class SpotifyCard extends LitElement {
   private startUri(elem: MouseEvent, uri: string): void {
     const loading = 'loading';
     const target = elem.target as HTMLElement;
-    if (target?.localName == 'div') target.children[1].classList.add(loading);
-    else if (target?.localName == 'svg') target.parentElement?.classList.add(loading);
-    else if (target?.localName == 'path') target.parentElement?.parentElement?.classList.add(loading);
-    else if (target?.localName == 'img') target.nextElementSibling?.classList.add(loading);
-    else if (target?.localName == 'p') target.parentElement?.children[1].classList.add(loading);
-    else console.log(target);
+    let item;
+    switch (target.localName) {
+      case 'img': {
+        item = target.parentElement?.parentElement;
+        break;
+      }
+      case 'div': {
+        item = target;
+        break;
+      }
+      case 'p': {
+        item = target.parentElement;
+        break;
+      }
+      default: {
+        console.log(target);
+        break;
+      }
+    }
+    item.classList.add(loading);
+    setTimeout(() => {
+      item.classList.remove(loading);
+    }, 10000);
     this.spotcast_connector.playUri(uri);
   }
 
@@ -303,7 +320,9 @@ export class SpotifyCard extends LitElement {
   private handleMediaEvent(ev: Event, command: string): void {
     ev.stopPropagation();
     if (this._spotify_state) {
-      this.hass.callService('media_player', command, { entity_id: this._spotify_state.entity_id });
+      this.hass.callService('media_player', command, {
+        entity_id: this._spotify_state.entity_id,
+      });
     }
   }
 
@@ -320,7 +339,16 @@ export class SpotifyCard extends LitElement {
     }
   }
 
-  private spotifyDeviceSelected(device: ConnectDevice): void {
+  private confirmDeviceSelection(elem: MouseEvent) {
+    const target = elem.target as HTMLElement;
+    target?.parentElement?.classList.add('dropdown-content-hide');
+    setTimeout(() => {
+      target?.parentElement?.classList.remove('dropdown-content-hide');
+    }, 1000);
+  }
+
+  private spotifyDeviceSelected(elem: MouseEvent, device: ConnectDevice): void {
+    this.confirmDeviceSelection(elem);
     const current_player = this.spotcast_connector.getCurrentPlayer();
     if (current_player) {
       return this.spotcast_connector.transferPlaybackToConnectDevice(device.id);
@@ -330,7 +358,8 @@ export class SpotifyCard extends LitElement {
     this.spotcast_connector.playUriOnConnectDevice(device.id, playlist.uri);
   }
 
-  private chromecastDeviceSelected(device: ChromecastDevice): void {
+  private chromecastDeviceSelected(elem: MouseEvent, device: ChromecastDevice): void {
+    this.confirmDeviceSelection(elem);
     const current_player = this.spotcast_connector.getCurrentPlayer();
     if (current_player) {
       return this.spotcast_connector.transferPlaybackToCastDevice(device.friendly_name);
@@ -494,11 +523,11 @@ export class SpotifyCard extends LitElement {
     return html`
       ${spotify_connect_devices.length > 0 ? html`<p>Spotify Connect devices</p>` : null}
       ${spotify_connect_devices.map((device) => {
-        return html`<a @click=${() => this.spotifyDeviceSelected(device)}>${device.name}</a>`;
+        return html`<a @click=${(elem) => this.spotifyDeviceSelected(elem, device)}>${device.name}</a>`;
       })}
       ${chromecast_devices.length > 0 ? html`<p>Chromecast devices</p>` : null}
       ${chromecast_devices.map((device) => {
-        return html`<a @click=${() => this.chromecastDeviceSelected(device)}>${device.friendly_name}</a>`;
+        return html`<a @click=${(elem) => this.chromecastDeviceSelected(elem, device)}>${device.friendly_name}</a>`;
       })}
     `;
   }
@@ -761,8 +790,8 @@ export class SpotifyCard extends LitElement {
     .dropdown-content a:hover {
       box-shadow: inset 0 0 100px 100px var(--secondary-background-color);
     }
-    .controls:hover + .dropdown-content,
-    .dropdown-content:hover {
+    .controls:hover + .dropdown-content:not(.dropdown-content-hide),
+    .dropdown-content:hover:not(.dropdown-content-hide) {
       display: block;
     }
 
@@ -770,23 +799,42 @@ export class SpotifyCard extends LitElement {
       fill: var(--primary-text-color);
     }
 
-    @keyframes loading {
+    @keyframes loading-grid {
       0% {
-        opacity: 100%;
+        box-shadow: rgba(var(--rgb-accent-color), 1) 0 0 0.2em 0.2em;
       }
       50% {
-        opacity: 0%;
+        box-shadow: rgba(var(--rgb-accent-color), 0) 0 0 0.2em 0.2em;
       }
       100% {
-        opacity: 100%;
+        box-shadow: rgba(var(--rgb-accent-color), 1) 0 0 0.2em 0.2em;
+      }
+    }
+
+    @keyframes loading-list {
+      0% {
+        background-color: rgba(var(--rgb-accent-color), 1);
+      }
+      50% {
+        background-color: rgba(var(--rgb-accent-color), 0);
+      }
+      100% {
+        background-color: rgba(var(--rgb-accent-color), 1);
       }
     }
 
     .loading {
-      animation-name: loading;
-      animation-duration: 1s;
+      animation-duration: 1.5s;
       animation-iteration-count: 5;
-      animation-timing-function: ease-in;
+      animation-timing-function: ease-in-out;
+    }
+
+    .grid-item.loading {
+      animation-name: loading-grid;
+    }
+
+    .list-item.loading {
+      animation-name: loading-list;
     }
   `;
 
@@ -804,6 +852,7 @@ export class SpotifyCard extends LitElement {
       display: flex;
       cursor: pointer;
       margin-right: -0.2em;
+      background-clip: content-box;
     }
 
     .list-item:hover {
@@ -816,7 +865,6 @@ export class SpotifyCard extends LitElement {
 
     .list-item.playing {
       background-color: var(--primary-color);
-      background-clip: content-box;
     }
 
     .cover {
@@ -854,6 +902,10 @@ export class SpotifyCard extends LitElement {
       position: relative;
       cursor: pointer;
       box-shadow: var(--primary-text-color) 0 0 0.2em;
+    }
+
+    .grid-item:hover {
+      box-shadow: rgba(var(--rgb-accent-color), 1) 0 0 0.2em 0.2em;
     }
 
     .grid-item-album-image {
