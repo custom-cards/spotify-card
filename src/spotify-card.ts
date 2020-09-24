@@ -24,6 +24,7 @@ import {
   Playlist,
   CurrentPlayer,
   isCurrentPlayer,
+  ValueChangedEvent,
 } from './types';
 
 import { PLAYLIST_TYPES } from './editor';
@@ -310,19 +311,30 @@ export class SpotifyCard extends LitElement {
   }
 
   private onShuffleSelect(): void {
-    if (this._spotify_state?.state == 'playing') {
-      this.hass.callService('media_player', 'shuffle_set', {
-        entity_id: this._spotify_state.entity_id,
-        shuffle: !this.player?.shuffle_state,
-      });
-    }
+    this.hass.callService('media_player', 'shuffle_set', {
+      entity_id: this._spotify_state?.entity_id,
+      shuffle: !this.player?.shuffle_state,
+    });
   }
 
-  private handlePlayPauseEvent(ev: Event, command: string): void {
+  private handleMediaEvent(ev: Event, command: string): void {
     ev.stopPropagation();
     if (this._spotify_state) {
       this.hass.callService('media_player', command, {
         entity_id: this._spotify_state.entity_id,
+      });
+    }
+  }
+
+  private getVolume(): number {
+    return this._spotify_state?.attributes?.volume_level * 100;
+  }
+
+  private handleVolumeChanged(ev: ValueChangedEvent): void {
+    if (this._spotify_state) {
+      this.hass.callService('media_player', 'volume_set', {
+        entity_id: this._spotify_state.entity_id,
+        volume_level: ev.target.value / 100,
       });
     }
   }
@@ -405,7 +417,7 @@ export class SpotifyCard extends LitElement {
         <div id="footer">
           <div class="dropdown-wrapper">
             <div class="controls">
-              <div class="dropdown">
+              <div class="mediaplayer">
                 <div class="mediaplayer_select">
                   <svg
                     class="mediaplayer_speaker_icon"
@@ -423,43 +435,79 @@ export class SpotifyCard extends LitElement {
                 </div>
               </div>
             </div>
-            <div class="dropdown-content">${this.generateDeviceList()}</div>
+            <div class="dropdown-content dropdown">${this.generateDeviceList()}</div>
           </div>
           <div class="footer__right">
             <div class="playback-controls">
-              ${this._spotify_state?.state == 'playing'
-                ? html`<div class="playpause-icon" @click=${this.onPauseSelect}>
-                    <svg viewBox="0 0 24 24">
-                      <path d="m1,24l8,0l0,-24l-8,0l0,24zm14,-24l0,24l8,0l0,-24l-8,0z" />
-                    </svg>
-                  </div>`
-                : html`<div class="playpause-icon" @click=${this.onResumeSelect}>
-                    <svg viewBox="0 0 24 24">
-                      <path d="m3,0l0,24l18,-12l-18,-12z" />
-                    </svg>
-                  </div>`}
-              ${this.getPlayingState()
-                ? html`<div
-                    class="shuffle-icon ${this.getShuffleState() ? 'playing' : ''}"
-                    @click=${this.onShuffleSelect}
-                  >
-                    <svg viewBox="0 0 24 24">
+            ${
+              this.getCurrentPlayer()
+                ? html`
+              ${
+                this._spotify_state?.state == 'playing'
+                  ? html`<div @click=${this.onPauseSelect}>
+                      <svg viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none" />
+                        <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
+                      </svg>
+                    </div>`
+                  : html`<div @click=${this.onResumeSelect}>
+                      <svg viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none" />
+                        <path d="M8 5v14l11-7z" />
+                      </svg>
+                    </div>`
+              }
+              <div @click=${this.onPrevSelect}>
+                <svg viewBox="0 0 24 24">
+                  <path d="M0 0h24v24H0z" fill="none" />
+                  <path d="M6 6h2v12H6zm3.5 6l8.5 6V6z" />
+                </svg>
+              </div>
+              <div @click=${this.onNextSelect}>
+                <svg viewBox="0 0 24 24">
+                  <path d="M0 0h24v24H0z" fill="none" />
+                  <path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z" />
+                </svg>
+              </div>
+              <div class="${this.getShuffleState() ? 'shuffle' : ''}" @click=${this.onShuffleSelect}>
+                <svg viewBox="0 0 24 24">
+                  <path d="M0 0h24v24H0z" fill="none" />
+                  <path
+                    d="M10.59 9.17L5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41l-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z"
+                  />
+                </svg>
+              </div>
+              <div class="volume">
+                <svg viewBox="0 0 24 24">
+                  <path d="M0 0h24v24H0z" fill="none" />
+                  <path
+                    d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"
+                  />
+                </svg>
+              </div>
+              <div id="volume-slider" class="dropdown">
+                <paper-slider
+                  max="100"
+                  min="0"
+                  pin
+                  .value=${this.getVolume()}
+                  @value-changed=${this.handleVolumeChanged}
+                ></paper-slider>
+              </div>
+            </div>`
+                : null
+            }
+            ${
+              this.config.hide_top_header
+                ? html`<div class="small-icon" onclick="window.open('https://www.spotify.com/')">
+                    <svg viewBox="0 0 168 168">
                       <path
-                        d="m9.885,7.75165l-7.77,-7.75164l-2.115,2.11409l7.755,7.75164l2.13,-2.11409zm5.865,-7.75164l3.06,3.05867l-18.81,18.81684l2.115,2.11409l18.825,-18.80185l3.06,3.05867l0,-8.24642l-8.25,0l0,0.00001zm0.495,14.10888l-2.115,2.11409l4.695,4.69296l-3.075,3.07367l8.25,0l0,-8.24642l-3.06,3.05867l-4.695,-4.69296z"
+                        d="M 83.996 0.277 C 37.747 0.277 0.253 37.77 0.253 84.019 C 0.253 130.27 37.747 167.76 83.996 167.76 C 130.25 167.76 167.74 130.27 167.74 84.019 C 167.74 37.773 130.25 0.281 83.995 0.281 L 83.996 0.277 L 83.996 0.277 Z M 122.4 121.057 C 120.9 123.517 117.68 124.297 115.22 122.787 C 95.558 110.777 70.806 108.057 41.656 114.717 C 38.847 115.357 36.047 113.597 35.407 110.787 C 34.764 107.977 36.517 105.177 39.333 104.537 C 71.233 97.249 98.596 100.387 120.67 113.877 C 123.13 115.387 123.91 118.597 122.4 121.057 L 122.4 121.057 Z M 132.65 98.255 C 130.76 101.327 126.74 102.297 123.67 100.407 C 101.16 86.571 66.847 82.564 40.222 90.646 C 36.769 91.689 33.122 89.743 32.074 86.296 C 31.034 82.843 32.981 79.203 36.428 78.153 C 66.841 68.925 104.65 73.395 130.5 89.28 C 133.57 91.17 134.54 95.19 132.65 98.256 L 132.65 98.255 Z M 133.53 74.511 C 106.54 58.48 62.01 57.006 36.241 64.827 C 32.103 66.082 27.727 63.746 26.473 59.608 C 25.219 55.468 27.553 51.095 31.694 49.837 C 61.275 40.857 110.45 42.592 141.524 61.039 C 145.254 63.248 146.474 68.055 144.264 71.772 C 142.064 75.494 137.244 76.721 133.534 74.511 L 133.53 74.511 Z"
                       />
                     </svg>
                   </div>`
-                : null}
-            </div>
-            ${this.config.hide_top_header
-              ? html`<div class="small-icon" onclick="window.open('https://www.spotify.com/')">
-                  <svg viewBox="0 0 168 168">
-                    <path
-                      d="M 83.996 0.277 C 37.747 0.277 0.253 37.77 0.253 84.019 C 0.253 130.27 37.747 167.76 83.996 167.76 C 130.25 167.76 167.74 130.27 167.74 84.019 C 167.74 37.773 130.25 0.281 83.995 0.281 L 83.996 0.277 L 83.996 0.277 Z M 122.4 121.057 C 120.9 123.517 117.68 124.297 115.22 122.787 C 95.558 110.777 70.806 108.057 41.656 114.717 C 38.847 115.357 36.047 113.597 35.407 110.787 C 34.764 107.977 36.517 105.177 39.333 104.537 C 71.233 97.249 98.596 100.387 120.67 113.877 C 123.13 115.387 123.91 118.597 122.4 121.057 L 122.4 121.057 Z M 132.65 98.255 C 130.76 101.327 126.74 102.297 123.67 100.407 C 101.16 86.571 66.847 82.564 40.222 90.646 C 36.769 91.689 33.122 89.743 32.074 86.296 C 31.034 82.843 32.981 79.203 36.428 78.153 C 66.841 68.925 104.65 73.395 130.5 89.28 C 133.57 91.17 134.54 95.19 132.65 98.256 L 132.65 98.255 Z M 133.53 74.511 C 106.54 58.48 62.01 57.006 36.241 64.827 C 32.103 66.082 27.727 63.746 26.473 59.608 C 25.219 55.468 27.553 51.095 31.694 49.837 C 61.275 40.857 110.45 42.592 141.524 61.039 C 145.254 63.248 146.474 68.055 144.264 71.772 C 142.064 75.494 137.244 76.721 133.534 74.511 L 133.53 74.511 Z"
-                    />
-                  </svg>
-                </div>`
-              : null}
+                : null
+            }
           </div>
         </div>
       </ha-card>
@@ -537,11 +585,19 @@ export class SpotifyCard extends LitElement {
   }
 
   private onPauseSelect(ev: Event): void {
-    this.handlePlayPauseEvent(ev, 'media_pause');
+    this.handleMediaEvent(ev, 'media_pause');
   }
 
   private onResumeSelect(ev: Event): void {
-    this.handlePlayPauseEvent(ev, 'media_play');
+    this.handleMediaEvent(ev, 'media_play');
+  }
+
+  private onNextSelect(ev: Event): void {
+    this.handleMediaEvent(ev, 'media_next_track');
+  }
+
+  private onPrevSelect(ev: Event): void {
+    this.handleMediaEvent(ev, 'media_previous_track');
   }
 
   // Show warning on top of the card
@@ -625,23 +681,52 @@ export class SpotifyCard extends LitElement {
 
     .playback-controls {
       display: flex;
-      padding-right: 10px;
     }
 
     .playback-controls > div {
-      height: 1.5em;
-      padding-right: 15px;
+      height: 2.5em;
     }
 
-    .shuffle-icon svg,
-    .playpause-icon svg {
+    .playback-controls > div:first-child {
+      padding-left: 0;
+    }
+
+    .playback-controls svg {
       height: 100%;
+      cursor: pointer;
+    }
+
+    .shuffle > svg {
+      fill: var(--primary-color);
+    }
+
+    #volume-slider {
+      bottom: 3em;
+      right: 0.5em;
+    }
+
+    #volume-slider > * {
+      height: 2.5em;
+    }
+
+    .dropdown {
+      display: none;
+      position: absolute;
+      box-shadow: var(--primary-text-color) 0 0 16px 0px;
+      z-index: 1;
+      background-color: var(--card-background-color);
+    }
+
+    .volume:hover + #volume-slider,
+    #volume-slider:hover {
+      display: block;
     }
 
     .small-icon {
       display: inline-flex;
       align-items: center;
       cursor: pointer;
+      padding-left: 10px;
     }
 
     .small-icon svg {
@@ -652,7 +737,7 @@ export class SpotifyCard extends LitElement {
       display: flex;
     }
 
-    .dropdown {
+    .mediaplayer {
       position: relative;
       display: inline-block;
     }
@@ -682,16 +767,11 @@ export class SpotifyCard extends LitElement {
     }
 
     .dropdown-content {
-      display: none;
-      position: absolute;
       left: 1em;
       bottom: 0.5em;
       max-height: calc(100% - 1em);
       overflow-y: auto;
-      background-color: var(--card-background-color);
       min-width: 250px;
-      box-shadow: var(--primary-text-color) 0 0 16px 0px;
-      z-index: 1;
     }
 
     .dropdown-content p {
