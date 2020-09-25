@@ -69,7 +69,12 @@ export function hasChangedMediaPlayer(newVal: HassEntity, oldVal: HassEntity): b
   if (!oldVal) {
     return true;
   }
-  if (newVal.state != oldVal.state || newVal.attributes.shuffle != oldVal.attributes.shuffle) {
+  if (
+    newVal.state != oldVal.state ||
+    newVal.attributes.shuffle != oldVal.attributes.shuffle ||
+    newVal.attributes.media_title != oldVal.attributes.media_title ||
+    newVal.attributes.media_artist != oldVal.attributes.media_artist
+  ) {
     return true;
   }
   return false;
@@ -423,6 +428,13 @@ export class SpotifyCard extends LitElement {
     return html`
       <ha-card tabindex="0" style="${this.config.height ? `height: ${this.config.height}px` : ''}"
         >${this.config.hide_warning ? '' : warning} ${!this.config.hide_top_header ? header : null}
+        ${
+          this._spotify_state && !this.config.hide_currently_playing
+            ? html` <p id="header-track">
+                ${this._spotify_state?.attributes.media_title} - ${this._spotify_state?.attributes.media_artist}
+              </p>`
+            : null
+        }
         <div id="content">${content}</div>
         <div id="footer">
           <div class="dropdown-wrapper">
@@ -648,6 +660,12 @@ export class SpotifyCard extends LitElement {
       display: flex;
       flex: 1;
       align-items: center;
+    }
+
+    #header-track {
+      overflow: hidden;
+      margin: 0;
+      font-size: 1.1em;
     }
 
     #content {

@@ -166,6 +166,8 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
         return this.config?.filter_devices?.toString() ?? '';
       case ConfigEntry.Hide_Top_Header:
         return this.config?.hide_top_header ?? false;
+      case ConfigEntry.Hide_Currently_Playing:
+        return this.config?.hide_currently_playing ?? false;
 
       default:
         break;
@@ -299,6 +301,15 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
             .id=${'hide_top_header'}
           ></ha-switch>
           <label for=${'hide_top_header'}>${localize('settings.hide_top_header')}</label>
+        </div>
+        <div>
+          <ha-switch
+            .checked=${this.getValue(ConfigEntry.Hide_Currently_Playing)}
+            .configValue=${'hide_currently_playing'}
+            @change=${this.valueChanged}
+            .id=${'hide_currently_playing'}
+          ></ha-switch>
+          <label for=${'hide_currently_playing'}>${localize('settings.hide_currently_playing')}</label>
         </div>
         <div>
           <paper-dropdown-menu

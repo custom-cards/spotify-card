@@ -30,6 +30,7 @@
     "spotify_entity": "Spotify media player entity",
     "default_device": "Default device name",
     "filter_devices": "Hide devices (see documentation under 'Advanced usage')",
-    "hide_top_header": "Hide header"
+    "hide_top_header": "Hide header",
+    "hide_currently_playing": "Hide currently playing"
   }
 }
