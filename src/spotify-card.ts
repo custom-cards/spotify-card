@@ -625,7 +625,7 @@ export class SpotifyCard extends LitElement {
     }
 
     ha-card {
-      --header-height: 4em;
+      --header-height: 2.5em;
       --footer-height: 2.5em;
       padding: 0.5em;
       display: flex;
@@ -642,10 +642,11 @@ export class SpotifyCard extends LitElement {
     #header {
       display: flex;
       height: var(--header-height);
+      padding-bottom: 0.5em;
     }
     #header > * {
       display: flex;
-      flex-grow: 1;
+      flex: 1;
       align-items: center;
     }
 
@@ -659,8 +660,6 @@ export class SpotifyCard extends LitElement {
 
     #icon {
       justify-content: left;
-      flex-grow: 0;
-      flex-shrink: 1;
       padding-left: 0.5em;
       cursor: pointer;
     }
