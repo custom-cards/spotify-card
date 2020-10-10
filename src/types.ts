@@ -221,4 +221,5 @@ export interface Tracks {
 
 export interface ValueChangedEvent {
   target?: any;
+  timeStamp: number;
 }
