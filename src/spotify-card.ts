@@ -430,6 +430,13 @@ export class SpotifyCard extends LitElement {
     return html`
       <ha-card tabindex="0" style="${this.config.height ? `height: ${this.config.height}px` : ''}"
         >${this.config.hide_warning ? '' : warning} ${!this.config.hide_top_header ? header : null}
+        ${
+          this._spotify_state && !this.config.hide_currently_playing
+            ? html` <p id="header-track">
+                ${this._spotify_state?.attributes.media_title} - ${this._spotify_state?.attributes.media_artist}
+              </p>`
+            : null
+        }
         <div id="content">${content}</div>
         <div id="footer">
           <div class="dropdown-wrapper">
@@ -655,6 +662,12 @@ export class SpotifyCard extends LitElement {
       display: flex;
       flex: 1;
       align-items: center;
+    }
+
+    #header-track {
+      overflow: hidden;
+      margin: 0;
+      margin-left: 0.2em;
     }
 
     #content {
