@@ -69,7 +69,13 @@ export function hasChangedMediaPlayer(newVal: HassEntity, oldVal: HassEntity): b
   if (!oldVal) {
     return true;
   }
-  if (newVal.state != oldVal.state || newVal.attributes.shuffle != oldVal.attributes.shuffle) {
+  if (
+    newVal.state != oldVal.state ||
+    newVal.attributes.shuffle != oldVal.attributes.shuffle ||
+    newVal.attributes.media_title != oldVal.attributes.media_title ||
+    newVal.attributes.media_artist != oldVal.attributes.media_artist ||
+    newVal.attributes.volume_level != oldVal.attributes.volume_level
+  ) {
     return true;
   }
   return false;
@@ -341,7 +347,8 @@ export class SpotifyCard extends LitElement {
   }
 
   private handleVolumeChanged(ev: ValueChangedEvent): void {
-    if (this._spotify_state) {
+    //Prevents volume setting directly after page load
+    if (this._spotify_state && ev.timeStamp > 2500) {
       this.hass.callService('media_player', 'volume_set', {
         entity_id: this._spotify_state.entity_id,
         volume_level: ev.target.value / 100,
