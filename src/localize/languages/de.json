@@ -28,6 +28,7 @@
     "default_device": "Default device name",
     "filter_devices": "Verstecke Geräte (siehe Dokumentation unter 'Advanced usage')",
     "hide_top_header": "Verstecke Kopfzeile",
-    "hide_currently_playing": "Verstecke die Anzeige des aktuellen Liedes"
+    "hide_currently_playing": "Verstecke die Anzeige des aktuellen Liedes",
+    "hide_playback_controls": "Verstecke Wiedergabesteuerung"
   }
 }

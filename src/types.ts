@@ -27,7 +27,8 @@ export enum ConfigEntry {
   Default_Device,
   Filter_Devices,
   Hide_Top_Header,
-  Hide_Currently_Playing
+  Hide_Currently_Playing,
+  Hide_Playback_Controls,
 }
 
 export interface SpotifyCardConfig extends LovelaceCardConfig {
@@ -63,6 +64,8 @@ export interface SpotifyCardConfig extends LovelaceCardConfig {
   hide_top_header?: boolean;
   //hide the currently playing row
   hide_currently_playing?: boolean;
+  //hide the playback controls
+  hide_playback_controls?: boolean;
   // locale
 }
 
