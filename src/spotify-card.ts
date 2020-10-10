@@ -665,7 +665,7 @@ export class SpotifyCard extends LitElement {
     #header-track {
       overflow: hidden;
       margin: 0;
-      font-size: 1.1em;
+      margin-left: 0.2em;
     }
 
     #content {
