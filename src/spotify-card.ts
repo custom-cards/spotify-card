@@ -107,6 +107,7 @@ export class SpotifyCard extends LitElement {
   private _unsubscribe_entitites?: any;
   private _spotify_installed = false;
   private _fetch_time_out: any = 0;
+  private _last_volume_set_time = 0;
 
   constructor() {
     super();
@@ -346,13 +347,30 @@ export class SpotifyCard extends LitElement {
     return this._spotify_state?.attributes?.volume_level * 100;
   }
 
+  protected shouldUpdate(changedProperties): any {
+    let scheduleUpdate = true;
+    changedProperties.forEach((_oldValue, propName) => {
+      // console.log(`${propName} changed. oldValue: ${_oldValue}`);
+      // Blocks render after a volume change, which otherwise can cause a jumping volume slider
+      if (propName == '_spotify_state') {
+        const d = new Date();
+        if (d.getTime() - this._last_volume_set_time < 500) {
+          scheduleUpdate = false;
+        }
+      }
+    });
+    return scheduleUpdate;
+  }
+
   private handleVolumeChanged(ev: ValueChangedEvent): void {
-    //Prevents volume setting directly after page load
-    if (this._spotify_state && ev.timeStamp > 2500) {
+    ev.stopPropagation();
+    if (this._spotify_state) {
       this.hass.callService('media_player', 'volume_set', {
         entity_id: this._spotify_state.entity_id,
         volume_level: ev.target.value / 100,
       });
+      const d = new Date();
+      this._last_volume_set_time = d.getTime();
     }
   }
 
@@ -516,7 +534,8 @@ export class SpotifyCard extends LitElement {
                   min="0"
                   pin
                   .value=${this.getVolume()}
-                  @value-changed=${this.handleVolumeChanged}
+                  @click=${this.handleVolumeChanged}
+                  @touchend=${this.handleVolumeChanged}
                 ></paper-slider>
               </div>
             </div>`

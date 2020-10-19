@@ -222,7 +222,7 @@ export interface Tracks {
   total: number;
 }
 
-export interface ValueChangedEvent {
-  target?: any;
+export interface ValueChangedEvent extends Event {
+  target: any;
   timeStamp: number;
 }
