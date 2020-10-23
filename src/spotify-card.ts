@@ -25,6 +25,7 @@ import {
   CurrentPlayer,
   isCurrentPlayer,
   ValueChangedEvent,
+  DeviceList,
 } from './types';
 
 import { PLAYLIST_TYPES } from './editor';
@@ -444,6 +445,7 @@ export class SpotifyCard extends LitElement {
       ${this.config.name ? html`<div id="header_name">${this.config.name}</div>` : null}
       <div></div>
     </div>`;
+    const devicelist = this.generateDeviceList();
     return html`
       <ha-card tabindex="0" style="${this.config.height ? `height: ${this.config.height}px` : ''}"
         >${this.config.hide_warning ? '' : warning} ${!this.config.hide_top_header ? header : null}
@@ -455,7 +457,7 @@ export class SpotifyCard extends LitElement {
               ${this._spotify_state?.attributes.media_title} - ${this._spotify_state?.attributes.media_artist}
             </p>`
           : null}
-        <div id="content">${content}</div>
+        <div id="content" class="${devicelist.count == 0 ? 'grey-scale' : null}">${content}</div>
         <div id="footer">
           <div class="dropdown-wrapper">
             <div class="controls">
@@ -477,7 +479,7 @@ export class SpotifyCard extends LitElement {
                 </div>
               </div>
             </div>
-            <div class="dropdown-content dropdown">${this.generateDeviceList()}</div>
+            <div class="dropdown-content dropdown">${devicelist.html}</div>
           </div>
           <div class="footer__right">
             ${!this.config.hide_playback_controls
@@ -559,21 +561,24 @@ export class SpotifyCard extends LitElement {
   }
 
   // Generate device list
-  private generateDeviceList(): TemplateResult {
+  private generateDeviceList(): DeviceList {
     const [spotify_connect_devices, chromecast_devices] = this.getFilteredDevices();
     if (spotify_connect_devices.length == 0 && chromecast_devices.length == 0) {
-      return html`<p>No devices found</p>`;
+      return { html: html`<p>No devices found</p>`, count: 0 };
     }
-    return html`
-      ${spotify_connect_devices.length > 0 ? html`<p>Spotify Connect devices</p>` : null}
-      ${spotify_connect_devices.map((device) => {
-        return html`<a @click=${(elem) => this.spotifyDeviceSelected(elem, device)}>${device.name}</a>`;
-      })}
-      ${chromecast_devices.length > 0 ? html`<p>Chromecast devices</p>` : null}
-      ${chromecast_devices.map((device) => {
-        return html`<a @click=${(elem) => this.chromecastDeviceSelected(elem, device)}>${device.friendly_name}</a>`;
-      })}
-    `;
+    return {
+      html: html`
+        ${spotify_connect_devices.length > 0 ? html`<p>Spotify Connect devices</p>` : null}
+        ${spotify_connect_devices.map((device) => {
+          return html`<a @click=${(elem) => this.spotifyDeviceSelected(elem, device)}>${device.name}</a>`;
+        })}
+        ${chromecast_devices.length > 0 ? html`<p>Chromecast devices</p>` : null}
+        ${chromecast_devices.map((device) => {
+          return html`<a @click=${(elem) => this.chromecastDeviceSelected(elem, device)}>${device.friendly_name}</a>`;
+        })}
+      `,
+      count: spotify_connect_devices.length + chromecast_devices.length,
+    };
   }
 
   // Generate items for display style 'List'
@@ -696,6 +701,10 @@ export class SpotifyCard extends LitElement {
       overflow: auto;
       padding: 0.2em;
       background-color: var(--primary-background-color);
+    }
+
+    .grey-scale {
+      filter: grayscale(1);
     }
 
     #icon {

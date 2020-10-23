@@ -1,4 +1,5 @@
 import { LovelaceCardConfig } from 'custom-card-helpers';
+import { TemplateResult } from 'lit-element';
 
 export enum DisplayStyle {
   Grid = 'grid',
@@ -225,4 +226,9 @@ export interface Tracks {
 export interface ValueChangedEvent extends Event {
   target: any;
   timeStamp: number;
+}
+
+export interface DeviceList {
+  html: TemplateResult;
+  count: number;
 }
