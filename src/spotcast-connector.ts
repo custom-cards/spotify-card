@@ -66,25 +66,34 @@ export class SpotcastConnector implements ISpotcastConnector {
 
   public playUri(uri: string): void {
     const current_player = this.getCurrentPlayer();
-    if (!current_player) {
+    // Play uri on active device, if there is any
+    if (current_player) {
+      this.playUriOnConnectDevice(current_player.id, uri);
+    } else {
       const default_device = this.parent.config.default_device;
+      // If default device is configured, try to play uri only on this device
       if (default_device) {
-        const connect_device = this.parent.devices.filter((device) => device.name == default_device);
-        if (connect_device.length > 0) {
-          return this.playUriOnConnectDevice(connect_device[0].id, uri);
-        } else {
-          const cast_device = this.parent.chromecast_devices.filter(
-            (cast) => cast.friendly_name == default_device
-          );
-          if (cast_device.length > 0) {
-            return this.playUriOnCastDevice(cast_device[0].friendly_name, uri);
-          }
-          throw new Error('Could not find default_device: ' + default_device);
-        }
+        this.startPlaybackOnDevice(default_device, uri);
       }
-      throw new Error('No active device nor default device in settings');
+      // If there is at least one device available, play uri on the first
+      else if (this.parent.devices.length > 0) {
+        const first_avaialable_device = this.parent.devices[0].name;
+        this.startPlaybackOnDevice(first_avaialable_device, uri);
+      } else throw new Error('No device available for playback');
     }
-    this.playUriOnConnectDevice(current_player.id, uri);
+  }
+
+  private startPlaybackOnDevice(device_name: string, uri: string): void {
+    const connect_device = this.parent.devices.filter((device) => device.name == device_name);
+    if (connect_device.length > 0) {
+      return this.playUriOnConnectDevice(connect_device[0].id, uri);
+    } else {
+      const cast_device = this.parent.chromecast_devices.filter((cast) => cast.friendly_name == device_name);
+      if (cast_device.length > 0) {
+        return this.playUriOnCastDevice(cast_device[0].friendly_name, uri);
+      }
+      throw new Error('Could not find device: ' + device_name);
+    }
   }
 
   public transferPlaybackToCastDevice(device_name: string): void {
