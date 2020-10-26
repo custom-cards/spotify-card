@@ -457,7 +457,7 @@ export class SpotifyCard extends LitElement {
               ${this._spotify_state?.attributes.media_title} - ${this._spotify_state?.attributes.media_artist}
             </p>`
           : null}
-        <div id="content" class="${devicelist.count == 0 ? 'grey-scale' : null}">${content}</div>
+        <div id="content" class="${devicelist.count == 0 ? 'grey-scale' : ''}">${content}</div>
         <div id="footer">
           <div class="dropdown-wrapper">
             <div class="controls">
