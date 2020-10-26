@@ -347,7 +347,7 @@ export class SpotifyCard extends LitElement {
     return this._spotify_state?.attributes?.volume_level * 100;
   }
 
-  protected shouldUpdate(changedProperties): any {
+  protected shouldUpdate(changedProperties:  Map<string | number | symbol, unknown>): any {
     let scheduleUpdate = true;
     changedProperties.forEach((_oldValue, propName) => {
       // console.log(`${propName} changed. oldValue: ${_oldValue}`);
@@ -451,9 +451,9 @@ export class SpotifyCard extends LitElement {
         !this.config.hide_currently_playing &&
         this._spotify_state?.attributes.media_title &&
         this._spotify_state?.attributes.media_artist
-          ? html` <p id="header-track">
+          ? html` <div id="header-track">
               ${this._spotify_state?.attributes.media_title} - ${this._spotify_state?.attributes.media_artist}
-            </p>`
+            </div>`
           : null}
         <div id="content">${content}</div>
         <div id="footer">
@@ -685,9 +685,9 @@ export class SpotifyCard extends LitElement {
     }
 
     #header-track {
-      overflow: hidden;
-      margin: 0;
-      margin-left: 0.2em;
+      margin: 0 0.2em 0 0.2em;
+      min-height: 1.35em;
+      overflow-x: hidden;
     }
 
     #content {
