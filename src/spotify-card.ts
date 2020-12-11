@@ -348,7 +348,7 @@ export class SpotifyCard extends LitElement {
     return this._spotify_state?.attributes?.volume_level * 100;
   }
 
-  protected shouldUpdate(changedProperties:  Map<string | number | symbol, unknown>): any {
+  protected shouldUpdate(changedProperties: Map<string | number | symbol, unknown>): any {
     let scheduleUpdate = true;
     changedProperties.forEach((_oldValue, propName) => {
       // console.log(`${propName} changed. oldValue: ${_oldValue}`);
@@ -669,6 +669,7 @@ export class SpotifyCard extends LitElement {
       padding: 0.5em;
       display: flex;
       flex-direction: column;
+      overflow: auto;
     }
 
     hui-warning {

@@ -1,7 +1,7 @@
 {
   "name": "spotify-card",
-  "author": "Niklas Fondberg <niklas.fondberg@gmail.com>, Max Fermor (FL550)",
-  "version": "2.3.4",
+  "author": "Niklas Fondberg <niklas.fondberg@gmail.com>, Max Fermor (FL550) <max.fermor@gmail.com>",
+  "version": "2.3.5",
   "description": "Spotify playlist card",
   "keywords": [
     "home-assistant",
