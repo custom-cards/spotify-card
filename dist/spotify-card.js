@@ -626,6 +626,7 @@ found at http://polymer.github.io/PATENTS.txt
 
     #header-track {
       margin: 0 0.2em 0 0.2em;
+      min-height: 1.45em;
     }
 
     #content {
