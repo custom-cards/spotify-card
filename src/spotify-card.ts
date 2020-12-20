@@ -621,6 +621,7 @@ export class SpotifyCard extends LitElement {
               d="M 83.996 0.277 C 37.747 0.277 0.253 37.77 0.253 84.019 C 0.253 130.27 37.747 167.76 83.996 167.76 C 130.25 167.76 167.74 130.27 167.74 84.019 C 167.74 37.773 130.25 0.281 83.995 0.281 L 83.996 0.277 L 83.996 0.277 Z M 122.4 121.057 C 120.9 123.517 117.68 124.297 115.22 122.787 C 95.558 110.777 70.806 108.057 41.656 114.717 C 38.847 115.357 36.047 113.597 35.407 110.787 C 34.764 107.977 36.517 105.177 39.333 104.537 C 71.233 97.249 98.596 100.387 120.67 113.877 C 123.13 115.387 123.91 118.597 122.4 121.057 L 122.4 121.057 Z M 132.65 98.255 C 130.76 101.327 126.74 102.297 123.67 100.407 C 101.16 86.571 66.847 82.564 40.222 90.646 C 36.769 91.689 33.122 89.743 32.074 86.296 C 31.034 82.843 32.981 79.203 36.428 78.153 C 66.841 68.925 104.65 73.395 130.5 89.28 C 133.57 91.17 134.54 95.19 132.65 98.256 L 132.65 98.255 Z M 133.53 74.511 C 106.54 58.48 62.01 57.006 36.241 64.827 C 32.103 66.082 27.727 63.746 26.473 59.608 C 25.219 55.468 27.553 51.095 31.694 49.837 C 61.275 40.857 110.45 42.592 141.524 61.039 C 145.254 63.248 146.474 68.055 144.264 71.772 C 142.064 75.494 137.244 76.721 133.534 74.511 L 133.53 74.511 Z"
             />
           </svg>
+          ${this.config.grid_show_title ? html`<div class="grid-item-album-title">${item.name}</div>` : null}
         </div>
       </div>`);
     }
@@ -982,6 +983,23 @@ export class SpotifyCard extends LitElement {
 
     .grid-item-album-image.playing {
       box-shadow: var(--primary-color) 0 0 0.2em 0.2em;
+    }
+
+    .grid-item-album-title {
+      position: absolute;
+      bottom: 0;
+      width: calc(100% - 0.1em);
+      padding: 0em 0.1em;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      color: var(--text-primary-color);
+      background-image: linear-gradient(
+        transparent,
+        rgba(var(--rgb-primary-text-color), 0.35),
+        rgba(var(--rgb-primary-text-color), 0.45),
+        rgba(var(--rgb-primary-text-color), 0.6)
+      );
     }
   `;
 }

@@ -353,6 +353,15 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
         </div>
         <div>
           <ha-switch
+            .checked=${this.getValue(ConfigEntry.Grid_Show_Title)}
+            .configValue=${'grid_show_title'}
+            @change=${this.valueChanged}
+            .id=${'grid_show_title'}
+          ></ha-switch>
+          <label for=${'grid_show_title'}>${localize('settings.grid_show_title')}</label>
+        </div>
+        <div>
+          <ha-switch
             .checked=${this.getValue(ConfigEntry.Grid_Center_Covers)}
             .configValue=${'grid_center_covers'}
             @change=${this.valueChanged}
