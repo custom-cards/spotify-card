@@ -25,6 +25,7 @@
     "display_style": "Display Style",
     "grid_covers_per_row": "Number of covers per row",
     "grid_center_covers": "Center Covers",
+    "grid_show_title": "Show album title in grid view",
     "account": "Account",
     "filter_out_cast_devices": "Filter out chromecast devices",
     "spotify_entity": "Spotify media player entity",

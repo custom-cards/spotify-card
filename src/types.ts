@@ -24,6 +24,7 @@ export enum ConfigEntry {
   Display_Style,
   Grid_Covers_Per_Row,
   Grid_Center_Covers,
+  Grid_Show_Title,
   Hide_Warning,
   Default_Device,
   Filter_Devices,
@@ -57,6 +58,8 @@ export interface SpotifyCardConfig extends LovelaceCardConfig {
   always_play_random_song?: boolean;
   //number of covers per row in grid
   grid_covers_per_row?: number;
+  //Show album title in grid
+  grid_show_title?: boolean;
   //preselected device
   default_device?: string;
   //filter the devices based on regex
