@@ -19,7 +19,7 @@
     "playlist_type": "Playlist Type",
     "limit": "Amount of playlists shown",
     "height": "Height of card",
-    "country_code": "Country Code for featured playlists",
+    "country_code": "Country Code",
     "always_play_random_song": "Always play random song when starting playback",
     "title": "Title of card",
     "display_style": "Display Style",
