@@ -164,6 +164,10 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
         return this.config?.default_device ?? '';
       case ConfigEntry.Filter_Devices:
         return this.config?.filter_devices?.toString() ?? '';
+      case ConfigEntry.Hide_Connect_Devices:
+        return this.config?.hide_connect_devices ?? false;
+      case ConfigEntry.Hide_Chromecast_Devices:
+        return this.config?.hide_chromecast_devices ?? false;
       case ConfigEntry.Hide_Top_Header:
         return this.config?.hide_top_header ?? false;
       case ConfigEntry.Hide_Currently_Playing:
@@ -383,6 +387,24 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
             .configValue=${'filter_devices'}
             @value-changed=${this.valueChanged}
           ></paper-input>
+        </div>
+        <div>
+          <ha-switch
+            .checked=${this.getValue(ConfigEntry.Hide_Connect_Devices)}
+            .configValue=${'hide_connect_devices'}
+            @change=${this.valueChanged}
+            .id=${'hide_connect_devices'}
+          ></ha-switch>
+          <label for=${'hide_connect_devices'}>${localize('settings.hide_connect_devices')}</label>
+        </div>
+        <div>
+          <ha-switch
+            .checked=${this.getValue(ConfigEntry.Hide_Chromecast_Devices)}
+            .configValue=${'hide_chromecast_devices'}
+            @change=${this.valueChanged}
+            .id=${'hide_chromecast_devices'}
+          ></ha-switch>
+          <label for=${'hide_chromecast_devices'}>${localize('settings.hide_chromecast_devices')}</label>
         </div>
       </div>
     `;
