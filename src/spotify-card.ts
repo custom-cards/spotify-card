@@ -276,8 +276,8 @@ export class SpotifyCard extends LitElement {
   }
 
   private getFilteredDevices(): [ConnectDevice[], ChromecastDevice[]] {
-    const spotify_connect_devices = this.devices.filter(this.checkIfAllowedToShow, this);
-    const chromecast_devices = this.chromecast_devices.filter(this.checkIfAllowedToShow, this);
+    const spotify_connect_devices = this.config.hide_connect_devices ? [] : this.devices.filter(this.checkIfAllowedToShow, this);
+    const chromecast_devices = this.config.hide_chromecast_devices ? [] : this.chromecast_devices.filter(this.checkIfAllowedToShow, this);
     return [spotify_connect_devices, chromecast_devices];
   }
 

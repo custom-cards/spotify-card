@@ -111,7 +111,7 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
         this.config = clone;
       } else {
         let target_value = target.value;
-        if (target.configValue == 'height') {
+        if (target.configValue == 'height' || target.configValue == 'limit') {
           target_value = Number(target_value);
         } else if (target.configValue == 'filter_devices') {
           target_value = target_value
@@ -164,6 +164,10 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
         return this.config?.default_device ?? '';
       case ConfigEntry.Filter_Devices:
         return this.config?.filter_devices?.toString() ?? '';
+      case ConfigEntry.Hide_Connect_Devices:
+        return this.config?.hide_connect_devices ?? false;
+      case ConfigEntry.Hide_Chromecast_Devices:
+        return this.config?.hide_chromecast_devices ?? false;
       case ConfigEntry.Hide_Top_Header:
         return this.config?.hide_top_header ?? false;
       case ConfigEntry.Hide_Currently_Playing:
@@ -180,7 +184,7 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
     const media_player_entities = this.getMediaPlayerEntities();
     return html`
       <div class="values">
-        <div>
+        <div class="side-by-side">
           <paper-dropdown-menu
             label=${localize('settings.account')}
             @value-changed=${this.valueChanged}
@@ -194,8 +198,6 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
               ${this.accounts.map((item) => html` <paper-item>${item}</paper-item> `)}
             </paper-listbox>
           </paper-dropdown-menu>
-        </div>
-        <div>
           <paper-dropdown-menu
             label=${localize('settings.spotify_entity')}
             @value-changed=${this.valueChanged}
@@ -210,7 +212,7 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
             </paper-listbox>
           </paper-dropdown-menu>
         </div>
-        <div>
+        <div class="side-by-side">
           <paper-dropdown-menu
             label=${localize('settings.playlist_type')}
             @value-changed=${this.valueChanged}
@@ -226,51 +228,34 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
               ${(Object.values(PlaylistType) as Array<string>).map((item) => html` <paper-item>${item}</paper-item> `)}
             </paper-listbox>
           </paper-dropdown-menu>
-        </div>
-        <div>
-          <div>${localize('settings.limit')}</div>
-          <paper-slider
-            .value=${this.getValue(ConfigEntry.Limit)}
-            .configValue=${'limit'}
-            @value-changed=${this.valueChanged}
-            max="50"
-            editable
-            pin
-          ></paper-slider>
-        </div>
-        <div>
           <paper-input
-            label=${localize('settings.height')}
-            .value=${this.getValue(ConfigEntry.Height)}
-            .configValue=${'height'}
-            @value-changed=${this.valueChanged}
-          ></paper-input>
-        </div>
-        <div>
-          <paper-input
+            class=${this.getValue(ConfigEntry.Playlist_Type) == 'featured' ? 'shown' : 'hidden' }
             label=${localize('settings.country_code')}
             .value=${this.getValue(ConfigEntry.Country_Code)}
             .configValue=${'country_code'}
             @value-changed=${this.valueChanged}
           ></paper-input>
+          <paper-input
+            label=${localize('settings.limit')}
+            .value=${this.getValue(ConfigEntry.Limit)}
+            .configValue=${'limit'}
+            @value-changed=${this.valueChanged}
+          ></paper-input>
         </div>
-        <div>
+        <ha-formfield label=${localize('settings.always_play_random_song')}>
           <ha-switch
             .checked=${this.getValue(ConfigEntry.Always_Play_Random_Song)}
             .configValue=${'always_play_random_song'}
             @change=${this.valueChanged}
             .id=${'always_play_random_song'}
           ></ha-switch>
-          <label for=${'always_play_random_song'}>${localize('settings.always_play_random_song')}</label>
-        </div>
-        <div>
-          <paper-input
-            label=${localize('settings.default_device')}
-            .value=${this.getValue(ConfigEntry.Default_Device)}
-            .configValue=${'default_device'}
-            @value-changed=${this.valueChanged}
-          ></paper-input>
-        </div>
+        </ha-formfield>
+        <paper-input
+          label=${localize('settings.default_device')}
+          .value=${this.getValue(ConfigEntry.Default_Device)}
+          .configValue=${'default_device'}
+          @value-changed=${this.valueChanged}
+        ></paper-input>
       </div>
     `;
   }
@@ -278,51 +263,49 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
   private renderAppearance(): TemplateResult {
     return html`
       <div class="values">
-        <div>
-          <ha-switch
-            .checked=${this.getValue(ConfigEntry.Hide_Warning)}
-            .configValue=${'hide_warning'}
-            @change=${this.valueChanged}
-            .id=${'hide_warning'}
-          ></ha-switch>
-          <label for=${'hide_warning'}>${localize('settings.hide_warning')}</label>
+        <paper-input
+          label=${localize('settings.title')}
+          .value=${this.getValue(ConfigEntry.Name)}
+          .configValue=${'name'}
+          @value-changed=${this.valueChanged}
+        ></paper-input>
+        <div class="side-by-side">
+          <ha-formfield label=${localize('settings.hide_warning')}>
+            <ha-switch
+              .checked=${this.getValue(ConfigEntry.Hide_Warning)}
+              .configValue=${'hide_warning'}
+              @change=${this.valueChanged}
+              .id=${'hide_warning'}
+            ></ha-switch>
+          </ha-formfield>
+          <ha-formfield label=${localize('settings.hide_top_header')}>
+            <ha-switch
+              .checked=${this.getValue(ConfigEntry.Hide_Top_Header)}
+              .configValue=${'hide_top_header'}
+              @change=${this.valueChanged}
+              .id=${'hide_top_header'}
+            ></ha-switch>
+          </ha-formfield>
         </div>
-        <div>
-          <paper-input
-            label=${localize('settings.title')}
-            .value=${this.getValue(ConfigEntry.Name)}
-            .configValue=${'name'}
-            @value-changed=${this.valueChanged}
-          ></paper-input>
+        <div class="side-by-side">
+          <ha-formfield label=${localize('settings.hide_currently_playing')}>
+            <ha-switch
+              .checked=${this.getValue(ConfigEntry.Hide_Currently_Playing)}
+              .configValue=${'hide_currently_playing'}
+              @change=${this.valueChanged}
+              .id=${'hide_currently_playing'}
+            ></ha-switch>
+          </ha-formfield>
+          <ha-formfield label=${localize('settings.hide_playback_controls')}>
+            <ha-switch
+              .checked=${this.getValue(ConfigEntry.Hide_Playback_Controls)}
+              .configValue=${'hide_playback_controls'}
+              @change=${this.valueChanged}
+              .id=${'hide_playback_controls'}
+            ></ha-switch>
+          </ha-formfield>
         </div>
-        <div>
-          <ha-switch
-            .checked=${this.getValue(ConfigEntry.Hide_Top_Header)}
-            .configValue=${'hide_top_header'}
-            @change=${this.valueChanged}
-            .id=${'hide_top_header'}
-          ></ha-switch>
-          <label for=${'hide_top_header'}>${localize('settings.hide_top_header')}</label>
-        </div>
-        <div>
-          <ha-switch
-            .checked=${this.getValue(ConfigEntry.Hide_Currently_Playing)}
-            .configValue=${'hide_currently_playing'}
-            @change=${this.valueChanged}
-            .id=${'hide_currently_playing'}
-          ></ha-switch>
-          <label for=${'hide_currently_playing'}>${localize('settings.hide_currently_playing')}</label>
-        </div>
-        <div>
-          <ha-switch
-            .checked=${this.getValue(ConfigEntry.Hide_Playback_Controls)}
-            .configValue=${'hide_playback_controls'}
-            @change=${this.valueChanged}
-            .id=${'hide_playback_controls'}
-          ></ha-switch>
-          <label for=${'hide_playback_controls'}>${localize('settings.hide_playback_controls')}</label>
-        </div>
-        <div>
+        <div class="side-by-side">
           <paper-dropdown-menu
             label=${localize('settings.display_style')}
             @value-changed=${this.valueChanged}
@@ -338,36 +321,28 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
               ${(Object.values(DisplayStyle) as Array<string>).map((item) => html` <paper-item>${item}</paper-item> `)}
             </paper-listbox>
           </paper-dropdown-menu>
-        </div>
-        <div>
-          <div>${localize('settings.grid_covers_per_row')}</div>
-          <paper-slider
-            .value=${this.getValue(ConfigEntry.Grid_Covers_Per_Row)}
-            .configValue=${'grid_covers_per_row'}
+          <paper-input
+            label=${localize('settings.height')}
+            .value=${this.getValue(ConfigEntry.Height)}
+            .configValue=${'height'}
             @value-changed=${this.valueChanged}
-            max="10"
-            min="1"
-            editable
-            pin
-          ></paper-slider>
+          ></paper-input>  
         </div>
-        <div>
-          <ha-switch
-            .checked=${this.getValue(ConfigEntry.Grid_Show_Title)}
-            .configValue=${'grid_show_title'}
-            @change=${this.valueChanged}
-            .id=${'grid_show_title'}
-          ></ha-switch>
-          <label for=${'grid_show_title'}>${localize('settings.grid_show_title')}</label>
-        </div>
-        <div>
-          <ha-switch
-            .checked=${this.getValue(ConfigEntry.Grid_Center_Covers)}
-            .configValue=${'grid_center_covers'}
-            @change=${this.valueChanged}
-            .id=${'grid_center_covers'}
-          ></ha-switch>
-          <label for=${'grid_center_covers'}>${localize('settings.grid_center_covers')}</label>
+        <div class="side-by-side${this.getValue(ConfigEntry.Display_Style) == 'grid' ? '' : ' hidden' }">
+          <paper-input
+              label=${localize('settings.grid_covers_per_row')}
+              .value=${this.getValue(ConfigEntry.Grid_Covers_Per_Row)}
+              .configValue=${'grid_covers_per_row'}
+              @value-changed=${this.valueChanged}
+            ></paper-input>  
+          <ha-formfield label=${localize('settings.grid_show_title')}>
+            <ha-switch
+              .checked=${this.getValue(ConfigEntry.Grid_Show_Title)}
+              .configValue=${'grid_show_title'}
+              @change=${this.valueChanged}
+              .id=${'grid_show_title'}
+            ></ha-switch>
+          </ha-formfield>
         </div>
       </div>
     `;
@@ -376,46 +351,54 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
   private renderAdvanced(): TemplateResult {
     return html`
       <div class="values">
-        <div>
-          <paper-input
-            label=${localize('settings.filter_devices')}
-            .value=${this.getValue(ConfigEntry.Filter_Devices)}
-            .configValue=${'filter_devices'}
-            @value-changed=${this.valueChanged}
-          ></paper-input>
+        <paper-input
+          label=${localize('settings.filter_devices')}
+          .value=${this.getValue(ConfigEntry.Filter_Devices)}
+          .configValue=${'filter_devices'}
+          @value-changed=${this.valueChanged}
+        ></paper-input>
+        <div class="side-by-side">
+          <ha-formfield label=${localize('settings.hide_connect_devices')}>
+            <ha-switch
+              .checked=${this.getValue(ConfigEntry.Hide_Connect_Devices)}
+              .configValue=${'hide_connect_devices'}
+              @change=${this.valueChanged}
+              .id=${'hide_connect_devices'}
+            ></ha-switch>
+          </ha-formfield>
+          <ha-formfield label=${localize('settings.hide_chromecast_devices')}>
+            <ha-switch
+              .checked=${this.getValue(ConfigEntry.Hide_Chromecast_Devices)}
+              .configValue=${'hide_chromecast_devices'}
+              @change=${this.valueChanged}
+              .id=${'hide_chromecast_devices'}
+            ></ha-switch>
+          </ha-formfield>
         </div>
       </div>
     `;
   }
 
   protected render(): TemplateResult | void {
-    if (!this.hass) {
-      return html``;
-    }
+    if (!this.hass) return html``;
 
     return html`
       <div class="card-config">
         <div class="option" @click=${this._toggleOption} .option=${'general'}>
-          <div class="row">
-            <ha-icon .icon=${`mdi:${options.general.icon}`}></ha-icon>
-            <div class="title">${options.general.name}</div>
-          </div>
+          <ha-icon .icon=${`mdi:${options.general.icon}`}></ha-icon>
+          <div class="title">${options.general.name}</div>
           <div class="secondary">${options.general.secondary}</div>
         </div>
         ${options.general.show ? this.renderGeneral() : ''}
         <div class="option" @click=${this._toggleOption} .option=${'appearance'}>
-          <div class="row">
-            <ha-icon .icon=${`mdi:${options.appearance.icon}`}></ha-icon>
-            <div class="title">${options.appearance.name}</div>
-          </div>
+          <ha-icon .icon=${`mdi:${options.appearance.icon}`}></ha-icon>
+          <div class="title">${options.appearance.name}</div>
           <div class="secondary">${options.appearance.secondary}</div>
         </div>
         ${options.appearance.show ? this.renderAppearance() : ''}
         <div class="option" @click=${this._toggleOption} .option=${'advanced'}>
-          <div class="row">
-            <ha-icon .icon=${`mdi:${options.advanced.icon}`}></ha-icon>
-            <div class="title">${options.advanced.name}</div>
-          </div>
+          <ha-icon .icon=${`mdi:${options.advanced.icon}`}></ha-icon>
+          <div class="title">${options.advanced.name}</div>
           <div class="secondary">${options.advanced.secondary}</div>
         </div>
         ${options.advanced.show ? this.renderAdvanced() : ''}
@@ -429,60 +412,30 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
         padding: 4px 0px;
         cursor: pointer;
       }
-      .row {
-        display: flex;
-        margin-bottom: -14px;
+      .option ha-icon {
+        float: left;
+        margin-top: 7px;
         pointer-events: none;
       }
-      .title {
-        padding-left: 16px;
-        margin-top: -6px;
+      .option div {
+        margin-left: 35px;
         pointer-events: none;
       }
       .secondary {
-        padding-left: 40px;
         color: var(--secondary-text-color);
-        pointer-events: none;
       }
-      .values {
-        background: var(--secondary-background-color);
-      }
-
-      .values > * {
-        padding-top: 16px;
-        padding-left: 16px;
-        border-bottom: solid var(--divider-color) 2px;
-      }
-
-      .values > *:last-child {
-        border-bottom: 0;
-      }
-
-      .dropdown {
-        width: 40%;
-      }
-
-      .filter_grid {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        row-gap: 20px;
-        padding-bottom: 10px;
-      }
-
-      .filter_grid > .filter_grid--title {
-        grid-column: span 3;
-      }
-
       ha-switch {
-        padding-bottom: 8px;
+        padding: 16px 6px;
       }
-
-      paper-input {
-        margin-top: -1em;
+      .side-by-side {
+        display: flex;
       }
-
-      paper-slider {
-        width: auto;
+      .side-by-side > * {
+        flex: 1;
+        padding-right: 4px;
+      }
+      .hidden {
+        display: none;
       }
     `;
   }
