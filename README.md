@@ -29,7 +29,7 @@ Follow the HACS instructions when installing it.
 
 #### Manually
 
-Copy the content of the `dist` folder to `www/community/spotify_card/` in your Home Assistant configuration directory. Create these folders if they do not exist.
+Copy the content of the `dist` folder to `www/community/spotify-card/` in your Home Assistant configuration directory. Create these folders if they do not exist.
 
 Then you have to add spotify card to your resources. This can be done via `Settings -> Lovelace Dashboards -> Resources`. Add this path:
 
