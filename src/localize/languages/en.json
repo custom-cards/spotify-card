@@ -30,6 +30,7 @@
     "spotify_entity": "Spotify media player entity",
     "default_device": "Default device name",
     "filter_devices": "Hide devices (see documentation under 'Advanced usage')",
+    "include_playlists": "Filter playlists to show (see documentation under 'Advanced usage')",
     "hide_connect_devices": "Hide all Spotify Connect Devices",
     "hide_chromecast_devices": "Hide all Chromecast Devices",
     "hide_top_header": "Hide header",

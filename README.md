@@ -45,11 +45,27 @@ Add the card via lovelace to your dashboard. All of the settings can be configur
 
 #### Advanced usage
 
+##### Device filtering
+
 If you want to hide specific devices, you can do so in the advanced tab of the visual editor. If you are not using the visual editor see [YAML mode](YAML-mode).
 You can enter as many regular expressions as you like, separated by a comma. If any of these rules apply to a device-name it will be hidden. The rules are evaluated against the whole device-name so `room` will not match `bedroom`. Here are a few examples:
 
 - `.*room` hides all devices ending with room
 - `bath.*,kids.*` hides all devices which start with bath or kids
+
+##### Playlist filtering
+
+You can filter the playlists you want on a specific card instance. Just enter as many regular expressions as you like, separated by a comma.
+Playlists are first requested through spotcast websocket API, and *then* filtered. It means that if you fetch 10 playlists, only those 10 will be filtered.
+
+The filters are inclusive, so it means that, as soon as you set at least one filter, a playlist will be included *only* if it matches at least one filter.
+
+Filters can apply on any top-level attributes (ie any attributes defined in [interface](https://github.com/custom-cards/spotify-card/blob/master/src/types.ts#L129)).
+
+You can specify filters in 2 ways:
+
+- with only pattern, ex `.*rock.*`, then it will filter only on `name` attribute
+- with field + pattern, ex `description:.*rock.*`, then it will filter on given field.
 
 #### YAML mode
 

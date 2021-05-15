@@ -399,6 +399,20 @@ describe('SpotifyCardLib', () => {
       expect(spotify_card_lib.getFilteredDevices()).toStrictEqual([[connect_device_1], [chromecast_device_1]]);
     });
   });
+  describe('getFilteredPlaylists', () => {
+    beforeEach(() => {
+      const playlist1 = jest.genMockFromModule<Playlist>('../types');
+      playlist1.name = 'name1';
+      playlist1.uri = 'test_uri/id1';
+      const playlist2 = jest.genMockFromModule<Playlist>('../types');
+      playlist2.name = 'name2';
+      spotify_card_lib.hass = jest.genMockFromModule<HomeAssistant>('home-assistant-js-websocket');
+      spotify_card_lib.hass.callWS.mockResolvedValue([playlist1, playlist2]);
+      spotify_card_lib.config = jest.genMockFromModule<SpotifyCardConfig>('../types');
+      spotify_card_lib._spotcast_connector = jest.genMockFromModule<SpotcastConnector>('../spotcast-connector');
+    });
+    test('')
+  });
   describe('onShuffleSelect', () => {
     beforeEach(() => {
       spotify_card_lib._spotcast_connector = jest.genMockFromModule<SpotcastConnector>('../spotcast-connector');

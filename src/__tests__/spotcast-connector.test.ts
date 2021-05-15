@@ -240,7 +240,16 @@ describe('SpotcastConnector', () => {
       spotcast_connector.parent.config.account = 'test_account';
       spotcast_connector.parent.config.limit = 5;
       spotcast_connector.parent.hass = jest.genMockFromModule<HomeAssistant>('home-assistant-js-websocket');
-      spotcast_connector.parent.hass.callWS = jest.fn().mockResolvedValue([]);
+      //spotcast_connector.parent.hass.callWS = jest.fn().mockResolvedValue([]);
+      const playlist1 = jest.genMockFromModule<Playlist>('../types');
+      playlist1.name = 'name1';
+      playlist1.uri = 'test_uri/id1';
+      const playlist2 = jest.genMockFromModule<Playlist>('../types');
+      playlist2.name = 'name2';
+      const playlist3 = jest.genMockFromModule<Playlist>('../types');
+      playlist3.name = 'name3';
+      playlist3.description = 'description3';
+      spotcast_connector.parent.hass.callWS = jest.fn().mockResolvedValue([playlist1, playlist2, playlist3]);
       //jest.genMockFromModule<ConnectDevice>('../types')
     });
     test('callWS', async () => {
@@ -264,6 +273,26 @@ describe('SpotcastConnector', () => {
         limit: 5,
         country_code: 'test_code',
       });
+    });
+    test('fetchPlaylists with empty filter', async () => {
+      const playlist1 = jest.genMockFromModule<Playlist>('../types');
+      playlist1.name = 'name1';
+      playlist1.uri = 'test_uri/id1';
+      const playlist2 = jest.genMockFromModule<Playlist>('../types');
+      playlist2.name = 'name2';
+      const playlist3 = jest.genMockFromModule<Playlist>('../types');
+      playlist3.name = 'name3';
+      playlist3.description = 'description3';
+      await spotcast_connector.fetchPlaylists();
+      expect(spotcast_connector.loading).toBeTruthy();
+      expect(spotcast_connector.parent.hass.callWS).toHaveBeenCalledWith({
+        type: 'spotcast/playlists',
+        playlist_type: 'test_type',
+        account: 'test_account',
+        limit: 5,
+      });
+      expect(spotcast_connector.parent.playlists).toEqual([playlist1, playlist2, playlist3]);
+      expect(spotcast_connector.is_loaded).toBeTruthy();
     });
     test('error', async () => {
       spotcast_connector.parent.hass = jest.genMockFromModule<HomeAssistant>('home-assistant-js-websocket');

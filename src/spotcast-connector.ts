@@ -1,5 +1,6 @@
-import { ConnectDevice, CurrentPlayer, Playlist, PlaybackOptions } from './types';
+import { ConnectDevice, CurrentPlayer, Playlist, PlaybackOptions, PlaylistFilter } from './types';
 import { SpotifyCard } from './spotify-card';
+
 interface Message {
   type: string;
   account?: string;
@@ -202,7 +203,30 @@ export class SpotcastConnector implements ISpotcastConnector {
     // message.locale = 'implement me later'
     try {
       const res: any = <Array<Playlist>>await this.parent.hass.callWS(message);
-      this.parent.playlists = res.items;
+      try {
+        if (this.parent.config.include_playlists) {
+          const includes = <Array<PlaylistFilter>> this.parent.config.include_playlists?.map((include_str) => {
+            if (include_str.indexOf(':') < 0) {
+              include_str = "name:".concat(include_str);
+            }
+            return <PlaylistFilter> {key: include_str.split(':',1)[0], pattern: new RegExp(include_str.slice(include_str.indexOf(':')+1).trim())};
+          }) ?? [];
+          const included_playlists = res.items.filter(p => 
+            includes.some(i => i.pattern.test(p[i.key]))
+          )
+          //console.log('FILTERS:', JSON.stringify(includes, null, 2));
+          this.parent.playlists = included_playlists;
+        } else {
+          this.parent.playlists = res.items;
+        }
+      } catch (e) {
+        if (e instanceof SyntaxError) {
+          // Silently ignore invalid RegExp
+        } else {
+          throw Error('Failed to filter playlists: ' + e);
+        }
+        this.parent.playlists = res.items;
+      }
     } catch (e) {
       throw Error('Failed to fetch playlists: ' + e);
     } finally {

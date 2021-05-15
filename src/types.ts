@@ -28,6 +28,7 @@ export enum ConfigEntry {
   Hide_Warning,
   Default_Device,
   Filter_Devices,
+  Include_Playlists,
   Hide_Connect_Devices,
   Hide_Chromecast_Devices,
   Hide_Top_Header,
@@ -66,6 +67,8 @@ export interface SpotifyCardConfig extends LovelaceCardConfig {
   default_device?: string;
   //filter the devices based on regex
   filter_devices?: Array<string>;
+  //select the playlists based on regex
+  include_playlists?: Array<string>;
   //hide all Spotify Connect devices
   hide_connect_devices?: boolean;
   //hide all Chromecast devices
@@ -240,4 +243,9 @@ export interface ValueChangedEvent extends Event {
 export interface DeviceList {
   html: TemplateResult;
   count: number;
+}
+
+export interface PlaylistFilter {
+  key: string;
+  pattern: RegExp;
 }

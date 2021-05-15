@@ -122,6 +122,15 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
             .filter((value: string) => {
               return value != '';
             });
+        } else if (target.configValue == 'include_playlists') {
+          target_value = target_value
+            .split(',')
+            .map((value: string) => {
+              return value.trim();
+            })
+            .filter((value: string) => {
+              return value != '';
+            });
         }
         this.config = {
           ...this.config,
@@ -164,6 +173,8 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
         return this.config?.default_device ?? '';
       case ConfigEntry.Filter_Devices:
         return this.config?.filter_devices?.toString() ?? '';
+      case ConfigEntry.Include_Playlists:
+        return this.config?.include_playlists?.toString() ?? '';
       case ConfigEntry.Hide_Connect_Devices:
         return this.config?.hide_connect_devices ?? false;
       case ConfigEntry.Hide_Chromecast_Devices:
@@ -326,7 +337,7 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
             .value=${this.getValue(ConfigEntry.Height)}
             .configValue=${'height'}
             @value-changed=${this.valueChanged}
-          ></paper-input>  
+          ></paper-input>
         </div>
         <div class="side-by-side${this.getValue(ConfigEntry.Display_Style) == 'grid' ? '' : ' hidden' }">
           <paper-input
@@ -334,7 +345,7 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
               .value=${this.getValue(ConfigEntry.Grid_Covers_Per_Row)}
               .configValue=${'grid_covers_per_row'}
               @value-changed=${this.valueChanged}
-            ></paper-input>  
+            ></paper-input>
           <ha-formfield label=${localize('settings.grid_show_title')}>
             <ha-switch
               .checked=${this.getValue(ConfigEntry.Grid_Show_Title)}
@@ -355,6 +366,12 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
           label=${localize('settings.filter_devices')}
           .value=${this.getValue(ConfigEntry.Filter_Devices)}
           .configValue=${'filter_devices'}
+          @value-changed=${this.valueChanged}
+        ></paper-input>
+        <paper-input
+          label=${localize('settings.include_playlists')}
+          .value=${this.getValue(ConfigEntry.Include_Playlists)}
+          .configValue=${'include_playlists'}
           @value-changed=${this.valueChanged}
         ></paper-input>
         <div class="side-by-side">
