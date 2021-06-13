@@ -205,15 +205,16 @@ export class SpotcastConnector implements ISpotcastConnector {
       const res: any = <Array<Playlist>>await this.parent.hass.callWS(message);
       try {
         if (this.parent.config.include_playlists) {
-          const includes = <Array<PlaylistFilter>> this.parent.config.include_playlists?.map((include_str) => {
-            if (include_str.indexOf(':') < 0) {
-              include_str = "name:".concat(include_str);
-            }
-            return <PlaylistFilter> {key: include_str.split(':',1)[0], pattern: new RegExp(include_str.slice(include_str.indexOf(':')+1).trim())};
-          }) ?? [];
-          const included_playlists = res.items.filter(p => 
-            includes.some(i => i.pattern.test(p[i.key]))
-          )
+          const includes = <Array<PlaylistFilter>>this.parent.config.include_playlists?.map((include_str) => {
+              if (include_str.indexOf(':') < 0) {
+                include_str = 'name:'.concat(include_str);
+              }
+              return <PlaylistFilter>{
+                key: include_str.split(':', 1)[0],
+                pattern: new RegExp(include_str.slice(include_str.indexOf(':') + 1).trim()),
+              };
+            }) ?? [];
+          const included_playlists = res.items.filter((p) => includes.some((i) => i.pattern.test(p[i.key])));
           //console.log('FILTERS:', JSON.stringify(includes, null, 2));
           this.parent.playlists = included_playlists;
         } else {
