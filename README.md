@@ -67,6 +67,13 @@ You can specify filters in 2 ways:
 - with only pattern, ex `.*rock.*`, then it will filter only on `name` attribute
 - with field + pattern, ex `description:.*rock.*`, then it will filter on given field.
 
+##### Known Spotify Connect devices
+
+You can specify a pre-known Spotify Connect devices that are not showing up in the devices list although they are available in the network.
+This is useful for smart WiFi speakers that are not connected specifically to your Spotify account and are available visible only inside the home WiFi network, such as Sonos speakers. 
+
+To add a device, start a playback on it and then click the add button in the card editor. You can also manually configure devices, if know the device id (see [spotcast guide for finding the device id](https://github.com/fondberg/spotcast#find-spotify-device-id)).
+
 #### YAML mode
 
 If you are not using the visual configuration of Lovelace you can add the card like this:
@@ -90,6 +97,10 @@ If you are not using the visual configuration of Lovelace you can add the card l
       filter_devices: <optional Array> Hides devices which matches any array entry. The entries have to be regular expressions and are matched against the full device-name. The following are examples
         - .*room <hides all devices ending with room>
         - bath.*,kids.* <hides all devices which start with bath or kids>
+      known_connect_devices: <optional> List of known Spotify Connect devices, see [Known Spotify Connect devices](Known-Spotify-Connect-devices) section
+        - id: The Spotify Connect device id
+          name: The name of the device
+          entity_id: <optional> The Home Assistant media player entity id of this device (e.g. from Sonos integration)
 ```
 
 ### Screenshots

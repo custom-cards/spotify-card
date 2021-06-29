@@ -13,9 +13,11 @@ import { HomeAssistant, LovelaceCardEditor, fireEvent } from 'custom-card-helper
 import {
   SpotifyCardConfig,
   ConfigEntry,
+  CurrentPlayer,
   DisplayStyle,
   PlaylistType,
   ChromecastDevice,
+  KnownConnectDevice,
   ValueChangedEvent,
 } from './types';
 import { localize } from './localize/localize';
@@ -110,10 +112,11 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
         delete clone[target.configValue];
         this.config = clone;
       } else {
+        let config_value = target.configValue;
         let target_value = target.value;
-        if (target.configValue == 'height' || target.configValue == 'limit') {
+        if (config_value == 'height' || config_value == 'limit') {
           target_value = Number(target_value);
-        } else if (target.configValue == 'filter_devices') {
+        } else if (config_value == 'filter_devices') {
           target_value = target_value
             .split(',')
             .map((value: string) => {
@@ -122,7 +125,7 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
             .filter((value: string) => {
               return value != '';
             });
-        } else if (target.configValue == 'include_playlists') {
+        } else if (config_value == 'include_playlists') {
           target_value = target_value
             .split(',')
             .map((value: string) => {
@@ -131,14 +134,59 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
             .filter((value: string) => {
               return value != '';
             });
+        } else if (config_value.startsWith('known_connect_devices')) {
+          const targetIndex = config_value.split(':')[1];
+          const targetProperty = config_value.split(':')[0].split('.')[1];
+          target_value = (this.config?.known_connect_devices ?? [])
+            .map((device: KnownConnectDevice, index: number) => {
+              return index == targetIndex ? {
+                ...device,
+                [targetProperty]: target_value
+              } : device;
+            });
+            config_value = 'known_connect_devices';
         }
         this.config = {
           ...this.config,
-          [target.configValue]: target.checked !== undefined ? target.checked : target_value,
+          [config_value]: target.checked !== undefined ? target.checked : target_value,
         };
       }
     }
     fireEvent(this, 'config-changed', { config: this.config });
+  }
+
+  private async addKnownConnectDevice(): Promise<void> {
+    let currentPlayer: CurrentPlayer | undefined = undefined;
+    try {
+      currentPlayer = await this.hass.callWS({
+        type: 'spotcast/player',
+        account: this.config?.account,
+      });
+    } catch (e) {
+      console.error('Failed to fetch player', e);
+    }
+    if (this.config) {
+      this.config = { 
+        ...this.config,
+        known_connect_devices: (this.config.known_connect_devices ?? []).concat([{
+          id: currentPlayer?.device?.id ?? '',
+          name: currentPlayer?.device.name ?? ''
+        }])
+      };
+      fireEvent(this, 'config-changed', { config: this.config });
+    }
+  }
+
+  private removeKnownConnectDevice(index: number): void {
+    if (this.config) {
+      this.config = { 
+        ...this.config,
+        known_connect_devices: (this.config.known_connect_devices ?? []).filter((_, i: number) => {
+          return i != index;
+        })
+      };
+      fireEvent(this, 'config-changed', { config: this.config });
+    }
   }
 
   public getValue(value: ConfigEntry): any {
@@ -173,6 +221,8 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
         return this.config?.default_device ?? '';
       case ConfigEntry.Filter_Devices:
         return this.config?.filter_devices?.toString() ?? '';
+      case ConfigEntry.Known_Connect_Devices:
+        return this.config?.known_connect_devices ?? [];
       case ConfigEntry.Include_Playlists:
         return this.config?.include_playlists?.toString() ?? '';
       case ConfigEntry.Hide_Connect_Devices:
@@ -360,6 +410,7 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
   }
 
   private renderAdvanced(): TemplateResult {
+    const media_player_entities = this.getMediaPlayerEntities();
     return html`
       <div class="values">
         <paper-input
@@ -392,6 +443,50 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
             ></ha-switch>
           </ha-formfield>
         </div>
+      </div>
+      <div>
+        <div class="side-by-side">
+          <p>${localize('settings.known_connect_devices')}</p>
+          <ha-icon-button
+            @click=${this.addKnownConnectDevice}
+            icon="hass:plus"
+            title=${localize('settings.known_connect_device_add')}>
+          </ha-icon-button>
+        </div>
+        ${this.getValue(ConfigEntry.Known_Connect_Devices).map((device: KnownConnectDevice, index: number) => {
+          return html`<div class="side-by-side">
+            <paper-input
+              label=${localize('settings.known_connect_device_id')}
+              .value=${device.id}
+              .configValue=${`known_connect_devices.id:${index}`}
+              @value-changed=${this.valueChanged}
+            ></paper-input>
+            <paper-input
+              label=${localize('settings.known_connect_device_name')}
+              .value=${device.name}
+              .configValue=${`known_connect_devices.name:${index}`}
+              @value-changed=${this.valueChanged}
+            ></paper-input>
+            <paper-dropdown-menu
+              label=${localize('settings.known_connect_device_entity_id')}
+              @value-changed=${this.valueChanged}
+              .configValue=${`known_connect_devices.entity_id:${index}`}
+              class="dropdown"
+            >
+              <paper-listbox
+                slot="dropdown-content"
+                .selected=${device.entity_id ? media_player_entities.indexOf(device.entity_id) : undefined}
+              >
+                ${media_player_entities.map((item) => html` <paper-item>${item}</paper-item> `)}
+              </paper-listbox>
+            </paper-dropdown-menu>
+            <ha-icon-button
+              @click=${() => this.removeKnownConnectDevice(index)}
+              icon="hass:close"
+              title=${localize('settings.known_connect_device_remove')}>
+            </ha-icon-button>
+          </div>`;
+        })}
       </div>
     `;
   }
@@ -446,10 +541,14 @@ export class SpotifyCardEditor extends LitElement implements LovelaceCardEditor 
       }
       .side-by-side {
         display: flex;
+        align-items: center;
       }
       .side-by-side > * {
         flex: 1;
         padding-right: 4px;
+      }
+      .side-by-side > ha-icon-button {
+        flex: 0;
       }
       .hidden {
         display: none;
