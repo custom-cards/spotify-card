@@ -20,6 +20,7 @@ import {
   PlaylistType,
   isConnectDevice,
   ConnectDevice,
+  KnownConnectDevice,
   ChromecastDevice,
   Playlist,
   CurrentPlayer,
@@ -67,7 +68,7 @@ export function hasChangedCustom(
 }
 
 export function hasChangedMediaPlayer(newVal: HassEntity, oldVal: HassEntity): boolean {
-  if (!oldVal) {
+  if (!oldVal || !newVal) {
     return true;
   }
   if (
@@ -103,12 +104,16 @@ export class SpotifyCard extends LitElement {
 
   @internalProperty({ hasChanged: hasChangedMediaPlayer })
   private _spotify_state?: HassEntity;
+  
+  @internalProperty({ hasChanged: hasChangedMediaPlayer })
+  private _connect_player_state?: HassEntity;
 
   private spotcast_connector!: ISpotcastConnector;
   private _unsubscribe_entitites?: any;
   private _spotify_installed = false;
   private _fetch_time_out: any = 0;
   private _last_volume_set_time = 0;
+  private _connect_player_entity_id?: string;
 
   constructor() {
     super();
@@ -171,9 +176,13 @@ export class SpotifyCard extends LitElement {
       // Are there any changes to media players
       if (item.startsWith('media_player')) {
         // Get spotify state
-        if (item.startsWith('media_player.spotify') || item == this.config.spotify_entity) {
+        if (item == this.config.spotify_entity || 
+            (!this.config.spotify_entity && item.startsWith('media_player.spotify'))) {
           this._spotify_installed = true;
           this._spotify_state = entities[item];
+        }
+        else if (item == this._connect_player_entity_id) {
+          this._connect_player_state = entities[item];
         }
         updateDevices = true;
       }
@@ -218,6 +227,15 @@ export class SpotifyCard extends LitElement {
         cover.dataset.spotifyImageUrl ? (downloadingImage.src = cover.dataset.spotifyImageUrl) : '';
       }
     });
+    if (changedProps.has('player') && this.player?.device && 
+        this.player.device.id != (changedProps.get('player') as CurrentPlayer)?.device?.id) {
+      console.log('player device changed', this.player.device.id);
+
+      const [,known_spotify_connect_devices,] = this.getFilteredDevices();
+      const knownConnectDevice = known_spotify_connect_devices.find(x => x.id == this.player?.device.id);
+      this._connect_player_entity_id = knownConnectDevice ? knownConnectDevice.entity_id : undefined;
+      this._connect_player_state = undefined;
+    }
   }
 
   private getDisplayStyle(): DisplayStyle {
@@ -230,15 +248,23 @@ export class SpotifyCard extends LitElement {
   }
 
   private getPlayingState(): boolean {
-    return this._spotify_state?.state == 'playing' ?? false;
+    return this._connect_player_state 
+      ? this._connect_player_state.state == 'playing'
+      : this._spotify_state?.state == 'playing' ?? false;
   }
 
   private getShuffleState(): boolean {
-    return this.player?.shuffle_state ?? false;
+    return this._connect_player_state 
+      ? this._connect_player_state.attributes.shuffle
+      : this.player?.shuffle_state ?? false;
   }
 
   public getSpotifyEntityState(): string {
     return this._spotify_state ? this._spotify_state.state : '';
+  }
+
+  private getMediaAttribute(attribute: string): string {
+    return this._connect_player_state?.attributes[attribute] ?? this._spotify_state?.attributes[attribute];
   }
 
   private isSpotcastInstalled(): boolean {
@@ -262,27 +288,31 @@ export class SpotifyCard extends LitElement {
   }
 
   private getDefaultDevice(): string | undefined {
-    let [spotify_connect_devices, chromecast_devices] = this.getFilteredDevices();
+    let [spotify_connect_devices, known_spotify_connect_devices, chromecast_devices] = this.getFilteredDevices();
     spotify_connect_devices = spotify_connect_devices.filter((device) => {
       return device.name == this.config.default_device;
     });
+    known_spotify_connect_devices = known_spotify_connect_devices.filter((device) => {
+      return device.name == this.config.default_device;
+    })
     chromecast_devices = chromecast_devices.filter((device) => {
       return device.friendly_name == this.config.default_device;
     });
-    if (spotify_connect_devices.length > 0 || chromecast_devices.length > 0) {
+    if (spotify_connect_devices.length > 0 || known_spotify_connect_devices.length > 0 || chromecast_devices.length > 0) {
       return this.config.default_device;
     }
     return;
   }
 
-  private getFilteredDevices(): [ConnectDevice[], ChromecastDevice[]] {
+  private getFilteredDevices(): [ConnectDevice[], KnownConnectDevice[], ChromecastDevice[]] {
     const spotify_connect_devices = this.config.hide_connect_devices
       ? []
       : this.devices.filter(this.checkIfAllowedToShow, this);
+    const known_spotify_connect_devices = this.config.known_connect_devices ?? [];
     const chromecast_devices = this.config.hide_chromecast_devices
       ? []
       : this.chromecast_devices.filter(this.checkIfAllowedToShow, this);
-    return [spotify_connect_devices, chromecast_devices];
+    return [spotify_connect_devices, known_spotify_connect_devices, chromecast_devices];
   }
 
   private getPlaylists(): Playlist[] {
@@ -324,8 +354,8 @@ export class SpotifyCard extends LitElement {
 
   private onShuffleSelect(elem: MouseEvent): void {
     this.hass.callService('media_player', 'shuffle_set', {
-      entity_id: this._spotify_state?.entity_id,
-      shuffle: !this.player?.shuffle_state,
+      entity_id: (this._connect_player_state ?? this._spotify_state)?.entity_id,
+      shuffle: !this.getShuffleState(),
     });
     const target = elem.target as HTMLElement;
     let parent = target.parentElement;
@@ -343,13 +373,13 @@ export class SpotifyCard extends LitElement {
     ev.stopPropagation();
     if (this._spotify_state) {
       this.hass.callService('media_player', command, {
-        entity_id: this._spotify_state.entity_id,
+        entity_id: (this._connect_player_state ?? this._spotify_state).entity_id,
       });
     }
   }
 
   private getVolume(): number {
-    return this._spotify_state?.attributes?.volume_level * 100;
+    return (this._connect_player_state ?? this._spotify_state)?.attributes?.volume_level * 100;
   }
 
   protected shouldUpdate(changedProperties: Map<string | number | symbol, unknown>): any {
@@ -357,7 +387,7 @@ export class SpotifyCard extends LitElement {
     changedProperties.forEach((_oldValue, propName) => {
       // console.log(`${propName} changed. oldValue: ${_oldValue}`);
       // Blocks render after a volume change, which otherwise can cause a jumping volume slider
-      if (propName == '_spotify_state') {
+      if (propName == '_spotify_state' || propName == '_connect_player_state') {
         const d = new Date();
         if (d.getTime() - this._last_volume_set_time < 500) {
           scheduleUpdate = false;
@@ -371,7 +401,7 @@ export class SpotifyCard extends LitElement {
     ev.stopPropagation();
     if (this._spotify_state) {
       this.hass.callService('media_player', 'volume_set', {
-        entity_id: this._spotify_state.entity_id,
+        entity_id: (this._connect_player_state ?? this._spotify_state)?.entity_id,
         volume_level: ev.target.value / 100,
       });
       const d = new Date();
@@ -395,6 +425,17 @@ export class SpotifyCard extends LitElement {
     }
     const playlist = this.playlists[0];
     console.log('spotifyDeviceSelected playing first playlist');
+    this.spotcast_connector.playUriOnConnectDevice(device.id, playlist.uri);
+  }
+  
+  private knownSpotifyConnectDeviceSelected(elem: MouseEvent, device: KnownConnectDevice): void {
+    this.confirmDeviceSelection(elem);
+    const current_player = this.spotcast_connector.getCurrentPlayer();
+    if (current_player) {
+      return this.spotcast_connector.transferPlaybackToConnectDevice(device.id);
+    }
+    const playlist = this.playlists[0];
+    console.log('knownSpotifyConnectDeviceSelected playing first playlist');
     this.spotcast_connector.playUriOnConnectDevice(device.id, playlist.uri);
   }
 
@@ -455,10 +496,10 @@ export class SpotifyCard extends LitElement {
         >${this.config.hide_warning ? '' : warning} ${!this.config.hide_top_header ? header : null}
         ${this._spotify_state &&
         !this.config.hide_currently_playing &&
-        this._spotify_state?.attributes.media_title &&
-        this._spotify_state?.attributes.media_artist
+        this.getMediaAttribute('media_title') && 
+        this.getMediaAttribute('media_artist')
           ? html` <div id="header-track">
-              ${this._spotify_state?.attributes.media_title} - ${this._spotify_state?.attributes.media_artist}
+              ${this.getMediaAttribute('media_title')} - ${this.getMediaAttribute('media_artist')}
             </div>`
           : null}
         <div id="content" class="${devicelist.count == 0 ? 'grey-scale' : ''}">${content}</div>
@@ -492,7 +533,7 @@ export class SpotifyCard extends LitElement {
                     ${this.getCurrentPlayer()
                       ? html`
               ${
-                this._spotify_state?.state == 'playing'
+                this.getPlayingState()
                   ? html`<div @click=${this.onPauseSelect}>
                       <svg viewBox="0 0 24 24">
                         <path d="M0 0h24v24H0z" fill="none" />
@@ -566,15 +607,18 @@ export class SpotifyCard extends LitElement {
 
   // Generate device list
   private generateDeviceList(): DeviceList {
-    const [spotify_connect_devices, chromecast_devices] = this.getFilteredDevices();
-    if (spotify_connect_devices.length == 0 && chromecast_devices.length == 0) {
+    const [spotify_connect_devices, known_spotify_connect_devices, chromecast_devices] = this.getFilteredDevices();
+    if (spotify_connect_devices.length == 0 && known_spotify_connect_devices.length == 0 && chromecast_devices.length == 0) {
       return { html: html`<p>No devices found</p>`, count: 0 };
     }
     return {
       html: html`
-        ${spotify_connect_devices.length > 0 ? html`<p>Spotify Connect devices</p>` : null}
+        ${spotify_connect_devices.length > 0 || known_spotify_connect_devices.length > 0 ? html`<p>Spotify Connect devices</p>` : null}
         ${spotify_connect_devices.map((device) => {
           return html`<a @click=${(elem) => this.spotifyDeviceSelected(elem, device)}>${device.name}</a>`;
+        })}
+        ${known_spotify_connect_devices.map((device) => {
+          return html`<a @click=${(elem) => this.knownSpotifyConnectDeviceSelected(elem, device)}>${device.name}</a>`;
         })}
         ${chromecast_devices.length > 0 ? html`<p>Chromecast devices</p>` : null}
         ${chromecast_devices.map((device) => {

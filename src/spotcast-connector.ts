@@ -86,9 +86,14 @@ export class SpotcastConnector implements ISpotcastConnector {
 
   private startPlaybackOnDevice(device_name: string, uri: string): void {
     const connect_device = this.parent.devices.filter((device) => device.name == device_name);
+    const known_device = this.parent.config.known_connect_devices?.filter((device) => device.name == device_name);
     if (connect_device.length > 0) {
       return this.playUriOnConnectDevice(connect_device[0].id, uri);
-    } else {
+    }
+    else if (known_device && known_device.length > 0) {
+      return this.playUriOnConnectDevice(known_device[0].id, uri);
+    }
+    else {
       const cast_device = this.parent.chromecast_devices.filter((cast) => cast.friendly_name == device_name);
       if (cast_device.length > 0) {
         return this.playUriOnCastDevice(cast_device[0].friendly_name, uri);
