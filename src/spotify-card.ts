@@ -304,6 +304,14 @@ export class SpotifyCard extends LitElement {
     return;
   }
 
+  // test for filtered devices
+  private hasFilteredDevices(): boolean {
+    const spotify_connect_devices = this.devices.filter(this.checkIfAllowedToShow, this);
+    const known_spotify_connect_devices = this.config.known_connect_devices ?? [];
+    const chromecast_devices = this.chromecast_devices.filter(this.checkIfAllowedToShow, this);
+    return spotify_connect_devices.length + known_spotify_connect_devices.length + chromecast_devices.length > 0
+  }
+
   private getFilteredDevices(): [ConnectDevice[], KnownConnectDevice[], ChromecastDevice[]] {
     const spotify_connect_devices = this.config.hide_connect_devices
       ? []
@@ -502,7 +510,7 @@ export class SpotifyCard extends LitElement {
               ${this.getMediaAttribute('media_title')} - ${this.getMediaAttribute('media_artist')}
             </div>`
           : null}
-        <div id="content" class="${devicelist.count == 0 ? 'grey-scale' : ''}">${content}</div>
+        <div id="content" class="${this.hasFilteredDevices() ? '' : 'grey-scale'}">${content}</div>
         <div id="footer">
           <div class="dropdown-wrapper">
             <div class="controls">
@@ -625,7 +633,7 @@ export class SpotifyCard extends LitElement {
           return html`<a @click=${(elem) => this.chromecastDeviceSelected(elem, device)}>${device.friendly_name}</a>`;
         })}
       `,
-      count: spotify_connect_devices.length + chromecast_devices.length,
+      count: spotify_connect_devices.length + known_spotify_connect_devices.length + chromecast_devices.length,
     };
   }
 
