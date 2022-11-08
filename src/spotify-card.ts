@@ -418,7 +418,7 @@ export class SpotifyCard extends LitElement {
   }
 
   private spotifyDeviceSelected(elem: MouseEvent, device: ConnectDevice): void {
-    this.confirmDeviceSelection(elem);
+    this.confirmDeviceSelection(elem); return;
     const current_player = this.spotcast_connector.getCurrentPlayer();
     if (current_player) {
       return this.spotcast_connector.transferPlaybackToConnectDevice(device.id);
@@ -429,7 +429,7 @@ export class SpotifyCard extends LitElement {
   }
   
   private knownSpotifyConnectDeviceSelected(elem: MouseEvent, device: KnownConnectDevice): void {
-    this.confirmDeviceSelection(elem);
+    this.confirmDeviceSelection(elem); return;
     const current_player = this.spotcast_connector.getCurrentPlayer();
     if (current_player) {
       return this.spotcast_connector.transferPlaybackToConnectDevice(device.id);
@@ -440,7 +440,7 @@ export class SpotifyCard extends LitElement {
   }
 
   private chromecastDeviceSelected(elem: MouseEvent, device: ChromecastDevice): void {
-    this.confirmDeviceSelection(elem);
+    this.confirmDeviceSelection(elem); return;
     const current_player = this.spotcast_connector.getCurrentPlayer();
     if (current_player) {
       return this.spotcast_connector.transferPlaybackToCastDevice(device.friendly_name);
