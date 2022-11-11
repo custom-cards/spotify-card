@@ -416,6 +416,7 @@ export class SpotifyCard extends LitElement {
   private confirmDeviceSelection(elem: MouseEvent) {
     const target = elem.target as HTMLElement;
     this._default_device = target.innerText;
+    this.updateSpotcast();
     target?.parentElement?.classList.add('dropdown-content-hide');
     setTimeout(() => {
       target?.parentElement?.classList.remove('dropdown-content-hide');
@@ -445,7 +446,7 @@ export class SpotifyCard extends LitElement {
   }
 
   private chromecastDeviceSelected(elem: MouseEvent, device: ChromecastDevice): void {
-    this.confirmDeviceSelection(elem);
+    this.confirmDeviceSelection(elem); return;
     const current_player = this.spotcast_connector.getCurrentPlayer();
     if (current_player) {
       return this.spotcast_connector.transferPlaybackToCastDevice(device.friendly_name);
