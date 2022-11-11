@@ -10,6 +10,10 @@ export enum PlaylistType {
   default = 'default',
   featured = 'featured',
   discover_weekly = 'discover-weekly',
+  recently_played = 'recently-played',
+  jump_back_in = 'jump-back-in',
+  your_top_mixes = 'your-top-mixes[0]',
+  more_of_what_you_like = 'home-personalized[more-of-what-you-like]',
 }
 
 export enum ConfigEntry {
