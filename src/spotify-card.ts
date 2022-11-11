@@ -114,6 +114,7 @@ export class SpotifyCard extends LitElement {
   private _fetch_time_out: any = 0;
   private _last_volume_set_time = 0;
   private _connect_player_entity_id?: string;
+  private _default_device;
 
   constructor() {
     super();
@@ -288,6 +289,9 @@ export class SpotifyCard extends LitElement {
   }
 
   private getDefaultDevice(): string | undefined {
+    if( this._default_device ){
+      return this._default_device;
+    }
     let [spotify_connect_devices, known_spotify_connect_devices, chromecast_devices] = this.getFilteredDevices();
     spotify_connect_devices = spotify_connect_devices.filter((device) => {
       return device.name == this.config.default_device;
@@ -411,6 +415,7 @@ export class SpotifyCard extends LitElement {
 
   private confirmDeviceSelection(elem: MouseEvent) {
     const target = elem.target as HTMLElement;
+    this._default_device = target.innerText;
     target?.parentElement?.classList.add('dropdown-content-hide');
     setTimeout(() => {
       target?.parentElement?.classList.remove('dropdown-content-hide');
@@ -418,7 +423,7 @@ export class SpotifyCard extends LitElement {
   }
 
   private spotifyDeviceSelected(elem: MouseEvent, device: ConnectDevice): void {
-    this.confirmDeviceSelection(elem); return;
+    this.confirmDeviceSelection(elem);
     const current_player = this.spotcast_connector.getCurrentPlayer();
     if (current_player) {
       return this.spotcast_connector.transferPlaybackToConnectDevice(device.id);
@@ -429,7 +434,7 @@ export class SpotifyCard extends LitElement {
   }
   
   private knownSpotifyConnectDeviceSelected(elem: MouseEvent, device: KnownConnectDevice): void {
-    this.confirmDeviceSelection(elem); return;
+    this.confirmDeviceSelection(elem);
     const current_player = this.spotcast_connector.getCurrentPlayer();
     if (current_player) {
       return this.spotcast_connector.transferPlaybackToConnectDevice(device.id);
@@ -440,7 +445,7 @@ export class SpotifyCard extends LitElement {
   }
 
   private chromecastDeviceSelected(elem: MouseEvent, device: ChromecastDevice): void {
-    this.confirmDeviceSelection(elem); return;
+    this.confirmDeviceSelection(elem);
     const current_player = this.spotcast_connector.getCurrentPlayer();
     if (current_player) {
       return this.spotcast_connector.transferPlaybackToCastDevice(device.friendly_name);
