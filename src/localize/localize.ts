@@ -1,11 +1,13 @@
 import * as en from './languages/en.json';
 import * as de from './languages/de.json';
 import * as se from './languages/se.json';
+import * as it from './languages/it.json';
 
 const languages = {
   en: en,
   de: de,
   se: se,
+  it: it,
 };
 
 export function localize(string: string, search = '', replace = ''): string {
